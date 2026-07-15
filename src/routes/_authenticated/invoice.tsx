@@ -1,13 +1,6 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { FileText } from "lucide-react";
-import { ModulePlaceholder } from "@/components/module-placeholder";
+import { createFileRoute, Outlet } from "@tanstack/react-router";
 
+/** Layout for /invoice/* — child routes render inside <Outlet />. */
 export const Route = createFileRoute("/_authenticated/invoice")({
-  component: () => (
-    <ModulePlaceholder
-      icon={FileText}
-      title="Invoice Generator"
-      description="Create branded, tax-ready invoices with AI."
-    />
-  ),
+  component: () => <Outlet />,
 });
