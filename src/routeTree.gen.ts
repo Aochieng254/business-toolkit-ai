@@ -28,6 +28,9 @@ import { Route as AuthenticatedBusinessNameGeneratorRouteImport } from './routes
 import { Route as AuthenticatedAiAssistantRouteImport } from './routes/_authenticated/ai-assistant'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedInvoiceIndexRouteImport } from './routes/_authenticated/invoice.index'
+import { Route as AuthenticatedInvoiceNewRouteImport } from './routes/_authenticated/invoice.new'
+import { Route as AuthenticatedInvoiceIdIndexRouteImport } from './routes/_authenticated/invoice.$id.index'
+import { Route as AuthenticatedInvoiceIdEditRouteImport } from './routes/_authenticated/invoice.$id.edit'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
@@ -129,6 +132,23 @@ const AuthenticatedInvoiceIndexRoute =
     path: '/',
     getParentRoute: () => AuthenticatedInvoiceRoute,
   } as any)
+const AuthenticatedInvoiceNewRoute = AuthenticatedInvoiceNewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => AuthenticatedInvoiceRoute,
+} as any)
+const AuthenticatedInvoiceIdIndexRoute =
+  AuthenticatedInvoiceIdIndexRouteImport.update({
+    id: '/$id/',
+    path: '/$id/',
+    getParentRoute: () => AuthenticatedInvoiceRoute,
+  } as any)
+const AuthenticatedInvoiceIdEditRoute =
+  AuthenticatedInvoiceIdEditRouteImport.update({
+    id: '/$id/edit',
+    path: '/$id/edit',
+    getParentRoute: () => AuthenticatedInvoiceRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -148,7 +168,10 @@ export interface FileRoutesByFullPath {
   '/receipt': typeof AuthenticatedReceiptRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/subscription': typeof AuthenticatedSubscriptionRoute
+  '/invoice/new': typeof AuthenticatedInvoiceNewRoute
   '/invoice/': typeof AuthenticatedInvoiceIndexRoute
+  '/invoice/$id/edit': typeof AuthenticatedInvoiceIdEditRoute
+  '/invoice/$id/': typeof AuthenticatedInvoiceIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -167,7 +190,10 @@ export interface FileRoutesByTo {
   '/receipt': typeof AuthenticatedReceiptRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/subscription': typeof AuthenticatedSubscriptionRoute
+  '/invoice/new': typeof AuthenticatedInvoiceNewRoute
   '/invoice': typeof AuthenticatedInvoiceIndexRoute
+  '/invoice/$id/edit': typeof AuthenticatedInvoiceIdEditRoute
+  '/invoice/$id': typeof AuthenticatedInvoiceIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -189,7 +215,10 @@ export interface FileRoutesById {
   '/_authenticated/receipt': typeof AuthenticatedReceiptRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/_authenticated/subscription': typeof AuthenticatedSubscriptionRoute
+  '/_authenticated/invoice/new': typeof AuthenticatedInvoiceNewRoute
   '/_authenticated/invoice/': typeof AuthenticatedInvoiceIndexRoute
+  '/_authenticated/invoice/$id/edit': typeof AuthenticatedInvoiceIdEditRoute
+  '/_authenticated/invoice/$id/': typeof AuthenticatedInvoiceIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -211,7 +240,10 @@ export interface FileRouteTypes {
     | '/receipt'
     | '/settings'
     | '/subscription'
+    | '/invoice/new'
     | '/invoice/'
+    | '/invoice/$id/edit'
+    | '/invoice/$id/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -230,7 +262,10 @@ export interface FileRouteTypes {
     | '/receipt'
     | '/settings'
     | '/subscription'
+    | '/invoice/new'
     | '/invoice'
+    | '/invoice/$id/edit'
+    | '/invoice/$id'
   id:
     | '__root__'
     | '/'
@@ -251,7 +286,10 @@ export interface FileRouteTypes {
     | '/_authenticated/receipt'
     | '/_authenticated/settings'
     | '/_authenticated/subscription'
+    | '/_authenticated/invoice/new'
     | '/_authenticated/invoice/'
+    | '/_authenticated/invoice/$id/edit'
+    | '/_authenticated/invoice/$id/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -397,15 +435,42 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedInvoiceIndexRouteImport
       parentRoute: typeof AuthenticatedInvoiceRoute
     }
+    '/_authenticated/invoice/new': {
+      id: '/_authenticated/invoice/new'
+      path: '/new'
+      fullPath: '/invoice/new'
+      preLoaderRoute: typeof AuthenticatedInvoiceNewRouteImport
+      parentRoute: typeof AuthenticatedInvoiceRoute
+    }
+    '/_authenticated/invoice/$id/': {
+      id: '/_authenticated/invoice/$id/'
+      path: '/$id'
+      fullPath: '/invoice/$id/'
+      preLoaderRoute: typeof AuthenticatedInvoiceIdIndexRouteImport
+      parentRoute: typeof AuthenticatedInvoiceRoute
+    }
+    '/_authenticated/invoice/$id/edit': {
+      id: '/_authenticated/invoice/$id/edit'
+      path: '/$id/edit'
+      fullPath: '/invoice/$id/edit'
+      preLoaderRoute: typeof AuthenticatedInvoiceIdEditRouteImport
+      parentRoute: typeof AuthenticatedInvoiceRoute
+    }
   }
 }
 
 interface AuthenticatedInvoiceRouteChildren {
+  AuthenticatedInvoiceNewRoute: typeof AuthenticatedInvoiceNewRoute
   AuthenticatedInvoiceIndexRoute: typeof AuthenticatedInvoiceIndexRoute
+  AuthenticatedInvoiceIdEditRoute: typeof AuthenticatedInvoiceIdEditRoute
+  AuthenticatedInvoiceIdIndexRoute: typeof AuthenticatedInvoiceIdIndexRoute
 }
 
 const AuthenticatedInvoiceRouteChildren: AuthenticatedInvoiceRouteChildren = {
+  AuthenticatedInvoiceNewRoute: AuthenticatedInvoiceNewRoute,
   AuthenticatedInvoiceIndexRoute: AuthenticatedInvoiceIndexRoute,
+  AuthenticatedInvoiceIdEditRoute: AuthenticatedInvoiceIdEditRoute,
+  AuthenticatedInvoiceIdIndexRoute: AuthenticatedInvoiceIdIndexRoute,
 }
 
 const AuthenticatedInvoiceRouteWithChildren =
