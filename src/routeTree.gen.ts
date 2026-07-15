@@ -22,11 +22,17 @@ import { Route as AuthenticatedPayslipRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedInvoiceRouteImport } from './routes/_authenticated/invoice'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedCvBuilderRouteImport } from './routes/_authenticated/cv-builder'
+import { Route as AuthenticatedCustomersRouteImport } from './routes/_authenticated/customers'
 import { Route as AuthenticatedCoverLetterRouteImport } from './routes/_authenticated/cover-letter'
+import { Route as AuthenticatedCompanyRouteImport } from './routes/_authenticated/company'
 import { Route as AuthenticatedCalculatorsRouteImport } from './routes/_authenticated/calculators'
 import { Route as AuthenticatedBusinessNameGeneratorRouteImport } from './routes/_authenticated/business-name-generator'
 import { Route as AuthenticatedAiAssistantRouteImport } from './routes/_authenticated/ai-assistant'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as AuthenticatedInvoiceIndexRouteImport } from './routes/_authenticated/invoice.index'
+import { Route as AuthenticatedInvoiceNewRouteImport } from './routes/_authenticated/invoice.new'
+import { Route as AuthenticatedInvoiceIdIndexRouteImport } from './routes/_authenticated/invoice.$id.index'
+import { Route as AuthenticatedInvoiceIdEditRouteImport } from './routes/_authenticated/invoice.$id.edit'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
@@ -93,12 +99,22 @@ const AuthenticatedCvBuilderRoute = AuthenticatedCvBuilderRouteImport.update({
   path: '/cv-builder',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedCustomersRoute = AuthenticatedCustomersRouteImport.update({
+  id: '/customers',
+  path: '/customers',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedCoverLetterRoute =
   AuthenticatedCoverLetterRouteImport.update({
     id: '/cover-letter',
     path: '/cover-letter',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedCompanyRoute = AuthenticatedCompanyRouteImport.update({
+  id: '/company',
+  path: '/company',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedCalculatorsRoute =
   AuthenticatedCalculatorsRouteImport.update({
     id: '/calculators',
@@ -122,6 +138,29 @@ const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedInvoiceIndexRoute =
+  AuthenticatedInvoiceIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedInvoiceRoute,
+  } as any)
+const AuthenticatedInvoiceNewRoute = AuthenticatedInvoiceNewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => AuthenticatedInvoiceRoute,
+} as any)
+const AuthenticatedInvoiceIdIndexRoute =
+  AuthenticatedInvoiceIdIndexRouteImport.update({
+    id: '/$id/',
+    path: '/$id/',
+    getParentRoute: () => AuthenticatedInvoiceRoute,
+  } as any)
+const AuthenticatedInvoiceIdEditRoute =
+  AuthenticatedInvoiceIdEditRouteImport.update({
+    id: '/$id/edit',
+    path: '/$id/edit',
+    getParentRoute: () => AuthenticatedInvoiceRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -132,15 +171,21 @@ export interface FileRoutesByFullPath {
   '/ai-assistant': typeof AuthenticatedAiAssistantRoute
   '/business-name-generator': typeof AuthenticatedBusinessNameGeneratorRoute
   '/calculators': typeof AuthenticatedCalculatorsRoute
+  '/company': typeof AuthenticatedCompanyRoute
   '/cover-letter': typeof AuthenticatedCoverLetterRoute
+  '/customers': typeof AuthenticatedCustomersRoute
   '/cv-builder': typeof AuthenticatedCvBuilderRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
-  '/invoice': typeof AuthenticatedInvoiceRoute
+  '/invoice': typeof AuthenticatedInvoiceRouteWithChildren
   '/payslip': typeof AuthenticatedPayslipRoute
   '/quotation': typeof AuthenticatedQuotationRoute
   '/receipt': typeof AuthenticatedReceiptRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/subscription': typeof AuthenticatedSubscriptionRoute
+  '/invoice/new': typeof AuthenticatedInvoiceNewRoute
+  '/invoice/': typeof AuthenticatedInvoiceIndexRoute
+  '/invoice/$id/edit': typeof AuthenticatedInvoiceIdEditRoute
+  '/invoice/$id/': typeof AuthenticatedInvoiceIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -151,15 +196,20 @@ export interface FileRoutesByTo {
   '/ai-assistant': typeof AuthenticatedAiAssistantRoute
   '/business-name-generator': typeof AuthenticatedBusinessNameGeneratorRoute
   '/calculators': typeof AuthenticatedCalculatorsRoute
+  '/company': typeof AuthenticatedCompanyRoute
   '/cover-letter': typeof AuthenticatedCoverLetterRoute
+  '/customers': typeof AuthenticatedCustomersRoute
   '/cv-builder': typeof AuthenticatedCvBuilderRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
-  '/invoice': typeof AuthenticatedInvoiceRoute
   '/payslip': typeof AuthenticatedPayslipRoute
   '/quotation': typeof AuthenticatedQuotationRoute
   '/receipt': typeof AuthenticatedReceiptRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/subscription': typeof AuthenticatedSubscriptionRoute
+  '/invoice/new': typeof AuthenticatedInvoiceNewRoute
+  '/invoice': typeof AuthenticatedInvoiceIndexRoute
+  '/invoice/$id/edit': typeof AuthenticatedInvoiceIdEditRoute
+  '/invoice/$id': typeof AuthenticatedInvoiceIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -172,15 +222,21 @@ export interface FileRoutesById {
   '/_authenticated/ai-assistant': typeof AuthenticatedAiAssistantRoute
   '/_authenticated/business-name-generator': typeof AuthenticatedBusinessNameGeneratorRoute
   '/_authenticated/calculators': typeof AuthenticatedCalculatorsRoute
+  '/_authenticated/company': typeof AuthenticatedCompanyRoute
   '/_authenticated/cover-letter': typeof AuthenticatedCoverLetterRoute
+  '/_authenticated/customers': typeof AuthenticatedCustomersRoute
   '/_authenticated/cv-builder': typeof AuthenticatedCvBuilderRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
-  '/_authenticated/invoice': typeof AuthenticatedInvoiceRoute
+  '/_authenticated/invoice': typeof AuthenticatedInvoiceRouteWithChildren
   '/_authenticated/payslip': typeof AuthenticatedPayslipRoute
   '/_authenticated/quotation': typeof AuthenticatedQuotationRoute
   '/_authenticated/receipt': typeof AuthenticatedReceiptRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/_authenticated/subscription': typeof AuthenticatedSubscriptionRoute
+  '/_authenticated/invoice/new': typeof AuthenticatedInvoiceNewRoute
+  '/_authenticated/invoice/': typeof AuthenticatedInvoiceIndexRoute
+  '/_authenticated/invoice/$id/edit': typeof AuthenticatedInvoiceIdEditRoute
+  '/_authenticated/invoice/$id/': typeof AuthenticatedInvoiceIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -193,7 +249,9 @@ export interface FileRouteTypes {
     | '/ai-assistant'
     | '/business-name-generator'
     | '/calculators'
+    | '/company'
     | '/cover-letter'
+    | '/customers'
     | '/cv-builder'
     | '/dashboard'
     | '/invoice'
@@ -202,6 +260,10 @@ export interface FileRouteTypes {
     | '/receipt'
     | '/settings'
     | '/subscription'
+    | '/invoice/new'
+    | '/invoice/'
+    | '/invoice/$id/edit'
+    | '/invoice/$id/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -212,15 +274,20 @@ export interface FileRouteTypes {
     | '/ai-assistant'
     | '/business-name-generator'
     | '/calculators'
+    | '/company'
     | '/cover-letter'
+    | '/customers'
     | '/cv-builder'
     | '/dashboard'
-    | '/invoice'
     | '/payslip'
     | '/quotation'
     | '/receipt'
     | '/settings'
     | '/subscription'
+    | '/invoice/new'
+    | '/invoice'
+    | '/invoice/$id/edit'
+    | '/invoice/$id'
   id:
     | '__root__'
     | '/'
@@ -232,7 +299,9 @@ export interface FileRouteTypes {
     | '/_authenticated/ai-assistant'
     | '/_authenticated/business-name-generator'
     | '/_authenticated/calculators'
+    | '/_authenticated/company'
     | '/_authenticated/cover-letter'
+    | '/_authenticated/customers'
     | '/_authenticated/cv-builder'
     | '/_authenticated/dashboard'
     | '/_authenticated/invoice'
@@ -241,6 +310,10 @@ export interface FileRouteTypes {
     | '/_authenticated/receipt'
     | '/_authenticated/settings'
     | '/_authenticated/subscription'
+    | '/_authenticated/invoice/new'
+    | '/_authenticated/invoice/'
+    | '/_authenticated/invoice/$id/edit'
+    | '/_authenticated/invoice/$id/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -344,11 +417,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCvBuilderRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/customers': {
+      id: '/_authenticated/customers'
+      path: '/customers'
+      fullPath: '/customers'
+      preLoaderRoute: typeof AuthenticatedCustomersRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/cover-letter': {
       id: '/_authenticated/cover-letter'
       path: '/cover-letter'
       fullPath: '/cover-letter'
       preLoaderRoute: typeof AuthenticatedCoverLetterRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/company': {
+      id: '/_authenticated/company'
+      path: '/company'
+      fullPath: '/company'
+      preLoaderRoute: typeof AuthenticatedCompanyRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/calculators': {
@@ -379,18 +466,65 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/invoice/': {
+      id: '/_authenticated/invoice/'
+      path: '/'
+      fullPath: '/invoice/'
+      preLoaderRoute: typeof AuthenticatedInvoiceIndexRouteImport
+      parentRoute: typeof AuthenticatedInvoiceRoute
+    }
+    '/_authenticated/invoice/new': {
+      id: '/_authenticated/invoice/new'
+      path: '/new'
+      fullPath: '/invoice/new'
+      preLoaderRoute: typeof AuthenticatedInvoiceNewRouteImport
+      parentRoute: typeof AuthenticatedInvoiceRoute
+    }
+    '/_authenticated/invoice/$id/': {
+      id: '/_authenticated/invoice/$id/'
+      path: '/$id'
+      fullPath: '/invoice/$id/'
+      preLoaderRoute: typeof AuthenticatedInvoiceIdIndexRouteImport
+      parentRoute: typeof AuthenticatedInvoiceRoute
+    }
+    '/_authenticated/invoice/$id/edit': {
+      id: '/_authenticated/invoice/$id/edit'
+      path: '/$id/edit'
+      fullPath: '/invoice/$id/edit'
+      preLoaderRoute: typeof AuthenticatedInvoiceIdEditRouteImport
+      parentRoute: typeof AuthenticatedInvoiceRoute
+    }
   }
 }
+
+interface AuthenticatedInvoiceRouteChildren {
+  AuthenticatedInvoiceNewRoute: typeof AuthenticatedInvoiceNewRoute
+  AuthenticatedInvoiceIndexRoute: typeof AuthenticatedInvoiceIndexRoute
+  AuthenticatedInvoiceIdEditRoute: typeof AuthenticatedInvoiceIdEditRoute
+  AuthenticatedInvoiceIdIndexRoute: typeof AuthenticatedInvoiceIdIndexRoute
+}
+
+const AuthenticatedInvoiceRouteChildren: AuthenticatedInvoiceRouteChildren = {
+  AuthenticatedInvoiceNewRoute: AuthenticatedInvoiceNewRoute,
+  AuthenticatedInvoiceIndexRoute: AuthenticatedInvoiceIndexRoute,
+  AuthenticatedInvoiceIdEditRoute: AuthenticatedInvoiceIdEditRoute,
+  AuthenticatedInvoiceIdIndexRoute: AuthenticatedInvoiceIdIndexRoute,
+}
+
+const AuthenticatedInvoiceRouteWithChildren =
+  AuthenticatedInvoiceRoute._addFileChildren(AuthenticatedInvoiceRouteChildren)
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
   AuthenticatedAiAssistantRoute: typeof AuthenticatedAiAssistantRoute
   AuthenticatedBusinessNameGeneratorRoute: typeof AuthenticatedBusinessNameGeneratorRoute
   AuthenticatedCalculatorsRoute: typeof AuthenticatedCalculatorsRoute
+  AuthenticatedCompanyRoute: typeof AuthenticatedCompanyRoute
   AuthenticatedCoverLetterRoute: typeof AuthenticatedCoverLetterRoute
+  AuthenticatedCustomersRoute: typeof AuthenticatedCustomersRoute
   AuthenticatedCvBuilderRoute: typeof AuthenticatedCvBuilderRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
-  AuthenticatedInvoiceRoute: typeof AuthenticatedInvoiceRoute
+  AuthenticatedInvoiceRoute: typeof AuthenticatedInvoiceRouteWithChildren
   AuthenticatedPayslipRoute: typeof AuthenticatedPayslipRoute
   AuthenticatedQuotationRoute: typeof AuthenticatedQuotationRoute
   AuthenticatedReceiptRoute: typeof AuthenticatedReceiptRoute
@@ -404,10 +538,12 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedBusinessNameGeneratorRoute:
     AuthenticatedBusinessNameGeneratorRoute,
   AuthenticatedCalculatorsRoute: AuthenticatedCalculatorsRoute,
+  AuthenticatedCompanyRoute: AuthenticatedCompanyRoute,
   AuthenticatedCoverLetterRoute: AuthenticatedCoverLetterRoute,
+  AuthenticatedCustomersRoute: AuthenticatedCustomersRoute,
   AuthenticatedCvBuilderRoute: AuthenticatedCvBuilderRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
-  AuthenticatedInvoiceRoute: AuthenticatedInvoiceRoute,
+  AuthenticatedInvoiceRoute: AuthenticatedInvoiceRouteWithChildren,
   AuthenticatedPayslipRoute: AuthenticatedPayslipRoute,
   AuthenticatedQuotationRoute: AuthenticatedQuotationRoute,
   AuthenticatedReceiptRoute: AuthenticatedReceiptRoute,
