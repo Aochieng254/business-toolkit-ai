@@ -13,6 +13,8 @@ import {
   CreditCard,
   ShieldCheck,
   Settings,
+  Users,
+  Building2,
 } from "lucide-react";
 import {
   Sidebar,
@@ -40,6 +42,11 @@ const generators = [
   { title: "CV Builder", url: "/cv-builder", icon: UserSquare2 },
   { title: "Cover Letter", url: "/cover-letter", icon: Mail },
   { title: "Business Name", url: "/business-name-generator", icon: Sparkles },
+];
+
+const business = [
+  { title: "Customers", url: "/customers", icon: Users },
+  { title: "Company profile", url: "/company", icon: Building2 },
 ];
 
 const tools = [
@@ -84,6 +91,7 @@ export function AppSidebar() {
       <SidebarContent>
         {renderGroup("Workspace", workspace)}
         {renderGroup("Generators", generators)}
+        {renderGroup("Business", business)}
         {renderGroup("Tools", tools)}
         {renderGroup("Account", account)}
       </SidebarContent>
