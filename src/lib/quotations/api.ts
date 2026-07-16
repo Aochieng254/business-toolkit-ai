@@ -202,8 +202,14 @@ export async function convertQuotationToInvoice(
     throw new Error("Quotation already converted");
   }
 
+  const { data: numData, error: numErr } = await supabase.rpc("next_invoice_number", {
+    _user_id: userId,
+  });
+  if (numErr) throw numErr;
+  const invoiceNumber = (numData as string) ?? "INV-000001";
+
   const invoice = await saveInvoice(userId, {
-    invoice_number: "", // placeholder — replaced below via next_invoice_number
+    invoice_number: invoiceNumber,
     invoice_date: new Date().toISOString().slice(0, 10),
     due_date: null,
     customer_id: src.customer_id,
@@ -221,12 +227,6 @@ export async function convertQuotationToInvoice(
       discount_is_percent: it.discount_is_percent,
       vat_percent: Number(it.vat_percent),
     })),
-    // saveInvoice requires invoice_number — get one now
-    ...(await (async () => {
-      const { data, error } = await supabase.rpc("next_invoice_number", { _user_id: userId });
-      if (error) throw error;
-      return { invoice_number: (data as string) ?? "INV-000001" };
-    })()),
   });
 
   // Link both directions
