@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import {
   FileText,
   FileSpreadsheet,
@@ -12,6 +13,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth";
+import { listQuotations } from "@/lib/quotations/api";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   component: Dashboard,
