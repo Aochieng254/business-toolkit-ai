@@ -35,6 +35,17 @@ function Dashboard() {
   const { user } = useAuth();
   const name = user?.user_metadata?.full_name ?? user?.email?.split("@")[0] ?? "there";
 
+  const { data: quotations = [] } = useQuery({
+    queryKey: ["quotations", { search: "", status: "all", from: "", to: "" }],
+    queryFn: () => listQuotations(),
+  });
+
+  const qTotal = quotations.length;
+  const qAccepted = quotations.filter((q) => q.status === "accepted").length;
+  const qPending = quotations.filter((q) => q.status === "draft" || q.status === "sent").length;
+  const qConverted = quotations.filter((q) => q.converted_invoice_id).length;
+  const qRate = qTotal > 0 ? Math.round((qConverted / qTotal) * 100) : 0;
+
   return (
     <div className="mx-auto max-w-6xl">
       <div className="rounded-2xl border border-border bg-gradient-primary p-8 text-primary-foreground shadow-elegant">
@@ -43,6 +54,15 @@ function Dashboard() {
         <p className="mt-2 max-w-xl text-sm opacity-90">
           Your workspace is ready. Modules will light up as we ship each phase.
         </p>
+      </div>
+
+      <h2 className="mt-10 text-lg font-semibold">Quotations</h2>
+      <p className="text-sm text-muted-foreground">Snapshot of your quote pipeline.</p>
+      <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <MiniStat label="Total quotations" value={String(qTotal)} />
+        <MiniStat label="Accepted" value={String(qAccepted)} tone="emerald" />
+        <MiniStat label="Pending" value={String(qPending)} tone="amber" />
+        <MiniStat label="Conversion rate" value={`${qRate}%`} />
       </div>
 
       <h2 className="mt-10 text-lg font-semibold">Quick actions</h2>
