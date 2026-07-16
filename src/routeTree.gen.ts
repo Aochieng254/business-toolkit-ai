@@ -29,6 +29,7 @@ import { Route as AuthenticatedCalculatorsRouteImport } from './routes/_authenti
 import { Route as AuthenticatedBusinessNameGeneratorRouteImport } from './routes/_authenticated/business-name-generator'
 import { Route as AuthenticatedAiAssistantRouteImport } from './routes/_authenticated/ai-assistant'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as AuthenticatedQuotationIndexRouteImport } from './routes/_authenticated/quotation.index'
 import { Route as AuthenticatedInvoiceIndexRouteImport } from './routes/_authenticated/invoice.index'
 import { Route as AuthenticatedInvoiceNewRouteImport } from './routes/_authenticated/invoice.new'
 import { Route as AuthenticatedInvoiceIdIndexRouteImport } from './routes/_authenticated/invoice.$id.index'
@@ -138,6 +139,12 @@ const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedQuotationIndexRoute =
+  AuthenticatedQuotationIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedQuotationRoute,
+  } as any)
 const AuthenticatedInvoiceIndexRoute =
   AuthenticatedInvoiceIndexRouteImport.update({
     id: '/',
@@ -178,12 +185,13 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/invoice': typeof AuthenticatedInvoiceRouteWithChildren
   '/payslip': typeof AuthenticatedPayslipRoute
-  '/quotation': typeof AuthenticatedQuotationRoute
+  '/quotation': typeof AuthenticatedQuotationRouteWithChildren
   '/receipt': typeof AuthenticatedReceiptRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/subscription': typeof AuthenticatedSubscriptionRoute
   '/invoice/new': typeof AuthenticatedInvoiceNewRoute
   '/invoice/': typeof AuthenticatedInvoiceIndexRoute
+  '/quotation/': typeof AuthenticatedQuotationIndexRoute
   '/invoice/$id/edit': typeof AuthenticatedInvoiceIdEditRoute
   '/invoice/$id/': typeof AuthenticatedInvoiceIdIndexRoute
 }
@@ -202,12 +210,12 @@ export interface FileRoutesByTo {
   '/cv-builder': typeof AuthenticatedCvBuilderRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/payslip': typeof AuthenticatedPayslipRoute
-  '/quotation': typeof AuthenticatedQuotationRoute
   '/receipt': typeof AuthenticatedReceiptRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/subscription': typeof AuthenticatedSubscriptionRoute
   '/invoice/new': typeof AuthenticatedInvoiceNewRoute
   '/invoice': typeof AuthenticatedInvoiceIndexRoute
+  '/quotation': typeof AuthenticatedQuotationIndexRoute
   '/invoice/$id/edit': typeof AuthenticatedInvoiceIdEditRoute
   '/invoice/$id': typeof AuthenticatedInvoiceIdIndexRoute
 }
@@ -229,12 +237,13 @@ export interface FileRoutesById {
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/invoice': typeof AuthenticatedInvoiceRouteWithChildren
   '/_authenticated/payslip': typeof AuthenticatedPayslipRoute
-  '/_authenticated/quotation': typeof AuthenticatedQuotationRoute
+  '/_authenticated/quotation': typeof AuthenticatedQuotationRouteWithChildren
   '/_authenticated/receipt': typeof AuthenticatedReceiptRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/_authenticated/subscription': typeof AuthenticatedSubscriptionRoute
   '/_authenticated/invoice/new': typeof AuthenticatedInvoiceNewRoute
   '/_authenticated/invoice/': typeof AuthenticatedInvoiceIndexRoute
+  '/_authenticated/quotation/': typeof AuthenticatedQuotationIndexRoute
   '/_authenticated/invoice/$id/edit': typeof AuthenticatedInvoiceIdEditRoute
   '/_authenticated/invoice/$id/': typeof AuthenticatedInvoiceIdIndexRoute
 }
@@ -262,6 +271,7 @@ export interface FileRouteTypes {
     | '/subscription'
     | '/invoice/new'
     | '/invoice/'
+    | '/quotation/'
     | '/invoice/$id/edit'
     | '/invoice/$id/'
   fileRoutesByTo: FileRoutesByTo
@@ -280,12 +290,12 @@ export interface FileRouteTypes {
     | '/cv-builder'
     | '/dashboard'
     | '/payslip'
-    | '/quotation'
     | '/receipt'
     | '/settings'
     | '/subscription'
     | '/invoice/new'
     | '/invoice'
+    | '/quotation'
     | '/invoice/$id/edit'
     | '/invoice/$id'
   id:
@@ -312,6 +322,7 @@ export interface FileRouteTypes {
     | '/_authenticated/subscription'
     | '/_authenticated/invoice/new'
     | '/_authenticated/invoice/'
+    | '/_authenticated/quotation/'
     | '/_authenticated/invoice/$id/edit'
     | '/_authenticated/invoice/$id/'
   fileRoutesById: FileRoutesById
@@ -466,6 +477,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/quotation/': {
+      id: '/_authenticated/quotation/'
+      path: '/'
+      fullPath: '/quotation/'
+      preLoaderRoute: typeof AuthenticatedQuotationIndexRouteImport
+      parentRoute: typeof AuthenticatedQuotationRoute
+    }
     '/_authenticated/invoice/': {
       id: '/_authenticated/invoice/'
       path: '/'
@@ -514,6 +532,20 @@ const AuthenticatedInvoiceRouteChildren: AuthenticatedInvoiceRouteChildren = {
 const AuthenticatedInvoiceRouteWithChildren =
   AuthenticatedInvoiceRoute._addFileChildren(AuthenticatedInvoiceRouteChildren)
 
+interface AuthenticatedQuotationRouteChildren {
+  AuthenticatedQuotationIndexRoute: typeof AuthenticatedQuotationIndexRoute
+}
+
+const AuthenticatedQuotationRouteChildren: AuthenticatedQuotationRouteChildren =
+  {
+    AuthenticatedQuotationIndexRoute: AuthenticatedQuotationIndexRoute,
+  }
+
+const AuthenticatedQuotationRouteWithChildren =
+  AuthenticatedQuotationRoute._addFileChildren(
+    AuthenticatedQuotationRouteChildren,
+  )
+
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
   AuthenticatedAiAssistantRoute: typeof AuthenticatedAiAssistantRoute
@@ -526,7 +558,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedInvoiceRoute: typeof AuthenticatedInvoiceRouteWithChildren
   AuthenticatedPayslipRoute: typeof AuthenticatedPayslipRoute
-  AuthenticatedQuotationRoute: typeof AuthenticatedQuotationRoute
+  AuthenticatedQuotationRoute: typeof AuthenticatedQuotationRouteWithChildren
   AuthenticatedReceiptRoute: typeof AuthenticatedReceiptRoute
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
   AuthenticatedSubscriptionRoute: typeof AuthenticatedSubscriptionRoute
@@ -545,7 +577,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedInvoiceRoute: AuthenticatedInvoiceRouteWithChildren,
   AuthenticatedPayslipRoute: AuthenticatedPayslipRoute,
-  AuthenticatedQuotationRoute: AuthenticatedQuotationRoute,
+  AuthenticatedQuotationRoute: AuthenticatedQuotationRouteWithChildren,
   AuthenticatedReceiptRoute: AuthenticatedReceiptRoute,
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
   AuthenticatedSubscriptionRoute: AuthenticatedSubscriptionRoute,
