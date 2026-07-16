@@ -34,6 +34,7 @@ import { Route as AuthenticatedInvoiceIndexRouteImport } from './routes/_authent
 import { Route as AuthenticatedQuotationNewRouteImport } from './routes/_authenticated/quotation.new'
 import { Route as AuthenticatedInvoiceNewRouteImport } from './routes/_authenticated/invoice.new'
 import { Route as AuthenticatedInvoiceIdIndexRouteImport } from './routes/_authenticated/invoice.$id.index'
+import { Route as AuthenticatedQuotationIdEditRouteImport } from './routes/_authenticated/quotation.$id.edit'
 import { Route as AuthenticatedInvoiceIdEditRouteImport } from './routes/_authenticated/invoice.$id.edit'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
@@ -169,6 +170,12 @@ const AuthenticatedInvoiceIdIndexRoute =
     path: '/$id/',
     getParentRoute: () => AuthenticatedInvoiceRoute,
   } as any)
+const AuthenticatedQuotationIdEditRoute =
+  AuthenticatedQuotationIdEditRouteImport.update({
+    id: '/$id/edit',
+    path: '/$id/edit',
+    getParentRoute: () => AuthenticatedQuotationRoute,
+  } as any)
 const AuthenticatedInvoiceIdEditRoute =
   AuthenticatedInvoiceIdEditRouteImport.update({
     id: '/$id/edit',
@@ -201,6 +208,7 @@ export interface FileRoutesByFullPath {
   '/invoice/': typeof AuthenticatedInvoiceIndexRoute
   '/quotation/': typeof AuthenticatedQuotationIndexRoute
   '/invoice/$id/edit': typeof AuthenticatedInvoiceIdEditRoute
+  '/quotation/$id/edit': typeof AuthenticatedQuotationIdEditRoute
   '/invoice/$id/': typeof AuthenticatedInvoiceIdIndexRoute
 }
 export interface FileRoutesByTo {
@@ -226,6 +234,7 @@ export interface FileRoutesByTo {
   '/invoice': typeof AuthenticatedInvoiceIndexRoute
   '/quotation': typeof AuthenticatedQuotationIndexRoute
   '/invoice/$id/edit': typeof AuthenticatedInvoiceIdEditRoute
+  '/quotation/$id/edit': typeof AuthenticatedQuotationIdEditRoute
   '/invoice/$id': typeof AuthenticatedInvoiceIdIndexRoute
 }
 export interface FileRoutesById {
@@ -255,6 +264,7 @@ export interface FileRoutesById {
   '/_authenticated/invoice/': typeof AuthenticatedInvoiceIndexRoute
   '/_authenticated/quotation/': typeof AuthenticatedQuotationIndexRoute
   '/_authenticated/invoice/$id/edit': typeof AuthenticatedInvoiceIdEditRoute
+  '/_authenticated/quotation/$id/edit': typeof AuthenticatedQuotationIdEditRoute
   '/_authenticated/invoice/$id/': typeof AuthenticatedInvoiceIdIndexRoute
 }
 export interface FileRouteTypes {
@@ -284,6 +294,7 @@ export interface FileRouteTypes {
     | '/invoice/'
     | '/quotation/'
     | '/invoice/$id/edit'
+    | '/quotation/$id/edit'
     | '/invoice/$id/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -309,6 +320,7 @@ export interface FileRouteTypes {
     | '/invoice'
     | '/quotation'
     | '/invoice/$id/edit'
+    | '/quotation/$id/edit'
     | '/invoice/$id'
   id:
     | '__root__'
@@ -337,6 +349,7 @@ export interface FileRouteTypes {
     | '/_authenticated/invoice/'
     | '/_authenticated/quotation/'
     | '/_authenticated/invoice/$id/edit'
+    | '/_authenticated/quotation/$id/edit'
     | '/_authenticated/invoice/$id/'
   fileRoutesById: FileRoutesById
 }
@@ -525,6 +538,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedInvoiceIdIndexRouteImport
       parentRoute: typeof AuthenticatedInvoiceRoute
     }
+    '/_authenticated/quotation/$id/edit': {
+      id: '/_authenticated/quotation/$id/edit'
+      path: '/$id/edit'
+      fullPath: '/quotation/$id/edit'
+      preLoaderRoute: typeof AuthenticatedQuotationIdEditRouteImport
+      parentRoute: typeof AuthenticatedQuotationRoute
+    }
     '/_authenticated/invoice/$id/edit': {
       id: '/_authenticated/invoice/$id/edit'
       path: '/$id/edit'
@@ -555,12 +575,14 @@ const AuthenticatedInvoiceRouteWithChildren =
 interface AuthenticatedQuotationRouteChildren {
   AuthenticatedQuotationNewRoute: typeof AuthenticatedQuotationNewRoute
   AuthenticatedQuotationIndexRoute: typeof AuthenticatedQuotationIndexRoute
+  AuthenticatedQuotationIdEditRoute: typeof AuthenticatedQuotationIdEditRoute
 }
 
 const AuthenticatedQuotationRouteChildren: AuthenticatedQuotationRouteChildren =
   {
     AuthenticatedQuotationNewRoute: AuthenticatedQuotationNewRoute,
     AuthenticatedQuotationIndexRoute: AuthenticatedQuotationIndexRoute,
+    AuthenticatedQuotationIdEditRoute: AuthenticatedQuotationIdEditRoute,
   }
 
 const AuthenticatedQuotationRouteWithChildren =
