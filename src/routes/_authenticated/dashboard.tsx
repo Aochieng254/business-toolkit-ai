@@ -90,3 +90,26 @@ function Dashboard() {
     </div>
   );
 }
+
+function MiniStat({
+  label,
+  value,
+  tone,
+}: {
+  label: string;
+  value: string;
+  tone?: "emerald" | "amber";
+}) {
+  const toneClass =
+    tone === "emerald"
+      ? "text-emerald-600 dark:text-emerald-400"
+      : tone === "amber"
+        ? "text-amber-600 dark:text-amber-400"
+        : "";
+  return (
+    <div className="rounded-xl border border-border bg-card p-4">
+      <p className="text-xs uppercase tracking-wide text-muted-foreground">{label}</p>
+      <p className={`mt-1 text-2xl font-semibold ${toneClass}`}>{value}</p>
+    </div>
+  );
+}
