@@ -14,6 +14,8 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { listQuotations } from "@/lib/quotations/api";
+import { listReceipts } from "@/lib/receipts/api";
+import { formatMoney } from "@/lib/invoices/calc";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   component: Dashboard,
@@ -39,12 +41,23 @@ function Dashboard() {
     queryKey: ["quotations", { search: "", status: "all", from: "", to: "" }],
     queryFn: () => listQuotations(),
   });
+  const { data: receipts = [] } = useQuery({
+    queryKey: ["receipts", { search: "", status: "all", method: "all", from: "", to: "" }],
+    queryFn: () => listReceipts(),
+  });
 
   const qTotal = quotations.length;
   const qAccepted = quotations.filter((q) => q.status === "accepted").length;
   const qPending = quotations.filter((q) => q.status === "draft" || q.status === "sent").length;
   const qConverted = quotations.filter((q) => q.converted_invoice_id).length;
   const qRate = qTotal > 0 ? Math.round((qConverted / qTotal) * 100) : 0;
+
+  const rTotal = receipts.length;
+  const rIssued = receipts.filter((r) => r.status === "issued").length;
+  const rReceived = receipts
+    .filter((r) => r.status === "issued")
+    .reduce((a, r) => a + Number(r.amount_received), 0);
+  const rCurrency = receipts[0]?.currency ?? "USD";
 
   return (
     <div className="mx-auto max-w-6xl">
@@ -63,6 +76,14 @@ function Dashboard() {
         <MiniStat label="Accepted" value={String(qAccepted)} tone="emerald" />
         <MiniStat label="Pending" value={String(qPending)} tone="amber" />
         <MiniStat label="Conversion rate" value={`${qRate}%`} />
+      </div>
+
+      <h2 className="mt-10 text-lg font-semibold">Receipts</h2>
+      <p className="text-sm text-muted-foreground">Payments recorded to date.</p>
+      <div className="mt-4 grid gap-4 sm:grid-cols-3">
+        <MiniStat label="Total receipts" value={String(rTotal)} />
+        <MiniStat label="Issued" value={String(rIssued)} tone="emerald" />
+        <MiniStat label="Amount received" value={formatMoney(rReceived, rCurrency)} tone="emerald" />
       </div>
 
       <h2 className="mt-10 text-lg font-semibold">Quick actions</h2>
