@@ -407,6 +407,153 @@ export type Database = {
           },
         ]
       }
+      receipt_items: {
+        Row: {
+          created_at: string
+          description: string
+          discount_is_percent: boolean
+          discount_value: number
+          id: string
+          line_total: number
+          position: number
+          quantity: number
+          receipt_id: string
+          unit_price: number
+          updated_at: string
+          user_id: string
+          vat_percent: number
+        }
+        Insert: {
+          created_at?: string
+          description?: string
+          discount_is_percent?: boolean
+          discount_value?: number
+          id?: string
+          line_total?: number
+          position?: number
+          quantity?: number
+          receipt_id: string
+          unit_price?: number
+          updated_at?: string
+          user_id: string
+          vat_percent?: number
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          discount_is_percent?: boolean
+          discount_value?: number
+          id?: string
+          line_total?: number
+          position?: number
+          quantity?: number
+          receipt_id?: string
+          unit_price?: number
+          updated_at?: string
+          user_id?: string
+          vat_percent?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "receipt_items_receipt_id_fkey"
+            columns: ["receipt_id"]
+            isOneToOne: false
+            referencedRelation: "receipts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      receipts: {
+        Row: {
+          amount_received: number
+          company_id: string | null
+          created_at: string
+          currency: string
+          customer_id: string | null
+          discount_total: number
+          grand_total: number
+          id: string
+          notes: string | null
+          payment_method: Database["public"]["Enums"]["payment_method"]
+          payment_reference: string | null
+          receipt_date: string
+          receipt_number: string
+          source_invoice_id: string | null
+          status: Database["public"]["Enums"]["receipt_status"]
+          subtotal: number
+          terms: string | null
+          updated_at: string
+          user_id: string
+          vat_total: number
+        }
+        Insert: {
+          amount_received?: number
+          company_id?: string | null
+          created_at?: string
+          currency?: string
+          customer_id?: string | null
+          discount_total?: number
+          grand_total?: number
+          id?: string
+          notes?: string | null
+          payment_method?: Database["public"]["Enums"]["payment_method"]
+          payment_reference?: string | null
+          receipt_date?: string
+          receipt_number: string
+          source_invoice_id?: string | null
+          status?: Database["public"]["Enums"]["receipt_status"]
+          subtotal?: number
+          terms?: string | null
+          updated_at?: string
+          user_id: string
+          vat_total?: number
+        }
+        Update: {
+          amount_received?: number
+          company_id?: string | null
+          created_at?: string
+          currency?: string
+          customer_id?: string | null
+          discount_total?: number
+          grand_total?: number
+          id?: string
+          notes?: string | null
+          payment_method?: Database["public"]["Enums"]["payment_method"]
+          payment_reference?: string | null
+          receipt_date?: string
+          receipt_number?: string
+          source_invoice_id?: string | null
+          status?: Database["public"]["Enums"]["receipt_status"]
+          subtotal?: number
+          terms?: string | null
+          updated_at?: string
+          user_id?: string
+          vat_total?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "receipts_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "receipts_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "receipts_source_invoice_id_fkey"
+            columns: ["source_invoice_id"]
+            isOneToOne: false
+            referencedRelation: "invoices"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -442,11 +589,22 @@ export type Database = {
       }
       next_invoice_number: { Args: { _user_id: string }; Returns: string }
       next_quotation_number: { Args: { _user_id: string }; Returns: string }
+      next_receipt_number: { Args: { _user_id: string }; Returns: string }
     }
     Enums: {
       app_role: "admin" | "user"
       invoice_status: "draft" | "sent" | "paid" | "overdue" | "cancelled"
+      payment_method:
+        | "cash"
+        | "bank_transfer"
+        | "card"
+        | "mpesa"
+        | "cheque"
+        | "paypal"
+        | "stripe"
+        | "other"
       quotation_status: "draft" | "sent" | "accepted" | "rejected" | "expired"
+      receipt_status: "draft" | "issued" | "void"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -576,7 +734,18 @@ export const Constants = {
     Enums: {
       app_role: ["admin", "user"],
       invoice_status: ["draft", "sent", "paid", "overdue", "cancelled"],
+      payment_method: [
+        "cash",
+        "bank_transfer",
+        "card",
+        "mpesa",
+        "cheque",
+        "paypal",
+        "stripe",
+        "other",
+      ],
       quotation_status: ["draft", "sent", "accepted", "rejected", "expired"],
+      receipt_status: ["draft", "issued", "void"],
     },
   },
 } as const

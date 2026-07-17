@@ -1,13 +1,6 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { Receipt } from "lucide-react";
-import { ModulePlaceholder } from "@/components/module-placeholder";
+import { createFileRoute, Outlet } from "@tanstack/react-router";
 
+/** Layout for /receipt/* — child routes render inside <Outlet />. */
 export const Route = createFileRoute("/_authenticated/receipt")({
-  component: () => (
-    <ModulePlaceholder
-      icon={Receipt}
-      title="Receipt Generator"
-      description="Instantly generate receipts for any transaction."
-    />
-  ),
+  component: () => <Outlet />,
 });

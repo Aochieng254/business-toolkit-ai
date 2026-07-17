@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate, useParams } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ArrowLeft, Copy, Download, Pencil, Trash2 } from "lucide-react";
+import { ArrowLeft, Copy, Download, Pencil, Receipt as ReceiptIcon, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -133,6 +133,14 @@ function ViewInvoicePage() {
           </Select>
           <Button variant="outline" onClick={downloadPdf}>
             <Download className="mr-2 h-4 w-4" /> PDF
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() =>
+              navigate({ to: "/receipt/new", search: { from_invoice: id } })
+            }
+          >
+            <ReceiptIcon className="mr-2 h-4 w-4" /> Record payment
           </Button>
           <Button variant="outline" onClick={() => dupMut.mutate()}>
             <Copy className="mr-2 h-4 w-4" /> Duplicate
