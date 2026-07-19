@@ -68,8 +68,8 @@ export const Route = createFileRoute("/api/ai/chat")({
           MODULE_PROMPTS.assistant +
           (body.pageContext ? `\nThe user is currently on: ${body.pageContext}.` : "");
         const system = buildSystemPrompt(base, {
-          tone: prefs?.tone,
-          length: prefs?.response_length,
+          tone: prefs?.tone as any,
+          length: prefs?.response_length as any,
           language: prefs?.language,
         });
 
