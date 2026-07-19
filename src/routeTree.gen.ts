@@ -32,6 +32,7 @@ import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedReceiptIndexRouteImport } from './routes/_authenticated/receipt.index'
 import { Route as AuthenticatedQuotationIndexRouteImport } from './routes/_authenticated/quotation.index'
 import { Route as AuthenticatedInvoiceIndexRouteImport } from './routes/_authenticated/invoice.index'
+import { Route as ApiAiChatRouteImport } from './routes/api/ai/chat'
 import { Route as AuthenticatedReceiptNewRouteImport } from './routes/_authenticated/receipt.new'
 import { Route as AuthenticatedQuotationNewRouteImport } from './routes/_authenticated/quotation.new'
 import { Route as AuthenticatedInvoiceNewRouteImport } from './routes/_authenticated/invoice.new'
@@ -164,6 +165,11 @@ const AuthenticatedInvoiceIndexRoute =
     path: '/',
     getParentRoute: () => AuthenticatedInvoiceRoute,
   } as any)
+const ApiAiChatRoute = ApiAiChatRouteImport.update({
+  id: '/api/ai/chat',
+  path: '/api/ai/chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedReceiptNewRoute = AuthenticatedReceiptNewRouteImport.update({
   id: '/new',
   path: '/new',
@@ -240,6 +246,7 @@ export interface FileRoutesByFullPath {
   '/invoice/new': typeof AuthenticatedInvoiceNewRoute
   '/quotation/new': typeof AuthenticatedQuotationNewRoute
   '/receipt/new': typeof AuthenticatedReceiptNewRoute
+  '/api/ai/chat': typeof ApiAiChatRoute
   '/invoice/': typeof AuthenticatedInvoiceIndexRoute
   '/quotation/': typeof AuthenticatedQuotationIndexRoute
   '/receipt/': typeof AuthenticatedReceiptIndexRoute
@@ -270,6 +277,7 @@ export interface FileRoutesByTo {
   '/invoice/new': typeof AuthenticatedInvoiceNewRoute
   '/quotation/new': typeof AuthenticatedQuotationNewRoute
   '/receipt/new': typeof AuthenticatedReceiptNewRoute
+  '/api/ai/chat': typeof ApiAiChatRoute
   '/invoice': typeof AuthenticatedInvoiceIndexRoute
   '/quotation': typeof AuthenticatedQuotationIndexRoute
   '/receipt': typeof AuthenticatedReceiptIndexRoute
@@ -305,6 +313,7 @@ export interface FileRoutesById {
   '/_authenticated/invoice/new': typeof AuthenticatedInvoiceNewRoute
   '/_authenticated/quotation/new': typeof AuthenticatedQuotationNewRoute
   '/_authenticated/receipt/new': typeof AuthenticatedReceiptNewRoute
+  '/api/ai/chat': typeof ApiAiChatRoute
   '/_authenticated/invoice/': typeof AuthenticatedInvoiceIndexRoute
   '/_authenticated/quotation/': typeof AuthenticatedQuotationIndexRoute
   '/_authenticated/receipt/': typeof AuthenticatedReceiptIndexRoute
@@ -340,6 +349,7 @@ export interface FileRouteTypes {
     | '/invoice/new'
     | '/quotation/new'
     | '/receipt/new'
+    | '/api/ai/chat'
     | '/invoice/'
     | '/quotation/'
     | '/receipt/'
@@ -370,6 +380,7 @@ export interface FileRouteTypes {
     | '/invoice/new'
     | '/quotation/new'
     | '/receipt/new'
+    | '/api/ai/chat'
     | '/invoice'
     | '/quotation'
     | '/receipt'
@@ -404,6 +415,7 @@ export interface FileRouteTypes {
     | '/_authenticated/invoice/new'
     | '/_authenticated/quotation/new'
     | '/_authenticated/receipt/new'
+    | '/api/ai/chat'
     | '/_authenticated/invoice/'
     | '/_authenticated/quotation/'
     | '/_authenticated/receipt/'
@@ -421,6 +433,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  ApiAiChatRoute: typeof ApiAiChatRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -585,6 +598,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/invoice/'
       preLoaderRoute: typeof AuthenticatedInvoiceIndexRouteImport
       parentRoute: typeof AuthenticatedInvoiceRoute
+    }
+    '/api/ai/chat': {
+      id: '/api/ai/chat'
+      path: '/api/ai/chat'
+      fullPath: '/api/ai/chat'
+      preLoaderRoute: typeof ApiAiChatRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_authenticated/receipt/new': {
       id: '/_authenticated/receipt/new'
@@ -752,17 +772,8 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  ApiAiChatRoute: ApiAiChatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

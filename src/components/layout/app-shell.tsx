@@ -5,6 +5,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/layout/app-sidebar";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
+import { FloatingAssistant } from "@/components/ai/floating-assistant";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -61,6 +62,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           </header>
           <main className="flex-1 p-4 md:p-8">{children}</main>
         </div>
+        <FloatingAssistant />
       </div>
     </SidebarProvider>
   );
