@@ -87,8 +87,8 @@ export const runAiAction = createServerFn({ method: "POST" })
     const action = data.action as AiAction;
     const base = ACTION_PROMPTS[action] ?? ACTION_PROMPTS.improve;
     const system = buildSystemPrompt(base, {
-      tone: prefs?.tone,
-      length: prefs?.response_length,
+      tone: prefs?.tone as any,
+      length: prefs?.response_length as any,
       language: prefs?.language,
     });
 
