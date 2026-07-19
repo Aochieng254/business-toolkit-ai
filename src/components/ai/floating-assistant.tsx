@@ -51,7 +51,7 @@ export function FloatingAssistant() {
 
   const { messages, sendMessage, status, error } = useChat({
     transport,
-    onError: (e) => toast.error(e.message || "AI error"),
+    onError: (e: Error) => toast.error(e.message || "AI error"),
   });
 
   useEffect(() => {
