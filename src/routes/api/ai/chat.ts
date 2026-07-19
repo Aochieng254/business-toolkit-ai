@@ -80,7 +80,7 @@ export const Route = createFileRoute("/api/ai/chat")({
           const result = streamText({
             model: gateway(model),
             system,
-            messages: convertToModelMessages(body.messages),
+            messages: await convertToModelMessages(body.messages),
             temperature: Math.max(0, Math.min(1, prefs?.creativity ?? 0.7)),
             onFinish: async ({ usage, text }) => {
               await supabase.from("ai_usage_log").insert({

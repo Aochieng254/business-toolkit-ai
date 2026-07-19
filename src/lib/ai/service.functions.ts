@@ -150,8 +150,8 @@ export const generateFromTemplate = createServerFn({ method: "POST" })
     const key = data.promptKey as ModulePromptKey;
     const base = MODULE_PROMPTS[key] ?? MODULE_PROMPTS.assistant;
     const system = buildSystemPrompt(base, {
-      tone: prefs?.tone,
-      length: prefs?.response_length,
+      tone: prefs?.tone as any,
+      length: prefs?.response_length as any,
       language: prefs?.language,
     });
 
