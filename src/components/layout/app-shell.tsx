@@ -62,6 +62,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           </header>
           <main className="flex-1 p-4 md:p-8">{children}</main>
         </div>
+        <FloatingAssistant />
       </div>
     </SidebarProvider>
   );
