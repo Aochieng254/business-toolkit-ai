@@ -64,14 +64,30 @@ export const Route = createFileRoute("/api/ai/chat")({
           .maybeSingle();
         const model = prefs?.preferred_model ?? DEFAULT_MODEL;
 
+        // Give the assistant lightweight awareness of the user's recent files
+        const { data: recentFiles } = await supabase
+          .from("files")
+          .select("name, extension, size_bytes, updated_at")
+          .eq("user_id", user.id)
+          .eq("is_trashed", false)
+          .order("updated_at", { ascending: false })
+          .limit(15);
+        const filesContext = recentFiles && recentFiles.length
+          ? `\nThe user's recent files (name · type · updated):\n` +
+            recentFiles.map((f) => `- ${f.name} · ${(f.extension ?? "file").toUpperCase()} · ${new Date(f.updated_at as string).toLocaleDateString()}`).join("\n") +
+            `\nYou can reference these by name. Full document analysis is not enabled yet.`
+          : "";
+
         const base =
           MODULE_PROMPTS.assistant +
-          (body.pageContext ? `\nThe user is currently on: ${body.pageContext}.` : "");
+          (body.pageContext ? `\nThe user is currently on: ${body.pageContext}.` : "") +
+          filesContext;
         const system = buildSystemPrompt(base, {
           tone: prefs?.tone as any,
           length: prefs?.response_length as any,
           language: prefs?.language,
         });
+
 
         const gateway = createLovableAiGateway();
         const started = Date.now();
