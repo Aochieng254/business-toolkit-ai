@@ -14,12 +14,14 @@ import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ShareTokenRouteImport } from './routes/share.$token'
 import { Route as AuthenticatedSubscriptionRouteImport } from './routes/_authenticated/subscription'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
 import { Route as AuthenticatedReceiptRouteImport } from './routes/_authenticated/receipt'
 import { Route as AuthenticatedQuotationRouteImport } from './routes/_authenticated/quotation'
 import { Route as AuthenticatedPayslipRouteImport } from './routes/_authenticated/payslip'
 import { Route as AuthenticatedInvoiceRouteImport } from './routes/_authenticated/invoice'
+import { Route as AuthenticatedFilesRouteImport } from './routes/_authenticated/files'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedCvBuilderRouteImport } from './routes/_authenticated/cv-builder'
 import { Route as AuthenticatedCustomersRouteImport } from './routes/_authenticated/customers'
@@ -39,6 +41,7 @@ import { Route as AuthenticatedInvoiceNewRouteImport } from './routes/_authentic
 import { Route as AuthenticatedReceiptIdIndexRouteImport } from './routes/_authenticated/receipt.$id.index'
 import { Route as AuthenticatedQuotationIdIndexRouteImport } from './routes/_authenticated/quotation.$id.index'
 import { Route as AuthenticatedInvoiceIdIndexRouteImport } from './routes/_authenticated/invoice.$id.index'
+import { Route as ApiPublicShareTokenRouteImport } from './routes/api/public/share.$token'
 import { Route as AuthenticatedReceiptIdEditRouteImport } from './routes/_authenticated/receipt.$id.edit'
 import { Route as AuthenticatedQuotationIdEditRouteImport } from './routes/_authenticated/quotation.$id.edit'
 import { Route as AuthenticatedInvoiceIdEditRouteImport } from './routes/_authenticated/invoice.$id.edit'
@@ -65,6 +68,11 @@ const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ShareTokenRoute = ShareTokenRouteImport.update({
+  id: '/share/$token',
+  path: '/share/$token',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedSubscriptionRoute =
@@ -96,6 +104,11 @@ const AuthenticatedPayslipRoute = AuthenticatedPayslipRouteImport.update({
 const AuthenticatedInvoiceRoute = AuthenticatedInvoiceRouteImport.update({
   id: '/invoice',
   path: '/invoice',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedFilesRoute = AuthenticatedFilesRouteImport.update({
+  id: '/files',
+  path: '/files',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
@@ -204,6 +217,11 @@ const AuthenticatedInvoiceIdIndexRoute =
     path: '/$id/',
     getParentRoute: () => AuthenticatedInvoiceRoute,
   } as any)
+const ApiPublicShareTokenRoute = ApiPublicShareTokenRouteImport.update({
+  id: '/api/public/share/$token',
+  path: '/api/public/share/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedReceiptIdEditRoute =
   AuthenticatedReceiptIdEditRouteImport.update({
     id: '/$id/edit',
@@ -237,12 +255,14 @@ export interface FileRoutesByFullPath {
   '/customers': typeof AuthenticatedCustomersRoute
   '/cv-builder': typeof AuthenticatedCvBuilderRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/files': typeof AuthenticatedFilesRoute
   '/invoice': typeof AuthenticatedInvoiceRouteWithChildren
   '/payslip': typeof AuthenticatedPayslipRoute
   '/quotation': typeof AuthenticatedQuotationRouteWithChildren
   '/receipt': typeof AuthenticatedReceiptRouteWithChildren
   '/settings': typeof AuthenticatedSettingsRoute
   '/subscription': typeof AuthenticatedSubscriptionRoute
+  '/share/$token': typeof ShareTokenRoute
   '/invoice/new': typeof AuthenticatedInvoiceNewRoute
   '/quotation/new': typeof AuthenticatedQuotationNewRoute
   '/receipt/new': typeof AuthenticatedReceiptNewRoute
@@ -253,6 +273,7 @@ export interface FileRoutesByFullPath {
   '/invoice/$id/edit': typeof AuthenticatedInvoiceIdEditRoute
   '/quotation/$id/edit': typeof AuthenticatedQuotationIdEditRoute
   '/receipt/$id/edit': typeof AuthenticatedReceiptIdEditRoute
+  '/api/public/share/$token': typeof ApiPublicShareTokenRoute
   '/invoice/$id/': typeof AuthenticatedInvoiceIdIndexRoute
   '/quotation/$id/': typeof AuthenticatedQuotationIdIndexRoute
   '/receipt/$id/': typeof AuthenticatedReceiptIdIndexRoute
@@ -271,9 +292,11 @@ export interface FileRoutesByTo {
   '/customers': typeof AuthenticatedCustomersRoute
   '/cv-builder': typeof AuthenticatedCvBuilderRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/files': typeof AuthenticatedFilesRoute
   '/payslip': typeof AuthenticatedPayslipRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/subscription': typeof AuthenticatedSubscriptionRoute
+  '/share/$token': typeof ShareTokenRoute
   '/invoice/new': typeof AuthenticatedInvoiceNewRoute
   '/quotation/new': typeof AuthenticatedQuotationNewRoute
   '/receipt/new': typeof AuthenticatedReceiptNewRoute
@@ -284,6 +307,7 @@ export interface FileRoutesByTo {
   '/invoice/$id/edit': typeof AuthenticatedInvoiceIdEditRoute
   '/quotation/$id/edit': typeof AuthenticatedQuotationIdEditRoute
   '/receipt/$id/edit': typeof AuthenticatedReceiptIdEditRoute
+  '/api/public/share/$token': typeof ApiPublicShareTokenRoute
   '/invoice/$id': typeof AuthenticatedInvoiceIdIndexRoute
   '/quotation/$id': typeof AuthenticatedQuotationIdIndexRoute
   '/receipt/$id': typeof AuthenticatedReceiptIdIndexRoute
@@ -304,12 +328,14 @@ export interface FileRoutesById {
   '/_authenticated/customers': typeof AuthenticatedCustomersRoute
   '/_authenticated/cv-builder': typeof AuthenticatedCvBuilderRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/files': typeof AuthenticatedFilesRoute
   '/_authenticated/invoice': typeof AuthenticatedInvoiceRouteWithChildren
   '/_authenticated/payslip': typeof AuthenticatedPayslipRoute
   '/_authenticated/quotation': typeof AuthenticatedQuotationRouteWithChildren
   '/_authenticated/receipt': typeof AuthenticatedReceiptRouteWithChildren
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/_authenticated/subscription': typeof AuthenticatedSubscriptionRoute
+  '/share/$token': typeof ShareTokenRoute
   '/_authenticated/invoice/new': typeof AuthenticatedInvoiceNewRoute
   '/_authenticated/quotation/new': typeof AuthenticatedQuotationNewRoute
   '/_authenticated/receipt/new': typeof AuthenticatedReceiptNewRoute
@@ -320,6 +346,7 @@ export interface FileRoutesById {
   '/_authenticated/invoice/$id/edit': typeof AuthenticatedInvoiceIdEditRoute
   '/_authenticated/quotation/$id/edit': typeof AuthenticatedQuotationIdEditRoute
   '/_authenticated/receipt/$id/edit': typeof AuthenticatedReceiptIdEditRoute
+  '/api/public/share/$token': typeof ApiPublicShareTokenRoute
   '/_authenticated/invoice/$id/': typeof AuthenticatedInvoiceIdIndexRoute
   '/_authenticated/quotation/$id/': typeof AuthenticatedQuotationIdIndexRoute
   '/_authenticated/receipt/$id/': typeof AuthenticatedReceiptIdIndexRoute
@@ -340,12 +367,14 @@ export interface FileRouteTypes {
     | '/customers'
     | '/cv-builder'
     | '/dashboard'
+    | '/files'
     | '/invoice'
     | '/payslip'
     | '/quotation'
     | '/receipt'
     | '/settings'
     | '/subscription'
+    | '/share/$token'
     | '/invoice/new'
     | '/quotation/new'
     | '/receipt/new'
@@ -356,6 +385,7 @@ export interface FileRouteTypes {
     | '/invoice/$id/edit'
     | '/quotation/$id/edit'
     | '/receipt/$id/edit'
+    | '/api/public/share/$token'
     | '/invoice/$id/'
     | '/quotation/$id/'
     | '/receipt/$id/'
@@ -374,9 +404,11 @@ export interface FileRouteTypes {
     | '/customers'
     | '/cv-builder'
     | '/dashboard'
+    | '/files'
     | '/payslip'
     | '/settings'
     | '/subscription'
+    | '/share/$token'
     | '/invoice/new'
     | '/quotation/new'
     | '/receipt/new'
@@ -387,6 +419,7 @@ export interface FileRouteTypes {
     | '/invoice/$id/edit'
     | '/quotation/$id/edit'
     | '/receipt/$id/edit'
+    | '/api/public/share/$token'
     | '/invoice/$id'
     | '/quotation/$id'
     | '/receipt/$id'
@@ -406,12 +439,14 @@ export interface FileRouteTypes {
     | '/_authenticated/customers'
     | '/_authenticated/cv-builder'
     | '/_authenticated/dashboard'
+    | '/_authenticated/files'
     | '/_authenticated/invoice'
     | '/_authenticated/payslip'
     | '/_authenticated/quotation'
     | '/_authenticated/receipt'
     | '/_authenticated/settings'
     | '/_authenticated/subscription'
+    | '/share/$token'
     | '/_authenticated/invoice/new'
     | '/_authenticated/quotation/new'
     | '/_authenticated/receipt/new'
@@ -422,6 +457,7 @@ export interface FileRouteTypes {
     | '/_authenticated/invoice/$id/edit'
     | '/_authenticated/quotation/$id/edit'
     | '/_authenticated/receipt/$id/edit'
+    | '/api/public/share/$token'
     | '/_authenticated/invoice/$id/'
     | '/_authenticated/quotation/$id/'
     | '/_authenticated/receipt/$id/'
@@ -433,7 +469,9 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  ShareTokenRoute: typeof ShareTokenRoute
   ApiAiChatRoute: typeof ApiAiChatRoute
+  ApiPublicShareTokenRoute: typeof ApiPublicShareTokenRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -471,6 +509,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/share/$token': {
+      id: '/share/$token'
+      path: '/share/$token'
+      fullPath: '/share/$token'
+      preLoaderRoute: typeof ShareTokenRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/subscription': {
@@ -513,6 +558,13 @@ declare module '@tanstack/react-router' {
       path: '/invoice'
       fullPath: '/invoice'
       preLoaderRoute: typeof AuthenticatedInvoiceRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/files': {
+      id: '/_authenticated/files'
+      path: '/files'
+      fullPath: '/files'
+      preLoaderRoute: typeof AuthenticatedFilesRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/dashboard': {
@@ -648,6 +700,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedInvoiceIdIndexRouteImport
       parentRoute: typeof AuthenticatedInvoiceRoute
     }
+    '/api/public/share/$token': {
+      id: '/api/public/share/$token'
+      path: '/api/public/share/$token'
+      fullPath: '/api/public/share/$token'
+      preLoaderRoute: typeof ApiPublicShareTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/receipt/$id/edit': {
       id: '/_authenticated/receipt/$id/edit'
       path: '/$id/edit'
@@ -736,6 +795,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedCustomersRoute: typeof AuthenticatedCustomersRoute
   AuthenticatedCvBuilderRoute: typeof AuthenticatedCvBuilderRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedFilesRoute: typeof AuthenticatedFilesRoute
   AuthenticatedInvoiceRoute: typeof AuthenticatedInvoiceRouteWithChildren
   AuthenticatedPayslipRoute: typeof AuthenticatedPayslipRoute
   AuthenticatedQuotationRoute: typeof AuthenticatedQuotationRouteWithChildren
@@ -755,6 +815,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCustomersRoute: AuthenticatedCustomersRoute,
   AuthenticatedCvBuilderRoute: AuthenticatedCvBuilderRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedFilesRoute: AuthenticatedFilesRoute,
   AuthenticatedInvoiceRoute: AuthenticatedInvoiceRouteWithChildren,
   AuthenticatedPayslipRoute: AuthenticatedPayslipRoute,
   AuthenticatedQuotationRoute: AuthenticatedQuotationRouteWithChildren,
@@ -772,7 +833,9 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  ShareTokenRoute: ShareTokenRoute,
   ApiAiChatRoute: ApiAiChatRoute,
+  ApiPublicShareTokenRoute: ApiPublicShareTokenRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

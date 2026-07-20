@@ -11,11 +11,14 @@ import {
   Calculator,
   Bot,
   ArrowRight,
+  FolderOpen,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { listQuotations } from "@/lib/quotations/api";
 import { listReceipts } from "@/lib/receipts/api";
 import { formatMoney } from "@/lib/invoices/calc";
+import { FileService } from "@/lib/files/service";
+import { PreviewService } from "@/lib/files/preview";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   component: Dashboard,
@@ -45,6 +48,16 @@ function Dashboard() {
     queryKey: ["receipts", { search: "", status: "all", method: "all", from: "", to: "" }],
     queryFn: () => listReceipts(),
   });
+  const { data: recentFiles = [] } = useQuery({
+    queryKey: ["recent-files"],
+    queryFn: () => FileService.recent(6),
+  });
+  const { data: storageUsed = 0 } = useQuery({
+    queryKey: ["storage-usage"],
+    queryFn: () => FileService.storageUsage(),
+  });
+  const favCount = recentFiles.filter((f) => f.is_favorite).length;
+
 
   const qTotal = quotations.length;
   const qAccepted = quotations.filter((q) => q.status === "accepted").length;
@@ -85,6 +98,31 @@ function Dashboard() {
         <MiniStat label="Issued" value={String(rIssued)} tone="emerald" />
         <MiniStat label="Amount received" value={formatMoney(rReceived, rCurrency)} tone="emerald" />
       </div>
+
+      <h2 className="mt-10 text-lg font-semibold">Files</h2>
+      <p className="text-sm text-muted-foreground">Your shared document workspace.</p>
+      <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <MiniStat label="Storage used" value={PreviewService.humanSize(storageUsed)} />
+        <MiniStat label="Recent files" value={String(recentFiles.length)} />
+        <MiniStat label="Favorites" value={String(favCount)} tone="amber" />
+        <Link to="/files" className="rounded-xl border border-border bg-card p-4 hover:border-primary/50">
+          <div className="flex items-center gap-2 text-sm font-medium">
+            <FolderOpen className="h-4 w-4 text-primary" /> Open Files
+          </div>
+          <p className="mt-1 text-xs text-muted-foreground">Upload, organize, share</p>
+        </Link>
+      </div>
+      {recentFiles.length > 0 && (
+        <div className="mt-4 divide-y divide-border rounded-xl border border-border bg-card">
+          {recentFiles.map((f) => (
+            <Link key={f.id} to="/files" className="flex items-center justify-between px-4 py-2 text-sm hover:bg-muted/40">
+              <span className="truncate">{f.name}</span>
+              <span className="text-xs text-muted-foreground">{PreviewService.humanSize(f.size_bytes)}</span>
+            </Link>
+          ))}
+        </div>
+      )}
+
 
       <h2 className="mt-10 text-lg font-semibold">Quick actions</h2>
       <p className="text-sm text-muted-foreground">Jump into any module.</p>
