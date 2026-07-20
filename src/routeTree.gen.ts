@@ -41,6 +41,7 @@ import { Route as AuthenticatedInvoiceNewRouteImport } from './routes/_authentic
 import { Route as AuthenticatedReceiptIdIndexRouteImport } from './routes/_authenticated/receipt.$id.index'
 import { Route as AuthenticatedQuotationIdIndexRouteImport } from './routes/_authenticated/quotation.$id.index'
 import { Route as AuthenticatedInvoiceIdIndexRouteImport } from './routes/_authenticated/invoice.$id.index'
+import { Route as ApiPublicShareTokenRouteImport } from './routes/api/public/share.$token'
 import { Route as AuthenticatedReceiptIdEditRouteImport } from './routes/_authenticated/receipt.$id.edit'
 import { Route as AuthenticatedQuotationIdEditRouteImport } from './routes/_authenticated/quotation.$id.edit'
 import { Route as AuthenticatedInvoiceIdEditRouteImport } from './routes/_authenticated/invoice.$id.edit'
@@ -216,6 +217,11 @@ const AuthenticatedInvoiceIdIndexRoute =
     path: '/$id/',
     getParentRoute: () => AuthenticatedInvoiceRoute,
   } as any)
+const ApiPublicShareTokenRoute = ApiPublicShareTokenRouteImport.update({
+  id: '/api/public/share/$token',
+  path: '/api/public/share/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedReceiptIdEditRoute =
   AuthenticatedReceiptIdEditRouteImport.update({
     id: '/$id/edit',
@@ -267,6 +273,7 @@ export interface FileRoutesByFullPath {
   '/invoice/$id/edit': typeof AuthenticatedInvoiceIdEditRoute
   '/quotation/$id/edit': typeof AuthenticatedQuotationIdEditRoute
   '/receipt/$id/edit': typeof AuthenticatedReceiptIdEditRoute
+  '/api/public/share/$token': typeof ApiPublicShareTokenRoute
   '/invoice/$id/': typeof AuthenticatedInvoiceIdIndexRoute
   '/quotation/$id/': typeof AuthenticatedQuotationIdIndexRoute
   '/receipt/$id/': typeof AuthenticatedReceiptIdIndexRoute
@@ -300,6 +307,7 @@ export interface FileRoutesByTo {
   '/invoice/$id/edit': typeof AuthenticatedInvoiceIdEditRoute
   '/quotation/$id/edit': typeof AuthenticatedQuotationIdEditRoute
   '/receipt/$id/edit': typeof AuthenticatedReceiptIdEditRoute
+  '/api/public/share/$token': typeof ApiPublicShareTokenRoute
   '/invoice/$id': typeof AuthenticatedInvoiceIdIndexRoute
   '/quotation/$id': typeof AuthenticatedQuotationIdIndexRoute
   '/receipt/$id': typeof AuthenticatedReceiptIdIndexRoute
@@ -338,6 +346,7 @@ export interface FileRoutesById {
   '/_authenticated/invoice/$id/edit': typeof AuthenticatedInvoiceIdEditRoute
   '/_authenticated/quotation/$id/edit': typeof AuthenticatedQuotationIdEditRoute
   '/_authenticated/receipt/$id/edit': typeof AuthenticatedReceiptIdEditRoute
+  '/api/public/share/$token': typeof ApiPublicShareTokenRoute
   '/_authenticated/invoice/$id/': typeof AuthenticatedInvoiceIdIndexRoute
   '/_authenticated/quotation/$id/': typeof AuthenticatedQuotationIdIndexRoute
   '/_authenticated/receipt/$id/': typeof AuthenticatedReceiptIdIndexRoute
@@ -376,6 +385,7 @@ export interface FileRouteTypes {
     | '/invoice/$id/edit'
     | '/quotation/$id/edit'
     | '/receipt/$id/edit'
+    | '/api/public/share/$token'
     | '/invoice/$id/'
     | '/quotation/$id/'
     | '/receipt/$id/'
@@ -409,6 +419,7 @@ export interface FileRouteTypes {
     | '/invoice/$id/edit'
     | '/quotation/$id/edit'
     | '/receipt/$id/edit'
+    | '/api/public/share/$token'
     | '/invoice/$id'
     | '/quotation/$id'
     | '/receipt/$id'
@@ -446,6 +457,7 @@ export interface FileRouteTypes {
     | '/_authenticated/invoice/$id/edit'
     | '/_authenticated/quotation/$id/edit'
     | '/_authenticated/receipt/$id/edit'
+    | '/api/public/share/$token'
     | '/_authenticated/invoice/$id/'
     | '/_authenticated/quotation/$id/'
     | '/_authenticated/receipt/$id/'
@@ -459,6 +471,7 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   ShareTokenRoute: typeof ShareTokenRoute
   ApiAiChatRoute: typeof ApiAiChatRoute
+  ApiPublicShareTokenRoute: typeof ApiPublicShareTokenRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -687,6 +700,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedInvoiceIdIndexRouteImport
       parentRoute: typeof AuthenticatedInvoiceRoute
     }
+    '/api/public/share/$token': {
+      id: '/api/public/share/$token'
+      path: '/api/public/share/$token'
+      fullPath: '/api/public/share/$token'
+      preLoaderRoute: typeof ApiPublicShareTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/receipt/$id/edit': {
       id: '/_authenticated/receipt/$id/edit'
       path: '/$id/edit'
@@ -815,6 +835,7 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   ShareTokenRoute: ShareTokenRoute,
   ApiAiChatRoute: ApiAiChatRoute,
+  ApiPublicShareTokenRoute: ApiPublicShareTokenRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
