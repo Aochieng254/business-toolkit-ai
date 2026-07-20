@@ -48,6 +48,16 @@ function Dashboard() {
     queryKey: ["receipts", { search: "", status: "all", method: "all", from: "", to: "" }],
     queryFn: () => listReceipts(),
   });
+  const { data: recentFiles = [] } = useQuery({
+    queryKey: ["recent-files"],
+    queryFn: () => FileService.recent(6),
+  });
+  const { data: storageUsed = 0 } = useQuery({
+    queryKey: ["storage-usage"],
+    queryFn: () => FileService.storageUsage(),
+  });
+  const favCount = recentFiles.filter((f) => f.is_favorite).length;
+
 
   const qTotal = quotations.length;
   const qAccepted = quotations.filter((q) => q.status === "accepted").length;
