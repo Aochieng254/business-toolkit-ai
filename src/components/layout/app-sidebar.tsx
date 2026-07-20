@@ -15,6 +15,7 @@ import {
   Settings,
   Users,
   Building2,
+  FolderOpen,
 } from "lucide-react";
 import {
   Sidebar,
@@ -31,8 +32,10 @@ import { Brand } from "@/components/brand";
 
 const workspace = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
+  { title: "Files", url: "/files", icon: FolderOpen },
   { title: "AI Assistant", url: "/ai-assistant", icon: Bot },
 ];
+
 
 const generators = [
   { title: "Invoice", url: "/invoice", icon: FileText },
