@@ -11,11 +11,14 @@ import {
   Calculator,
   Bot,
   ArrowRight,
+  FolderOpen,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { listQuotations } from "@/lib/quotations/api";
 import { listReceipts } from "@/lib/receipts/api";
 import { formatMoney } from "@/lib/invoices/calc";
+import { FileService } from "@/lib/files/service";
+import { PreviewService } from "@/lib/files/preview";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   component: Dashboard,
