@@ -238,6 +238,272 @@ export type Database = {
         }
         Relationships: []
       }
+      favorites: {
+        Row: {
+          created_at: string
+          file_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          file_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          file_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "favorites_file_id_fkey"
+            columns: ["file_id"]
+            isOneToOne: false
+            referencedRelation: "files"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      file_activity: {
+        Row: {
+          action: string
+          created_at: string
+          file_id: string | null
+          folder_id: string | null
+          id: string
+          metadata: Json
+          user_id: string
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          file_id?: string | null
+          folder_id?: string | null
+          id?: string
+          metadata?: Json
+          user_id: string
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          file_id?: string | null
+          folder_id?: string | null
+          id?: string
+          metadata?: Json
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "file_activity_file_id_fkey"
+            columns: ["file_id"]
+            isOneToOne: false
+            referencedRelation: "files"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "file_activity_folder_id_fkey"
+            columns: ["folder_id"]
+            isOneToOne: false
+            referencedRelation: "folders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      file_tags: {
+        Row: {
+          created_at: string
+          file_id: string
+          tag_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          file_id: string
+          tag_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          file_id?: string
+          tag_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "file_tags_file_id_fkey"
+            columns: ["file_id"]
+            isOneToOne: false
+            referencedRelation: "files"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "file_tags_tag_id_fkey"
+            columns: ["tag_id"]
+            isOneToOne: false
+            referencedRelation: "tags"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      file_versions: {
+        Row: {
+          created_at: string
+          file_id: string
+          id: string
+          note: string | null
+          size_bytes: number
+          storage_path: string
+          user_id: string
+          version: number
+        }
+        Insert: {
+          created_at?: string
+          file_id: string
+          id?: string
+          note?: string | null
+          size_bytes?: number
+          storage_path: string
+          user_id: string
+          version: number
+        }
+        Update: {
+          created_at?: string
+          file_id?: string
+          id?: string
+          note?: string | null
+          size_bytes?: number
+          storage_path?: string
+          user_id?: string
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "file_versions_file_id_fkey"
+            columns: ["file_id"]
+            isOneToOne: false
+            referencedRelation: "files"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      files: {
+        Row: {
+          created_at: string
+          extension: string | null
+          folder_id: string | null
+          id: string
+          is_archived: boolean
+          is_favorite: boolean
+          is_trashed: boolean
+          metadata: Json
+          mime_type: string | null
+          name: string
+          size_bytes: number
+          source_id: string | null
+          source_module: string | null
+          storage_path: string
+          trashed_at: string | null
+          updated_at: string
+          user_id: string
+          version: number
+        }
+        Insert: {
+          created_at?: string
+          extension?: string | null
+          folder_id?: string | null
+          id?: string
+          is_archived?: boolean
+          is_favorite?: boolean
+          is_trashed?: boolean
+          metadata?: Json
+          mime_type?: string | null
+          name: string
+          size_bytes?: number
+          source_id?: string | null
+          source_module?: string | null
+          storage_path: string
+          trashed_at?: string | null
+          updated_at?: string
+          user_id: string
+          version?: number
+        }
+        Update: {
+          created_at?: string
+          extension?: string | null
+          folder_id?: string | null
+          id?: string
+          is_archived?: boolean
+          is_favorite?: boolean
+          is_trashed?: boolean
+          metadata?: Json
+          mime_type?: string | null
+          name?: string
+          size_bytes?: number
+          source_id?: string | null
+          source_module?: string | null
+          storage_path?: string
+          trashed_at?: string | null
+          updated_at?: string
+          user_id?: string
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "files_folder_id_fkey"
+            columns: ["folder_id"]
+            isOneToOne: false
+            referencedRelation: "folders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      folders: {
+        Row: {
+          color: string | null
+          created_at: string
+          icon: string | null
+          id: string
+          is_trashed: boolean
+          name: string
+          parent_id: string | null
+          trashed_at: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          color?: string | null
+          created_at?: string
+          icon?: string | null
+          id?: string
+          is_trashed?: boolean
+          name: string
+          parent_id?: string | null
+          trashed_at?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          color?: string | null
+          created_at?: string
+          icon?: string | null
+          id?: string
+          is_trashed?: boolean
+          name?: string
+          parent_id?: string | null
+          trashed_at?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "folders_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "folders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       invoice_items: {
         Row: {
           created_at: string
@@ -694,6 +960,106 @@ export type Database = {
           },
         ]
       }
+      recents: {
+        Row: {
+          file_id: string
+          id: string
+          opened_at: string
+          user_id: string
+        }
+        Insert: {
+          file_id: string
+          id?: string
+          opened_at?: string
+          user_id: string
+        }
+        Update: {
+          file_id?: string
+          id?: string
+          opened_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "recents_file_id_fkey"
+            columns: ["file_id"]
+            isOneToOne: false
+            referencedRelation: "files"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      shared_files: {
+        Row: {
+          allow_download: boolean
+          created_at: string
+          expires_at: string | null
+          file_id: string
+          id: string
+          password_hash: string | null
+          revoked_at: string | null
+          token: string
+          user_id: string
+          view_count: number
+        }
+        Insert: {
+          allow_download?: boolean
+          created_at?: string
+          expires_at?: string | null
+          file_id: string
+          id?: string
+          password_hash?: string | null
+          revoked_at?: string | null
+          token: string
+          user_id: string
+          view_count?: number
+        }
+        Update: {
+          allow_download?: boolean
+          created_at?: string
+          expires_at?: string | null
+          file_id?: string
+          id?: string
+          password_hash?: string | null
+          revoked_at?: string | null
+          token?: string
+          user_id?: string
+          view_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shared_files_file_id_fkey"
+            columns: ["file_id"]
+            isOneToOne: false
+            referencedRelation: "files"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tags: {
+        Row: {
+          color: string | null
+          created_at: string
+          id: string
+          name: string
+          user_id: string
+        }
+        Insert: {
+          color?: string | null
+          created_at?: string
+          id?: string
+          name: string
+          user_id: string
+        }
+        Update: {
+          color?: string | null
+          created_at?: string
+          id?: string
+          name?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -721,6 +1087,21 @@ export type Database = {
     }
     Functions: {
       ai_daily_count: { Args: { _user_id: string }; Returns: number }
+      get_shared_file: {
+        Args: { _token: string }
+        Returns: {
+          allow_download: boolean
+          expires_at: string
+          file_id: string
+          has_password: boolean
+          mime_type: string
+          name: string
+          owner_id: string
+          revoked_at: string
+          size_bytes: number
+          storage_path: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -731,6 +1112,7 @@ export type Database = {
       next_invoice_number: { Args: { _user_id: string }; Returns: string }
       next_quotation_number: { Args: { _user_id: string }; Returns: string }
       next_receipt_number: { Args: { _user_id: string }; Returns: string }
+      storage_usage: { Args: { _user_id: string }; Returns: number }
     }
     Enums: {
       app_role: "admin" | "user"
