@@ -17,8 +17,9 @@ function extOf(name: string) {
 async function logActivity(fileId: string | null, folderId: string | null, action: string, metadata: Record<string, unknown> = {}) {
   const uid = await currentUserId();
   await supabase.from("file_activity").insert({
-    user_id: uid, file_id: fileId, folder_id: folderId, action, metadata,
+    user_id: uid, file_id: fileId, folder_id: folderId, action, metadata: metadata as never,
   });
+
 }
 
 /* ================= StorageService ================= */
@@ -114,13 +115,14 @@ export const FolderService = {
     const chain: Folder[] = [];
     let current: string | null = folderId;
     while (current) {
-      const { data } = await supabase.from("folders").select("*").eq("id", current).maybeSingle();
+      const { data }: { data: Folder | null } = await supabase.from("folders").select("*").eq("id", current).maybeSingle();
       if (!data) break;
-      chain.unshift(data as Folder);
-      current = (data as Folder).parent_id;
+      chain.unshift(data);
+      current = data.parent_id;
     }
     return chain;
   },
+
 };
 
 /* ================= FileService ================= */
