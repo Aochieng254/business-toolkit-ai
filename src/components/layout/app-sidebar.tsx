@@ -2,6 +2,7 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import {
   LayoutDashboard,
   FileText,
+  FileType2,
   FileSpreadsheet,
   Receipt,
   Wallet,
