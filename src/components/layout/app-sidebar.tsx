@@ -53,6 +53,7 @@ const business = [
 ];
 
 const tools = [
+  { title: "PDF to Word", url: "/pdf-to-word", icon: FileType2 },
   { title: "Calculators", url: "/calculators", icon: Calculator },
 ];
 
