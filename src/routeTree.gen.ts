@@ -15,6 +15,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ShareTokenRouteImport } from './routes/share.$token'
+import { Route as AuthenticatedWordToPdfRouteImport } from './routes/_authenticated/word-to-pdf'
 import { Route as AuthenticatedSubscriptionRouteImport } from './routes/_authenticated/subscription'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
 import { Route as AuthenticatedReceiptRouteImport } from './routes/_authenticated/receipt'
@@ -75,6 +76,11 @@ const ShareTokenRoute = ShareTokenRouteImport.update({
   id: '/share/$token',
   path: '/share/$token',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedWordToPdfRoute = AuthenticatedWordToPdfRouteImport.update({
+  id: '/word-to-pdf',
+  path: '/word-to-pdf',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedSubscriptionRoute =
   AuthenticatedSubscriptionRouteImport.update({
@@ -269,6 +275,7 @@ export interface FileRoutesByFullPath {
   '/receipt': typeof AuthenticatedReceiptRouteWithChildren
   '/settings': typeof AuthenticatedSettingsRoute
   '/subscription': typeof AuthenticatedSubscriptionRoute
+  '/word-to-pdf': typeof AuthenticatedWordToPdfRoute
   '/share/$token': typeof ShareTokenRoute
   '/invoice/new': typeof AuthenticatedInvoiceNewRoute
   '/quotation/new': typeof AuthenticatedQuotationNewRoute
@@ -304,6 +311,7 @@ export interface FileRoutesByTo {
   '/pdf-to-word': typeof AuthenticatedPdfToWordRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/subscription': typeof AuthenticatedSubscriptionRoute
+  '/word-to-pdf': typeof AuthenticatedWordToPdfRoute
   '/share/$token': typeof ShareTokenRoute
   '/invoice/new': typeof AuthenticatedInvoiceNewRoute
   '/quotation/new': typeof AuthenticatedQuotationNewRoute
@@ -344,6 +352,7 @@ export interface FileRoutesById {
   '/_authenticated/receipt': typeof AuthenticatedReceiptRouteWithChildren
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/_authenticated/subscription': typeof AuthenticatedSubscriptionRoute
+  '/_authenticated/word-to-pdf': typeof AuthenticatedWordToPdfRoute
   '/share/$token': typeof ShareTokenRoute
   '/_authenticated/invoice/new': typeof AuthenticatedInvoiceNewRoute
   '/_authenticated/quotation/new': typeof AuthenticatedQuotationNewRoute
@@ -384,6 +393,7 @@ export interface FileRouteTypes {
     | '/receipt'
     | '/settings'
     | '/subscription'
+    | '/word-to-pdf'
     | '/share/$token'
     | '/invoice/new'
     | '/quotation/new'
@@ -419,6 +429,7 @@ export interface FileRouteTypes {
     | '/pdf-to-word'
     | '/settings'
     | '/subscription'
+    | '/word-to-pdf'
     | '/share/$token'
     | '/invoice/new'
     | '/quotation/new'
@@ -458,6 +469,7 @@ export interface FileRouteTypes {
     | '/_authenticated/receipt'
     | '/_authenticated/settings'
     | '/_authenticated/subscription'
+    | '/_authenticated/word-to-pdf'
     | '/share/$token'
     | '/_authenticated/invoice/new'
     | '/_authenticated/quotation/new'
@@ -529,6 +541,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/share/$token'
       preLoaderRoute: typeof ShareTokenRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/word-to-pdf': {
+      id: '/_authenticated/word-to-pdf'
+      path: '/word-to-pdf'
+      fullPath: '/word-to-pdf'
+      preLoaderRoute: typeof AuthenticatedWordToPdfRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/subscription': {
       id: '/_authenticated/subscription'
@@ -822,6 +841,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedReceiptRoute: typeof AuthenticatedReceiptRouteWithChildren
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
   AuthenticatedSubscriptionRoute: typeof AuthenticatedSubscriptionRoute
+  AuthenticatedWordToPdfRoute: typeof AuthenticatedWordToPdfRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -843,6 +863,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedReceiptRoute: AuthenticatedReceiptRouteWithChildren,
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
   AuthenticatedSubscriptionRoute: AuthenticatedSubscriptionRoute,
+  AuthenticatedWordToPdfRoute: AuthenticatedWordToPdfRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
