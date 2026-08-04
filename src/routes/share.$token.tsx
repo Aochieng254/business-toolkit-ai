@@ -46,7 +46,6 @@ function SharePage() {
       if (!info.has_password) setUnlocked(true);
       setLoading(false);
     })();
-    })();
   }, [token]);
 
   useEffect(() => {
