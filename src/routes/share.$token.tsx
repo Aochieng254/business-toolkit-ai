@@ -13,14 +13,11 @@ export const Route = createFileRoute("/share/$token")({
 
 interface ShareInfo {
   file_id: string;
-  owner_id: string;
   name: string;
   mime_type: string | null;
   size_bytes: number;
-  storage_path: string;
   allow_download: boolean;
   expires_at: string | null;
-  revoked_at: string | null;
   has_password: boolean;
 }
 
