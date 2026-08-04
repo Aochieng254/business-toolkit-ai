@@ -17,6 +17,12 @@ import {
   Users,
   Building2,
   FolderOpen,
+  Wrench,
+  Presentation,
+  Image as ImageIcon,
+  Scissors,
+  Combine,
+  LayoutTemplate,
 } from "lucide-react";
 import {
   Sidebar,
@@ -54,7 +60,15 @@ const business = [
 ];
 
 const tools = [
+  { title: "PDF Tools", url: "/pdf-tools", icon: Wrench },
   { title: "PDF to Word", url: "/pdf-to-word", icon: FileType2 },
+  { title: "Word to PDF", url: "/word-to-pdf", icon: FileText },
+  { title: "PDF to Excel", url: "/pdf-to-excel", icon: FileSpreadsheet },
+  { title: "PDF to PowerPoint", url: "/pdf-to-powerpoint", icon: Presentation },
+  { title: "PDF to Image", url: "/pdf-to-image", icon: ImageIcon },
+  { title: "Split PDF", url: "/pdf-split", icon: Scissors },
+  { title: "Merge PDFs", url: "/pdf-merge", icon: Combine },
+  { title: "PDF to Publisher", url: "/pdf-to-publisher", icon: LayoutTemplate },
   { title: "Calculators", url: "/calculators", icon: Calculator },
 ];
 

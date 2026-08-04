@@ -21,6 +21,7 @@ import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedReceiptRouteImport } from './routes/_authenticated/receipt'
 import { Route as AuthenticatedQuotationRouteImport } from './routes/_authenticated/quotation'
 import { Route as AuthenticatedPdfToWordRouteImport } from './routes/_authenticated/pdf-to-word'
+import { Route as AuthenticatedPdfToPowerpointRouteImport } from './routes/_authenticated/pdf-to-powerpoint'
 import { Route as AuthenticatedPdfToExcelRouteImport } from './routes/_authenticated/pdf-to-excel'
 import { Route as AuthenticatedPdfSplitRouteImport } from './routes/_authenticated/pdf-split'
 import { Route as AuthenticatedPdfMergeRouteImport } from './routes/_authenticated/pdf-merge'
@@ -111,6 +112,12 @@ const AuthenticatedPdfToWordRoute = AuthenticatedPdfToWordRouteImport.update({
   path: '/pdf-to-word',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedPdfToPowerpointRoute =
+  AuthenticatedPdfToPowerpointRouteImport.update({
+    id: '/pdf-to-powerpoint',
+    path: '/pdf-to-powerpoint',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedPdfToExcelRoute = AuthenticatedPdfToExcelRouteImport.update({
   id: '/pdf-to-excel',
   path: '/pdf-to-excel',
@@ -291,6 +298,7 @@ export interface FileRoutesByFullPath {
   '/pdf-merge': typeof AuthenticatedPdfMergeRoute
   '/pdf-split': typeof AuthenticatedPdfSplitRoute
   '/pdf-to-excel': typeof AuthenticatedPdfToExcelRoute
+  '/pdf-to-powerpoint': typeof AuthenticatedPdfToPowerpointRoute
   '/pdf-to-word': typeof AuthenticatedPdfToWordRoute
   '/quotation': typeof AuthenticatedQuotationRouteWithChildren
   '/receipt': typeof AuthenticatedReceiptRouteWithChildren
@@ -332,6 +340,7 @@ export interface FileRoutesByTo {
   '/pdf-merge': typeof AuthenticatedPdfMergeRoute
   '/pdf-split': typeof AuthenticatedPdfSplitRoute
   '/pdf-to-excel': typeof AuthenticatedPdfToExcelRoute
+  '/pdf-to-powerpoint': typeof AuthenticatedPdfToPowerpointRoute
   '/pdf-to-word': typeof AuthenticatedPdfToWordRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/subscription': typeof AuthenticatedSubscriptionRoute
@@ -374,6 +383,7 @@ export interface FileRoutesById {
   '/_authenticated/pdf-merge': typeof AuthenticatedPdfMergeRoute
   '/_authenticated/pdf-split': typeof AuthenticatedPdfSplitRoute
   '/_authenticated/pdf-to-excel': typeof AuthenticatedPdfToExcelRoute
+  '/_authenticated/pdf-to-powerpoint': typeof AuthenticatedPdfToPowerpointRoute
   '/_authenticated/pdf-to-word': typeof AuthenticatedPdfToWordRoute
   '/_authenticated/quotation': typeof AuthenticatedQuotationRouteWithChildren
   '/_authenticated/receipt': typeof AuthenticatedReceiptRouteWithChildren
@@ -418,6 +428,7 @@ export interface FileRouteTypes {
     | '/pdf-merge'
     | '/pdf-split'
     | '/pdf-to-excel'
+    | '/pdf-to-powerpoint'
     | '/pdf-to-word'
     | '/quotation'
     | '/receipt'
@@ -459,6 +470,7 @@ export interface FileRouteTypes {
     | '/pdf-merge'
     | '/pdf-split'
     | '/pdf-to-excel'
+    | '/pdf-to-powerpoint'
     | '/pdf-to-word'
     | '/settings'
     | '/subscription'
@@ -500,6 +512,7 @@ export interface FileRouteTypes {
     | '/_authenticated/pdf-merge'
     | '/_authenticated/pdf-split'
     | '/_authenticated/pdf-to-excel'
+    | '/_authenticated/pdf-to-powerpoint'
     | '/_authenticated/pdf-to-word'
     | '/_authenticated/quotation'
     | '/_authenticated/receipt'
@@ -618,6 +631,13 @@ declare module '@tanstack/react-router' {
       path: '/pdf-to-word'
       fullPath: '/pdf-to-word'
       preLoaderRoute: typeof AuthenticatedPdfToWordRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/pdf-to-powerpoint': {
+      id: '/_authenticated/pdf-to-powerpoint'
+      path: '/pdf-to-powerpoint'
+      fullPath: '/pdf-to-powerpoint'
+      preLoaderRoute: typeof AuthenticatedPdfToPowerpointRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/pdf-to-excel': {
@@ -896,6 +916,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedPdfMergeRoute: typeof AuthenticatedPdfMergeRoute
   AuthenticatedPdfSplitRoute: typeof AuthenticatedPdfSplitRoute
   AuthenticatedPdfToExcelRoute: typeof AuthenticatedPdfToExcelRoute
+  AuthenticatedPdfToPowerpointRoute: typeof AuthenticatedPdfToPowerpointRoute
   AuthenticatedPdfToWordRoute: typeof AuthenticatedPdfToWordRoute
   AuthenticatedQuotationRoute: typeof AuthenticatedQuotationRouteWithChildren
   AuthenticatedReceiptRoute: typeof AuthenticatedReceiptRouteWithChildren
@@ -921,6 +942,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedPdfMergeRoute: AuthenticatedPdfMergeRoute,
   AuthenticatedPdfSplitRoute: AuthenticatedPdfSplitRoute,
   AuthenticatedPdfToExcelRoute: AuthenticatedPdfToExcelRoute,
+  AuthenticatedPdfToPowerpointRoute: AuthenticatedPdfToPowerpointRoute,
   AuthenticatedPdfToWordRoute: AuthenticatedPdfToWordRoute,
   AuthenticatedQuotationRoute: AuthenticatedQuotationRouteWithChildren,
   AuthenticatedReceiptRoute: AuthenticatedReceiptRouteWithChildren,
