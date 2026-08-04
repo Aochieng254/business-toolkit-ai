@@ -15,11 +15,19 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ShareTokenRouteImport } from './routes/share.$token'
+import { Route as AuthenticatedWordToPdfRouteImport } from './routes/_authenticated/word-to-pdf'
 import { Route as AuthenticatedSubscriptionRouteImport } from './routes/_authenticated/subscription'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
 import { Route as AuthenticatedReceiptRouteImport } from './routes/_authenticated/receipt'
 import { Route as AuthenticatedQuotationRouteImport } from './routes/_authenticated/quotation'
+import { Route as AuthenticatedPdfToolsRouteImport } from './routes/_authenticated/pdf-tools'
 import { Route as AuthenticatedPdfToWordRouteImport } from './routes/_authenticated/pdf-to-word'
+import { Route as AuthenticatedPdfToPublisherRouteImport } from './routes/_authenticated/pdf-to-publisher'
+import { Route as AuthenticatedPdfToPowerpointRouteImport } from './routes/_authenticated/pdf-to-powerpoint'
+import { Route as AuthenticatedPdfToImageRouteImport } from './routes/_authenticated/pdf-to-image'
+import { Route as AuthenticatedPdfToExcelRouteImport } from './routes/_authenticated/pdf-to-excel'
+import { Route as AuthenticatedPdfSplitRouteImport } from './routes/_authenticated/pdf-split'
+import { Route as AuthenticatedPdfMergeRouteImport } from './routes/_authenticated/pdf-merge'
 import { Route as AuthenticatedPayslipRouteImport } from './routes/_authenticated/payslip'
 import { Route as AuthenticatedInvoiceRouteImport } from './routes/_authenticated/invoice'
 import { Route as AuthenticatedFilesRouteImport } from './routes/_authenticated/files'
@@ -76,6 +84,11 @@ const ShareTokenRoute = ShareTokenRouteImport.update({
   path: '/share/$token',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedWordToPdfRoute = AuthenticatedWordToPdfRouteImport.update({
+  id: '/word-to-pdf',
+  path: '/word-to-pdf',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedSubscriptionRoute =
   AuthenticatedSubscriptionRouteImport.update({
     id: '/subscription',
@@ -97,9 +110,46 @@ const AuthenticatedQuotationRoute = AuthenticatedQuotationRouteImport.update({
   path: '/quotation',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedPdfToolsRoute = AuthenticatedPdfToolsRouteImport.update({
+  id: '/pdf-tools',
+  path: '/pdf-tools',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedPdfToWordRoute = AuthenticatedPdfToWordRouteImport.update({
   id: '/pdf-to-word',
   path: '/pdf-to-word',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedPdfToPublisherRoute =
+  AuthenticatedPdfToPublisherRouteImport.update({
+    id: '/pdf-to-publisher',
+    path: '/pdf-to-publisher',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedPdfToPowerpointRoute =
+  AuthenticatedPdfToPowerpointRouteImport.update({
+    id: '/pdf-to-powerpoint',
+    path: '/pdf-to-powerpoint',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedPdfToImageRoute = AuthenticatedPdfToImageRouteImport.update({
+  id: '/pdf-to-image',
+  path: '/pdf-to-image',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedPdfToExcelRoute = AuthenticatedPdfToExcelRouteImport.update({
+  id: '/pdf-to-excel',
+  path: '/pdf-to-excel',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedPdfSplitRoute = AuthenticatedPdfSplitRouteImport.update({
+  id: '/pdf-split',
+  path: '/pdf-split',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedPdfMergeRoute = AuthenticatedPdfMergeRouteImport.update({
+  id: '/pdf-merge',
+  path: '/pdf-merge',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedPayslipRoute = AuthenticatedPayslipRouteImport.update({
@@ -264,11 +314,19 @@ export interface FileRoutesByFullPath {
   '/files': typeof AuthenticatedFilesRoute
   '/invoice': typeof AuthenticatedInvoiceRouteWithChildren
   '/payslip': typeof AuthenticatedPayslipRoute
+  '/pdf-merge': typeof AuthenticatedPdfMergeRoute
+  '/pdf-split': typeof AuthenticatedPdfSplitRoute
+  '/pdf-to-excel': typeof AuthenticatedPdfToExcelRoute
+  '/pdf-to-image': typeof AuthenticatedPdfToImageRoute
+  '/pdf-to-powerpoint': typeof AuthenticatedPdfToPowerpointRoute
+  '/pdf-to-publisher': typeof AuthenticatedPdfToPublisherRoute
   '/pdf-to-word': typeof AuthenticatedPdfToWordRoute
+  '/pdf-tools': typeof AuthenticatedPdfToolsRoute
   '/quotation': typeof AuthenticatedQuotationRouteWithChildren
   '/receipt': typeof AuthenticatedReceiptRouteWithChildren
   '/settings': typeof AuthenticatedSettingsRoute
   '/subscription': typeof AuthenticatedSubscriptionRoute
+  '/word-to-pdf': typeof AuthenticatedWordToPdfRoute
   '/share/$token': typeof ShareTokenRoute
   '/invoice/new': typeof AuthenticatedInvoiceNewRoute
   '/quotation/new': typeof AuthenticatedQuotationNewRoute
@@ -301,9 +359,17 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/files': typeof AuthenticatedFilesRoute
   '/payslip': typeof AuthenticatedPayslipRoute
+  '/pdf-merge': typeof AuthenticatedPdfMergeRoute
+  '/pdf-split': typeof AuthenticatedPdfSplitRoute
+  '/pdf-to-excel': typeof AuthenticatedPdfToExcelRoute
+  '/pdf-to-image': typeof AuthenticatedPdfToImageRoute
+  '/pdf-to-powerpoint': typeof AuthenticatedPdfToPowerpointRoute
+  '/pdf-to-publisher': typeof AuthenticatedPdfToPublisherRoute
   '/pdf-to-word': typeof AuthenticatedPdfToWordRoute
+  '/pdf-tools': typeof AuthenticatedPdfToolsRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/subscription': typeof AuthenticatedSubscriptionRoute
+  '/word-to-pdf': typeof AuthenticatedWordToPdfRoute
   '/share/$token': typeof ShareTokenRoute
   '/invoice/new': typeof AuthenticatedInvoiceNewRoute
   '/quotation/new': typeof AuthenticatedQuotationNewRoute
@@ -339,11 +405,19 @@ export interface FileRoutesById {
   '/_authenticated/files': typeof AuthenticatedFilesRoute
   '/_authenticated/invoice': typeof AuthenticatedInvoiceRouteWithChildren
   '/_authenticated/payslip': typeof AuthenticatedPayslipRoute
+  '/_authenticated/pdf-merge': typeof AuthenticatedPdfMergeRoute
+  '/_authenticated/pdf-split': typeof AuthenticatedPdfSplitRoute
+  '/_authenticated/pdf-to-excel': typeof AuthenticatedPdfToExcelRoute
+  '/_authenticated/pdf-to-image': typeof AuthenticatedPdfToImageRoute
+  '/_authenticated/pdf-to-powerpoint': typeof AuthenticatedPdfToPowerpointRoute
+  '/_authenticated/pdf-to-publisher': typeof AuthenticatedPdfToPublisherRoute
   '/_authenticated/pdf-to-word': typeof AuthenticatedPdfToWordRoute
+  '/_authenticated/pdf-tools': typeof AuthenticatedPdfToolsRoute
   '/_authenticated/quotation': typeof AuthenticatedQuotationRouteWithChildren
   '/_authenticated/receipt': typeof AuthenticatedReceiptRouteWithChildren
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/_authenticated/subscription': typeof AuthenticatedSubscriptionRoute
+  '/_authenticated/word-to-pdf': typeof AuthenticatedWordToPdfRoute
   '/share/$token': typeof ShareTokenRoute
   '/_authenticated/invoice/new': typeof AuthenticatedInvoiceNewRoute
   '/_authenticated/quotation/new': typeof AuthenticatedQuotationNewRoute
@@ -379,11 +453,19 @@ export interface FileRouteTypes {
     | '/files'
     | '/invoice'
     | '/payslip'
+    | '/pdf-merge'
+    | '/pdf-split'
+    | '/pdf-to-excel'
+    | '/pdf-to-image'
+    | '/pdf-to-powerpoint'
+    | '/pdf-to-publisher'
     | '/pdf-to-word'
+    | '/pdf-tools'
     | '/quotation'
     | '/receipt'
     | '/settings'
     | '/subscription'
+    | '/word-to-pdf'
     | '/share/$token'
     | '/invoice/new'
     | '/quotation/new'
@@ -416,9 +498,17 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/files'
     | '/payslip'
+    | '/pdf-merge'
+    | '/pdf-split'
+    | '/pdf-to-excel'
+    | '/pdf-to-image'
+    | '/pdf-to-powerpoint'
+    | '/pdf-to-publisher'
     | '/pdf-to-word'
+    | '/pdf-tools'
     | '/settings'
     | '/subscription'
+    | '/word-to-pdf'
     | '/share/$token'
     | '/invoice/new'
     | '/quotation/new'
@@ -453,11 +543,19 @@ export interface FileRouteTypes {
     | '/_authenticated/files'
     | '/_authenticated/invoice'
     | '/_authenticated/payslip'
+    | '/_authenticated/pdf-merge'
+    | '/_authenticated/pdf-split'
+    | '/_authenticated/pdf-to-excel'
+    | '/_authenticated/pdf-to-image'
+    | '/_authenticated/pdf-to-powerpoint'
+    | '/_authenticated/pdf-to-publisher'
     | '/_authenticated/pdf-to-word'
+    | '/_authenticated/pdf-tools'
     | '/_authenticated/quotation'
     | '/_authenticated/receipt'
     | '/_authenticated/settings'
     | '/_authenticated/subscription'
+    | '/_authenticated/word-to-pdf'
     | '/share/$token'
     | '/_authenticated/invoice/new'
     | '/_authenticated/quotation/new'
@@ -530,6 +628,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ShareTokenRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/word-to-pdf': {
+      id: '/_authenticated/word-to-pdf'
+      path: '/word-to-pdf'
+      fullPath: '/word-to-pdf'
+      preLoaderRoute: typeof AuthenticatedWordToPdfRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/subscription': {
       id: '/_authenticated/subscription'
       path: '/subscription'
@@ -558,11 +663,60 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedQuotationRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/pdf-tools': {
+      id: '/_authenticated/pdf-tools'
+      path: '/pdf-tools'
+      fullPath: '/pdf-tools'
+      preLoaderRoute: typeof AuthenticatedPdfToolsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/pdf-to-word': {
       id: '/_authenticated/pdf-to-word'
       path: '/pdf-to-word'
       fullPath: '/pdf-to-word'
       preLoaderRoute: typeof AuthenticatedPdfToWordRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/pdf-to-publisher': {
+      id: '/_authenticated/pdf-to-publisher'
+      path: '/pdf-to-publisher'
+      fullPath: '/pdf-to-publisher'
+      preLoaderRoute: typeof AuthenticatedPdfToPublisherRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/pdf-to-powerpoint': {
+      id: '/_authenticated/pdf-to-powerpoint'
+      path: '/pdf-to-powerpoint'
+      fullPath: '/pdf-to-powerpoint'
+      preLoaderRoute: typeof AuthenticatedPdfToPowerpointRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/pdf-to-image': {
+      id: '/_authenticated/pdf-to-image'
+      path: '/pdf-to-image'
+      fullPath: '/pdf-to-image'
+      preLoaderRoute: typeof AuthenticatedPdfToImageRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/pdf-to-excel': {
+      id: '/_authenticated/pdf-to-excel'
+      path: '/pdf-to-excel'
+      fullPath: '/pdf-to-excel'
+      preLoaderRoute: typeof AuthenticatedPdfToExcelRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/pdf-split': {
+      id: '/_authenticated/pdf-split'
+      path: '/pdf-split'
+      fullPath: '/pdf-split'
+      preLoaderRoute: typeof AuthenticatedPdfSplitRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/pdf-merge': {
+      id: '/_authenticated/pdf-merge'
+      path: '/pdf-merge'
+      fullPath: '/pdf-merge'
+      preLoaderRoute: typeof AuthenticatedPdfMergeRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/payslip': {
@@ -817,11 +971,19 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedFilesRoute: typeof AuthenticatedFilesRoute
   AuthenticatedInvoiceRoute: typeof AuthenticatedInvoiceRouteWithChildren
   AuthenticatedPayslipRoute: typeof AuthenticatedPayslipRoute
+  AuthenticatedPdfMergeRoute: typeof AuthenticatedPdfMergeRoute
+  AuthenticatedPdfSplitRoute: typeof AuthenticatedPdfSplitRoute
+  AuthenticatedPdfToExcelRoute: typeof AuthenticatedPdfToExcelRoute
+  AuthenticatedPdfToImageRoute: typeof AuthenticatedPdfToImageRoute
+  AuthenticatedPdfToPowerpointRoute: typeof AuthenticatedPdfToPowerpointRoute
+  AuthenticatedPdfToPublisherRoute: typeof AuthenticatedPdfToPublisherRoute
   AuthenticatedPdfToWordRoute: typeof AuthenticatedPdfToWordRoute
+  AuthenticatedPdfToolsRoute: typeof AuthenticatedPdfToolsRoute
   AuthenticatedQuotationRoute: typeof AuthenticatedQuotationRouteWithChildren
   AuthenticatedReceiptRoute: typeof AuthenticatedReceiptRouteWithChildren
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
   AuthenticatedSubscriptionRoute: typeof AuthenticatedSubscriptionRoute
+  AuthenticatedWordToPdfRoute: typeof AuthenticatedWordToPdfRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -838,11 +1000,19 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedFilesRoute: AuthenticatedFilesRoute,
   AuthenticatedInvoiceRoute: AuthenticatedInvoiceRouteWithChildren,
   AuthenticatedPayslipRoute: AuthenticatedPayslipRoute,
+  AuthenticatedPdfMergeRoute: AuthenticatedPdfMergeRoute,
+  AuthenticatedPdfSplitRoute: AuthenticatedPdfSplitRoute,
+  AuthenticatedPdfToExcelRoute: AuthenticatedPdfToExcelRoute,
+  AuthenticatedPdfToImageRoute: AuthenticatedPdfToImageRoute,
+  AuthenticatedPdfToPowerpointRoute: AuthenticatedPdfToPowerpointRoute,
+  AuthenticatedPdfToPublisherRoute: AuthenticatedPdfToPublisherRoute,
   AuthenticatedPdfToWordRoute: AuthenticatedPdfToWordRoute,
+  AuthenticatedPdfToolsRoute: AuthenticatedPdfToolsRoute,
   AuthenticatedQuotationRoute: AuthenticatedQuotationRouteWithChildren,
   AuthenticatedReceiptRoute: AuthenticatedReceiptRouteWithChildren,
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
   AuthenticatedSubscriptionRoute: AuthenticatedSubscriptionRoute,
+  AuthenticatedWordToPdfRoute: AuthenticatedWordToPdfRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =

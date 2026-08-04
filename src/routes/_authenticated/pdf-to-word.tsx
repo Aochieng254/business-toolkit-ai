@@ -1,26 +1,31 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { FileType2, Upload, Loader2, FileText } from "lucide-react";
+import { FileType2, FileText, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Progress } from "@/components/ui/progress";
-import { exportBlocksToWord, textToBlocks } from "@/lib/docs/export";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { FileDrop, ToolHeader } from "@/components/tools/file-drop";
+import { extractPages, downloadBlob, baseName, type PageContent } from "@/lib/pdf/core";
+import { pagesToDocxBlob, pdfToImageDocxBlob } from "@/lib/pdf/convert";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/pdf-to-word")({
   head: () => ({
     meta: [
-      { title: "PDF to Word Converter | Business Toolkit AI" },
+      { title: "PDF to Word with OCR | Business Toolkit AI" },
       {
         name: "description",
         content:
-          "Convert PDF documents into editable Word (.docx) files right in your browser — nothing leaves your device.",
+          "Convert PDFs into editable Word documents with the original layout intact, including OCR for scanned pages — all in your browser.",
       },
-      { property: "og:title", content: "PDF to Word Converter | Business Toolkit AI" },
+      { property: "og:title", content: "PDF to Word with OCR | Business Toolkit AI" },
       {
         property: "og:description",
-        content: "Turn any PDF into an editable Word document in seconds.",
+        content: "Layout-accurate PDF to Word conversion with built-in OCR for scanned files.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -29,130 +34,196 @@ export const Route = createFileRoute("/_authenticated/pdf-to-word")({
   component: PdfToWordPage,
 });
 
+type Mode = "layout" | "text" | "image";
+
 function PdfToWordPage() {
-  const inputRef = useRef<HTMLInputElement>(null);
+  const [file, setFile] = useState<File | null>(null);
+  const [pages, setPages] = useState<PageContent[]>([]);
   const [busy, setBusy] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [fileName, setFileName] = useState("");
+  const [status, setStatus] = useState("");
+  const [ocr, setOcr] = useState(true);
+  const [mode, setMode] = useState<Mode>("layout");
   const [text, setText] = useState("");
 
-  const handleFile = async (file: File) => {
-    if (!file.name.toLowerCase().endsWith(".pdf")) {
+  const analyse = async (f: File) => {
+    if (!f.name.toLowerCase().endsWith(".pdf")) {
       toast.error("Please choose a PDF file.");
       return;
     }
+    setFile(f);
     setBusy(true);
     setProgress(0);
-    setFileName(file.name.replace(/\.pdf$/i, ""));
+    setPages([]);
+    setText("");
     try {
-      const pdfjs = await import("pdfjs-dist");
-      const workerSrc = (await import("pdfjs-dist/build/pdf.worker.min.mjs?url")).default;
-      pdfjs.GlobalWorkerOptions.workerSrc = workerSrc;
-
-      const buf = await file.arrayBuffer();
-      const pdf = await pdfjs.getDocument({ data: buf }).promise;
-      const pages: string[] = [];
-      for (let i = 1; i <= pdf.numPages; i++) {
-        const page = await pdf.getPage(i);
-        const content = await page.getTextContent();
-        let lastY: number | null = null;
-        let out = "";
-        for (const item of content.items as Array<{ str?: string; transform?: number[] }>) {
-          if (typeof item.str !== "string") continue;
-          const y = item.transform?.[5] ?? null;
-          if (lastY !== null && y !== null && Math.abs(y - lastY) > 4) out += "\n";
-          out += item.str;
-          lastY = y;
-        }
-        pages.push(out.replace(/[ \t]{2,}/g, " ").trim());
-        setProgress(Math.round((i / pdf.numPages) * 100));
-      }
-      const joined = pages.join("\n\n");
-      setText(joined);
-      if (!joined.trim())
-        toast.warning("No selectable text found — this PDF is likely a scan.");
-      else toast.success(`Extracted ${pdf.numPages} page(s)`);
+      const result = await extractPages(f, {
+        ocr,
+        onProgress: (pct, label) => {
+          setProgress(pct);
+          setStatus(label);
+        },
+      });
+      setPages(result);
+      setText(
+        result
+          .map((p) => p.lines.map((l) => l.text).join("\n"))
+          .join("\n\n")
+          .trim(),
+      );
+      const ocrPages = result.filter((p) => p.ocr).length;
+      const empty = result.every((p) => p.lines.length === 0);
+      if (empty)
+        toast.warning(
+          ocr
+            ? "No text could be read from this PDF. Try the page-image mode below."
+            : "No selectable text found — turn on OCR and try again.",
+        );
+      else
+        toast.success(
+          ocrPages ? `Read ${result.length} page(s), ${ocrPages} via OCR` : `Read ${result.length} page(s)`,
+        );
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Could not read that PDF");
     } finally {
       setBusy(false);
+      setStatus("");
+    }
+  };
+
+  const convert = async () => {
+    if (!file) return;
+    setBusy(true);
+    setProgress(0);
+    try {
+      const name = baseName(file.name);
+      if (mode === "image") {
+        setStatus("Rendering pages…");
+        const blob = await pdfToImageDocxBlob(file, setProgress);
+        downloadBlob(blob, `${name}.docx`);
+      } else if (mode === "layout") {
+        const blob = await pagesToDocxBlob(pages);
+        downloadBlob(blob, `${name}.docx`);
+      } else {
+        const blob = await pagesToDocxBlob([
+          {
+            pageNumber: 1,
+            width: 612,
+            height: 792,
+            ocr: false,
+            lines: text.split("\n").map((t, i, arr) => ({
+              y: arr.length - i,
+              x: 0,
+              text: t,
+              size: 11,
+              bold: false,
+              italic: false,
+            })),
+          },
+        ]);
+        downloadBlob(blob, `${name}.docx`);
+      }
+      toast.success("Word file downloaded");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Conversion failed");
+    } finally {
+      setBusy(false);
+      setStatus("");
     }
   };
 
   return (
     <div className="mx-auto max-w-4xl space-y-6">
-      <div className="flex items-center gap-3">
-        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent text-accent-foreground">
-          <FileType2 className="h-6 w-6" />
-        </div>
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">PDF to Word</h1>
-          <p className="text-sm text-muted-foreground">
-            Convert a PDF into an editable Word document — processed on your device.
-          </p>
-        </div>
-      </div>
+      <ToolHeader
+        icon={FileType2}
+        title="PDF to Word"
+        description="Keeps the original layout, and reads scanned pages with OCR — all on your device."
+      />
 
       <Card>
-        <CardContent className="p-6">
-          <div
-            onDragOver={(e) => e.preventDefault()}
-            onDrop={(e) => {
-              e.preventDefault();
-              const f = e.dataTransfer.files?.[0];
-              if (f) handleFile(f);
-            }}
-            className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-border p-10 text-center"
-          >
-            <Upload className="h-8 w-8 text-muted-foreground" />
-            <p className="mt-3 text-sm font-medium">Drop a PDF here</p>
-            <p className="text-xs text-muted-foreground">or choose a file from your device</p>
-            <input
-              ref={inputRef}
-              type="file"
-              accept="application/pdf"
-              className="hidden"
-              onChange={(e) => {
-                const f = e.target.files?.[0];
-                if (f) handleFile(f);
-              }}
-            />
-            <Button
-              className="mt-4"
-              variant="outline"
-              disabled={busy}
-              onClick={() => inputRef.current?.click()}
-            >
-              {busy ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-              Select PDF
-            </Button>
-            {busy && <Progress value={progress} className="mt-4 w-64" />}
+        <CardContent className="space-y-4 p-6">
+          <FileDrop
+            accept="application/pdf"
+            label="Drop a PDF here"
+            hint="or choose a file from your device"
+            busy={busy}
+            onFiles={(f) => analyse(f[0])}
+          />
+          <div className="flex items-center justify-between rounded-lg border border-border p-3">
+            <div>
+              <Label htmlFor="ocr">OCR for scanned pages</Label>
+              <p className="text-xs text-muted-foreground">
+                Recognises text in image-only pages. Slower, but makes scans editable.
+              </p>
+            </div>
+            <Switch id="ocr" checked={ocr} onCheckedChange={setOcr} />
           </div>
+          {busy && (
+            <div className="space-y-1">
+              <Progress value={progress} />
+              <p className="text-xs text-muted-foreground">{status || "Working…"}</p>
+            </div>
+          )}
         </CardContent>
       </Card>
 
-      {text && (
+      {file && !busy && (
         <Card>
           <CardHeader className="flex-row items-center justify-between space-y-0">
-            <CardTitle className="text-base">Extracted text — edit before export</CardTitle>
-            <Button
-              onClick={async () => {
-                await exportBlocksToWord(textToBlocks(text), fileName || "converted");
-                toast.success("Word file downloaded");
-              }}
-            >
-              <FileText className="mr-2 h-4 w-4" /> Download .docx
+            <CardTitle className="text-base">Conversion style</CardTitle>
+            <Button onClick={convert}>
+              <Download className="mr-2 h-4 w-4" /> Download .docx
             </Button>
           </CardHeader>
           <CardContent>
-            <Textarea rows={20} value={text} onChange={(e) => setText(e.target.value)} />
+            <RadioGroup value={mode} onValueChange={(v) => setMode(v as Mode)} className="gap-3">
+              {[
+                {
+                  v: "layout",
+                  t: "Keep layout (recommended)",
+                  d: "Reproduces the document as-is: page breaks, headings, font sizes, bold text and indentation.",
+                },
+                {
+                  v: "text",
+                  t: "Plain editable text",
+                  d: "One continuous flow of text you can review and edit below before exporting.",
+                },
+                {
+                  v: "image",
+                  t: "Exact page pictures",
+                  d: "Each page embedded as a high-resolution image — pixel-perfect, but not editable text.",
+                },
+              ].map((o) => (
+                <label
+                  key={o.v}
+                  className="flex cursor-pointer items-start gap-3 rounded-lg border border-border p-3"
+                >
+                  <RadioGroupItem value={o.v} className="mt-1" />
+                  <span>
+                    <span className="block text-sm font-medium">{o.t}</span>
+                    <span className="block text-xs text-muted-foreground">{o.d}</span>
+                  </span>
+                </label>
+              ))}
+            </RadioGroup>
+          </CardContent>
+        </Card>
+      )}
+
+      {mode === "text" && text && (
+        <Card>
+          <CardHeader className="flex-row items-center justify-between space-y-0">
+            <CardTitle className="text-base">Extracted text — edit before export</CardTitle>
+            <FileText className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <Textarea rows={18} value={text} onChange={(e) => setText(e.target.value)} />
           </CardContent>
         </Card>
       )}
 
       <p className="text-xs text-muted-foreground">
-        Text-based PDFs convert with full text fidelity. Scanned PDFs contain images rather
-        than text, so nothing can be extracted from them here.
+        Everything is processed locally in your browser — your documents never leave your device.
       </p>
     </div>
   );
