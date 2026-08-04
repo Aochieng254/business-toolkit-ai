@@ -21,6 +21,7 @@ import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedReceiptRouteImport } from './routes/_authenticated/receipt'
 import { Route as AuthenticatedQuotationRouteImport } from './routes/_authenticated/quotation'
 import { Route as AuthenticatedPdfToWordRouteImport } from './routes/_authenticated/pdf-to-word'
+import { Route as AuthenticatedPdfSplitRouteImport } from './routes/_authenticated/pdf-split'
 import { Route as AuthenticatedPayslipRouteImport } from './routes/_authenticated/payslip'
 import { Route as AuthenticatedInvoiceRouteImport } from './routes/_authenticated/invoice'
 import { Route as AuthenticatedFilesRouteImport } from './routes/_authenticated/files'
@@ -106,6 +107,11 @@ const AuthenticatedQuotationRoute = AuthenticatedQuotationRouteImport.update({
 const AuthenticatedPdfToWordRoute = AuthenticatedPdfToWordRouteImport.update({
   id: '/pdf-to-word',
   path: '/pdf-to-word',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedPdfSplitRoute = AuthenticatedPdfSplitRouteImport.update({
+  id: '/pdf-split',
+  path: '/pdf-split',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedPayslipRoute = AuthenticatedPayslipRouteImport.update({
@@ -270,6 +276,7 @@ export interface FileRoutesByFullPath {
   '/files': typeof AuthenticatedFilesRoute
   '/invoice': typeof AuthenticatedInvoiceRouteWithChildren
   '/payslip': typeof AuthenticatedPayslipRoute
+  '/pdf-split': typeof AuthenticatedPdfSplitRoute
   '/pdf-to-word': typeof AuthenticatedPdfToWordRoute
   '/quotation': typeof AuthenticatedQuotationRouteWithChildren
   '/receipt': typeof AuthenticatedReceiptRouteWithChildren
@@ -308,6 +315,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/files': typeof AuthenticatedFilesRoute
   '/payslip': typeof AuthenticatedPayslipRoute
+  '/pdf-split': typeof AuthenticatedPdfSplitRoute
   '/pdf-to-word': typeof AuthenticatedPdfToWordRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/subscription': typeof AuthenticatedSubscriptionRoute
@@ -347,6 +355,7 @@ export interface FileRoutesById {
   '/_authenticated/files': typeof AuthenticatedFilesRoute
   '/_authenticated/invoice': typeof AuthenticatedInvoiceRouteWithChildren
   '/_authenticated/payslip': typeof AuthenticatedPayslipRoute
+  '/_authenticated/pdf-split': typeof AuthenticatedPdfSplitRoute
   '/_authenticated/pdf-to-word': typeof AuthenticatedPdfToWordRoute
   '/_authenticated/quotation': typeof AuthenticatedQuotationRouteWithChildren
   '/_authenticated/receipt': typeof AuthenticatedReceiptRouteWithChildren
@@ -388,6 +397,7 @@ export interface FileRouteTypes {
     | '/files'
     | '/invoice'
     | '/payslip'
+    | '/pdf-split'
     | '/pdf-to-word'
     | '/quotation'
     | '/receipt'
@@ -426,6 +436,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/files'
     | '/payslip'
+    | '/pdf-split'
     | '/pdf-to-word'
     | '/settings'
     | '/subscription'
@@ -464,6 +475,7 @@ export interface FileRouteTypes {
     | '/_authenticated/files'
     | '/_authenticated/invoice'
     | '/_authenticated/payslip'
+    | '/_authenticated/pdf-split'
     | '/_authenticated/pdf-to-word'
     | '/_authenticated/quotation'
     | '/_authenticated/receipt'
@@ -582,6 +594,13 @@ declare module '@tanstack/react-router' {
       path: '/pdf-to-word'
       fullPath: '/pdf-to-word'
       preLoaderRoute: typeof AuthenticatedPdfToWordRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/pdf-split': {
+      id: '/_authenticated/pdf-split'
+      path: '/pdf-split'
+      fullPath: '/pdf-split'
+      preLoaderRoute: typeof AuthenticatedPdfSplitRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/payslip': {
@@ -836,6 +855,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedFilesRoute: typeof AuthenticatedFilesRoute
   AuthenticatedInvoiceRoute: typeof AuthenticatedInvoiceRouteWithChildren
   AuthenticatedPayslipRoute: typeof AuthenticatedPayslipRoute
+  AuthenticatedPdfSplitRoute: typeof AuthenticatedPdfSplitRoute
   AuthenticatedPdfToWordRoute: typeof AuthenticatedPdfToWordRoute
   AuthenticatedQuotationRoute: typeof AuthenticatedQuotationRouteWithChildren
   AuthenticatedReceiptRoute: typeof AuthenticatedReceiptRouteWithChildren
@@ -858,6 +878,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedFilesRoute: AuthenticatedFilesRoute,
   AuthenticatedInvoiceRoute: AuthenticatedInvoiceRouteWithChildren,
   AuthenticatedPayslipRoute: AuthenticatedPayslipRoute,
+  AuthenticatedPdfSplitRoute: AuthenticatedPdfSplitRoute,
   AuthenticatedPdfToWordRoute: AuthenticatedPdfToWordRoute,
   AuthenticatedQuotationRoute: AuthenticatedQuotationRouteWithChildren,
   AuthenticatedReceiptRoute: AuthenticatedReceiptRouteWithChildren,
