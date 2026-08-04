@@ -1096,10 +1096,7 @@ export type Database = {
           has_password: boolean
           mime_type: string
           name: string
-          owner_id: string
-          revoked_at: string
           size_bytes: number
-          storage_path: string
         }[]
       }
       has_role: {
