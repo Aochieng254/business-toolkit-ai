@@ -13,14 +13,11 @@ export const Route = createFileRoute("/share/$token")({
 
 interface ShareInfo {
   file_id: string;
-  owner_id: string;
   name: string;
   mime_type: string | null;
   size_bytes: number;
-  storage_path: string;
   allow_download: boolean;
   expires_at: string | null;
-  revoked_at: string | null;
   has_password: boolean;
 }
 
@@ -43,15 +40,11 @@ function SharePage() {
       const { data, error } = await supabase.rpc("get_shared_file", { _token: token });
       if (error) { setErr(error.message); setLoading(false); return; }
       const row = Array.isArray(data) ? data[0] : data;
-      if (!row) { setErr("Link not found"); setLoading(false); return; }
+      if (!row) { setErr("This link is invalid, expired, or has been revoked."); setLoading(false); return; }
       const info = row as ShareInfo;
-      if (info.revoked_at) { setErr("This link has been revoked."); setLoading(false); return; }
-      if (info.expires_at && new Date(info.expires_at) < new Date()) { setErr("This link has expired."); setLoading(false); return; }
       setInfo(info);
       if (!info.has_password) setUnlocked(true);
       setLoading(false);
-      // increment view count
-      await supabase.rpc("get_shared_file", { _token: token }); // no-op; view count tracked below via server fn if needed
     })();
   }, [token]);
 
