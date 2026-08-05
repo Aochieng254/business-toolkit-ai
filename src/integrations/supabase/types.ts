@@ -84,9 +84,11 @@ export type Database = {
       }
       ai_preferences: {
         Row: {
+          auto_save_conversions: boolean
           created_at: string
           creativity: number
           language: string
+          ocr_language: string
           preferred_model: string
           response_length: string
           tone: string
@@ -94,9 +96,11 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          auto_save_conversions?: boolean
           created_at?: string
           creativity?: number
           language?: string
+          ocr_language?: string
           preferred_model?: string
           response_length?: string
           tone?: string
@@ -104,9 +108,11 @@ export type Database = {
           user_id: string
         }
         Update: {
+          auto_save_conversions?: boolean
           created_at?: string
           creativity?: number
           language?: string
+          ocr_language?: string
           preferred_model?: string
           response_length?: string
           tone?: string
@@ -154,6 +160,42 @@ export type Database = {
         }
         Relationships: []
       }
+      billing_events: {
+        Row: {
+          created_at: string
+          event_id: string
+          event_type: string
+          id: string
+          payload: Json
+          provider: string
+          resource_id: string | null
+          user_id: string | null
+          verified: boolean
+        }
+        Insert: {
+          created_at?: string
+          event_id: string
+          event_type: string
+          id?: string
+          payload?: Json
+          provider?: string
+          resource_id?: string | null
+          user_id?: string | null
+          verified?: boolean
+        }
+        Update: {
+          created_at?: string
+          event_id?: string
+          event_type?: string
+          id?: string
+          payload?: Json
+          provider?: string
+          resource_id?: string | null
+          user_id?: string | null
+          verified?: boolean
+        }
+        Relationships: []
+      }
       companies: {
         Row: {
           address: string | null
@@ -198,6 +240,83 @@ export type Database = {
           website?: string | null
         }
         Relationships: []
+      }
+      conversion_jobs: {
+        Row: {
+          counted_against_quota: boolean
+          created_at: string
+          error: string | null
+          finished_at: string | null
+          id: string
+          ocr_language: string | null
+          options: Json
+          output_file_id: string | null
+          output_name: string | null
+          output_size_bytes: number | null
+          page_count: number | null
+          progress: number
+          source_name: string
+          source_size_bytes: number
+          stage: string | null
+          started_at: string
+          status: Database["public"]["Enums"]["job_status"]
+          tool: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          counted_against_quota?: boolean
+          created_at?: string
+          error?: string | null
+          finished_at?: string | null
+          id?: string
+          ocr_language?: string | null
+          options?: Json
+          output_file_id?: string | null
+          output_name?: string | null
+          output_size_bytes?: number | null
+          page_count?: number | null
+          progress?: number
+          source_name: string
+          source_size_bytes?: number
+          stage?: string | null
+          started_at?: string
+          status?: Database["public"]["Enums"]["job_status"]
+          tool: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          counted_against_quota?: boolean
+          created_at?: string
+          error?: string | null
+          finished_at?: string | null
+          id?: string
+          ocr_language?: string | null
+          options?: Json
+          output_file_id?: string | null
+          output_name?: string | null
+          output_size_bytes?: number | null
+          page_count?: number | null
+          progress?: number
+          source_name?: string
+          source_size_bytes?: number
+          stage?: string | null
+          started_at?: string
+          status?: Database["public"]["Enums"]["job_status"]
+          tool?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conversion_jobs_output_file_id_fkey"
+            columns: ["output_file_id"]
+            isOneToOne: false
+            referencedRelation: "files"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       customers: {
         Row: {
@@ -1036,6 +1155,51 @@ export type Database = {
           },
         ]
       }
+      subscriptions: {
+        Row: {
+          cancel_at_period_end: boolean
+          created_at: string
+          current_period_end: string | null
+          paypal_payer_email: string | null
+          paypal_subscription_id: string | null
+          plan: Database["public"]["Enums"]["plan_tier"]
+          price_usd: number
+          status: Database["public"]["Enums"]["sub_status"]
+          trial_ends_at: string | null
+          trial_started_at: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          cancel_at_period_end?: boolean
+          created_at?: string
+          current_period_end?: string | null
+          paypal_payer_email?: string | null
+          paypal_subscription_id?: string | null
+          plan?: Database["public"]["Enums"]["plan_tier"]
+          price_usd?: number
+          status?: Database["public"]["Enums"]["sub_status"]
+          trial_ends_at?: string | null
+          trial_started_at?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          cancel_at_period_end?: boolean
+          created_at?: string
+          current_period_end?: string | null
+          paypal_payer_email?: string | null
+          paypal_subscription_id?: string | null
+          plan?: Database["public"]["Enums"]["plan_tier"]
+          price_usd?: number
+          status?: Database["public"]["Enums"]["sub_status"]
+          trial_ends_at?: string | null
+          trial_started_at?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       tags: {
         Row: {
           color: string | null
@@ -1087,6 +1251,7 @@ export type Database = {
     }
     Functions: {
       ai_daily_count: { Args: { _user_id: string }; Returns: number }
+      conversions_today: { Args: { _user_id: string }; Returns: number }
       get_shared_file: {
         Args: { _token: string }
         Returns: {
@@ -1106,6 +1271,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_pro: { Args: { _user_id: string }; Returns: boolean }
       next_invoice_number: { Args: { _user_id: string }; Returns: string }
       next_quotation_number: { Args: { _user_id: string }; Returns: string }
       next_receipt_number: { Args: { _user_id: string }; Returns: string }
@@ -1114,6 +1280,7 @@ export type Database = {
     Enums: {
       app_role: "admin" | "user"
       invoice_status: "draft" | "sent" | "paid" | "overdue" | "cancelled"
+      job_status: "queued" | "running" | "done" | "error" | "cancelled"
       payment_method:
         | "cash"
         | "bank_transfer"
@@ -1123,8 +1290,16 @@ export type Database = {
         | "paypal"
         | "stripe"
         | "other"
+      plan_tier: "free" | "pro"
       quotation_status: "draft" | "sent" | "accepted" | "rejected" | "expired"
       receipt_status: "draft" | "issued" | "void"
+      sub_status:
+        | "none"
+        | "trialing"
+        | "active"
+        | "past_due"
+        | "cancelled"
+        | "expired"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1254,6 +1429,7 @@ export const Constants = {
     Enums: {
       app_role: ["admin", "user"],
       invoice_status: ["draft", "sent", "paid", "overdue", "cancelled"],
+      job_status: ["queued", "running", "done", "error", "cancelled"],
       payment_method: [
         "cash",
         "bank_transfer",
@@ -1264,8 +1440,17 @@ export const Constants = {
         "stripe",
         "other",
       ],
+      plan_tier: ["free", "pro"],
       quotation_status: ["draft", "sent", "accepted", "rejected", "expired"],
       receipt_status: ["draft", "issued", "void"],
+      sub_status: [
+        "none",
+        "trialing",
+        "active",
+        "past_due",
+        "cancelled",
+        "expired",
+      ],
     },
   },
 } as const
