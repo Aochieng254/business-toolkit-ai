@@ -63,7 +63,7 @@ export function useConversion(tool: ToolId) {
             sourceName: opts.sourceName,
             sourceSize: opts.sourceSize ?? 0,
             pageCount: opts.pageCount ?? 0,
-            ocrLanguage: opts.ocrLanguage ?? null ?? undefined,
+            ocrLanguage: opts.ocrLanguage ?? undefined,
             options: opts.options ?? {},
           },
         });
