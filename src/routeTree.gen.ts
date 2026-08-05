@@ -43,6 +43,7 @@ import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedReceiptIndexRouteImport } from './routes/_authenticated/receipt.index'
 import { Route as AuthenticatedQuotationIndexRouteImport } from './routes/_authenticated/quotation.index'
 import { Route as AuthenticatedInvoiceIndexRouteImport } from './routes/_authenticated/invoice.index'
+import { Route as ApiPublicPaypalWebhookRouteImport } from './routes/api/public/paypal-webhook'
 import { Route as ApiAiChatRouteImport } from './routes/api/ai/chat'
 import { Route as AuthenticatedReceiptNewRouteImport } from './routes/_authenticated/receipt.new'
 import { Route as AuthenticatedQuotationNewRouteImport } from './routes/_authenticated/quotation.new'
@@ -234,6 +235,11 @@ const AuthenticatedInvoiceIndexRoute =
     path: '/',
     getParentRoute: () => AuthenticatedInvoiceRoute,
   } as any)
+const ApiPublicPaypalWebhookRoute = ApiPublicPaypalWebhookRouteImport.update({
+  id: '/api/public/paypal-webhook',
+  path: '/api/public/paypal-webhook',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiAiChatRoute = ApiAiChatRouteImport.update({
   id: '/api/ai/chat',
   path: '/api/ai/chat',
@@ -332,6 +338,7 @@ export interface FileRoutesByFullPath {
   '/quotation/new': typeof AuthenticatedQuotationNewRoute
   '/receipt/new': typeof AuthenticatedReceiptNewRoute
   '/api/ai/chat': typeof ApiAiChatRoute
+  '/api/public/paypal-webhook': typeof ApiPublicPaypalWebhookRoute
   '/invoice/': typeof AuthenticatedInvoiceIndexRoute
   '/quotation/': typeof AuthenticatedQuotationIndexRoute
   '/receipt/': typeof AuthenticatedReceiptIndexRoute
@@ -375,6 +382,7 @@ export interface FileRoutesByTo {
   '/quotation/new': typeof AuthenticatedQuotationNewRoute
   '/receipt/new': typeof AuthenticatedReceiptNewRoute
   '/api/ai/chat': typeof ApiAiChatRoute
+  '/api/public/paypal-webhook': typeof ApiPublicPaypalWebhookRoute
   '/invoice': typeof AuthenticatedInvoiceIndexRoute
   '/quotation': typeof AuthenticatedQuotationIndexRoute
   '/receipt': typeof AuthenticatedReceiptIndexRoute
@@ -423,6 +431,7 @@ export interface FileRoutesById {
   '/_authenticated/quotation/new': typeof AuthenticatedQuotationNewRoute
   '/_authenticated/receipt/new': typeof AuthenticatedReceiptNewRoute
   '/api/ai/chat': typeof ApiAiChatRoute
+  '/api/public/paypal-webhook': typeof ApiPublicPaypalWebhookRoute
   '/_authenticated/invoice/': typeof AuthenticatedInvoiceIndexRoute
   '/_authenticated/quotation/': typeof AuthenticatedQuotationIndexRoute
   '/_authenticated/receipt/': typeof AuthenticatedReceiptIndexRoute
@@ -471,6 +480,7 @@ export interface FileRouteTypes {
     | '/quotation/new'
     | '/receipt/new'
     | '/api/ai/chat'
+    | '/api/public/paypal-webhook'
     | '/invoice/'
     | '/quotation/'
     | '/receipt/'
@@ -514,6 +524,7 @@ export interface FileRouteTypes {
     | '/quotation/new'
     | '/receipt/new'
     | '/api/ai/chat'
+    | '/api/public/paypal-webhook'
     | '/invoice'
     | '/quotation'
     | '/receipt'
@@ -561,6 +572,7 @@ export interface FileRouteTypes {
     | '/_authenticated/quotation/new'
     | '/_authenticated/receipt/new'
     | '/api/ai/chat'
+    | '/api/public/paypal-webhook'
     | '/_authenticated/invoice/'
     | '/_authenticated/quotation/'
     | '/_authenticated/receipt/'
@@ -581,6 +593,7 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   ShareTokenRoute: typeof ShareTokenRoute
   ApiAiChatRoute: typeof ApiAiChatRoute
+  ApiPublicPaypalWebhookRoute: typeof ApiPublicPaypalWebhookRoute
   ApiPublicShareTokenRoute: typeof ApiPublicShareTokenRoute
 }
 
@@ -824,6 +837,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedInvoiceIndexRouteImport
       parentRoute: typeof AuthenticatedInvoiceRoute
     }
+    '/api/public/paypal-webhook': {
+      id: '/api/public/paypal-webhook'
+      path: '/api/public/paypal-webhook'
+      fullPath: '/api/public/paypal-webhook'
+      preLoaderRoute: typeof ApiPublicPaypalWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/ai/chat': {
       id: '/api/ai/chat'
       path: '/api/ai/chat'
@@ -1026,6 +1046,7 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   ShareTokenRoute: ShareTokenRoute,
   ApiAiChatRoute: ApiAiChatRoute,
+  ApiPublicPaypalWebhookRoute: ApiPublicPaypalWebhookRoute,
   ApiPublicShareTokenRoute: ApiPublicShareTokenRoute,
 }
 export const routeTree = rootRouteImport

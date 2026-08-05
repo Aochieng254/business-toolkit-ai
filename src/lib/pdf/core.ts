@@ -120,6 +120,8 @@ export async function extractPages(
   file: File,
   opts: {
     ocr?: boolean;
+    /** Tesseract language pack, e.g. "eng", "swa", "fra". */
+    ocrLanguage?: string;
     onProgress?: (pct: number, label: string) => void;
   } = {},
 ): Promise<PageContent[]> {
@@ -151,7 +153,7 @@ export async function extractPages(
         opts.onProgress?.(Math.round(((i - 1) / pdf.numPages) * 100), `OCR page ${i}…`);
         if (!worker) {
           const { createWorker } = await import("tesseract.js");
-          worker = await createWorker("eng");
+          worker = await createWorker(opts.ocrLanguage || "eng");
         }
         const canvas = await renderPageToCanvas(page, 2);
         const { data } = await worker.recognize(canvas);
