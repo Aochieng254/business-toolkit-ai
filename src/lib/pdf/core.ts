@@ -120,6 +120,8 @@ export async function extractPages(
   file: File,
   opts: {
     ocr?: boolean;
+    /** Tesseract language pack, e.g. "eng", "swa", "fra". */
+    ocrLanguage?: string;
     onProgress?: (pct: number, label: string) => void;
   } = {},
 ): Promise<PageContent[]> {
