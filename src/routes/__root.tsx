@@ -87,14 +87,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "Business Toolkit AI is the all-in-one SaaS for founders: AI document generators, business calculators, and productivity tools in one modern workspace.",
       },
       { name: "author", content: "Business Toolkit AI" },
-      { property: "og:title", content: "Business Toolkit AI" },
+      { property: "og:title", content: "Business Toolkit AI — AI-powered documents, calculators & more" },
       {
         property: "og:description",
         content:
-          "The all-in-one AI workspace for modern businesses — generators, calculators, and an AI assistant.",
+          "Business Toolkit AI is the all-in-one SaaS for founders: AI document generators, business calculators, and productivity tools in one modern workspace.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Business Toolkit AI — AI-powered documents, calculators & more" },
+      { name: "twitter:description", content: "Business Toolkit AI is the all-in-one SaaS for founders: AI document generators, business calculators, and productivity tools in one modern workspace." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/8bd43dc0-ddeb-4911-b1ab-c10d299fe3ec/id-preview-7e5de0ef--a655b013-eef9-4a16-b938-308b55291ae3.lovable.app-1785830158784.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/8bd43dc0-ddeb-4911-b1ab-c10d299fe3ec/id-preview-7e5de0ef--a655b013-eef9-4a16-b938-308b55291ae3.lovable.app-1785830158784.png" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
