@@ -229,9 +229,11 @@ export const FileService = {
   },
   async storageUsage(): Promise<number> {
     const uid = await currentUserId();
-    const { data } = await supabase.rpc("storage_usage", { _user_id: uid });
-    return Number(data ?? 0);
+    const { data } = await supabase.from("files").select("size_bytes")
+      .eq("user_id", uid).eq("is_trashed", false);
+    return (data ?? []).reduce((sum, r) => sum + Number(r.size_bytes ?? 0), 0);
   },
+
   async searchGlobal(q: string, limit = 50): Promise<FileRow[]> {
     if (!q.trim()) return [];
     const { data } = await supabase.from("files").select("*")

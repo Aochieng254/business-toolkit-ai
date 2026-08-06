@@ -2,6 +2,8 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { FREE_DAILY_CONVERSIONS } from "@/lib/billing/plans";
+import { countConversionsToday } from "@/lib/billing/service.functions";
+
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
