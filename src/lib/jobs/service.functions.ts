@@ -37,9 +37,17 @@ export const startConversionJob = createServerFn({ method: "POST" })
   .inputValidator((data: z.input<typeof startSchema>) => startSchema.parse(data))
   .handler(async ({ data, context }) => {
     const supabase = context.supabase as any;
-    const { data: isPro } = await supabase.rpc("is_pro", { _user_id: context.userId });
-    const { data: usedToday } = await supabase.rpc("conversions_today", { _user_id: context.userId });
-    const used = Number(usedToday ?? 0);
+    const [{ data: roles }, { data: sub }] = await Promise.all([
+      supabase.from("user_roles").select("role").eq("user_id", context.userId),
+      supabase.from("subscriptions").select("plan, status, trial_ends_at, current_period_end").eq("user_id", context.userId).maybeSingle(),
+    ]);
+    const now = Date.now();
+    const isAdmin = (roles ?? []).some((r: { role: string }) => r.role === "admin");
+    const trialing = sub?.status === "trialing" && sub?.trial_ends_at && new Date(sub.trial_ends_at).getTime() > now;
+    const active = sub?.status === "active" && (!sub?.current_period_end || new Date(sub.current_period_end).getTime() > now);
+    const isPro = Boolean(isAdmin || ((trialing || active) && sub?.plan === "pro"));
+    const used = await countConversionsToday(supabase, context.userId);
+
 
     if (!isPro && used >= FREE_DAILY_CONVERSIONS) {
       throw new Error(
