@@ -37,16 +37,23 @@ function SharePage() {
 
   useEffect(() => {
     (async () => {
-      const { data, error } = await supabase.rpc("get_shared_file", { _token: token });
-      if (error) { setErr(error.message); setLoading(false); return; }
-      const row = Array.isArray(data) ? data[0] : data;
-      if (!row) { setErr("This link is invalid, expired, or has been revoked."); setLoading(false); return; }
-      const info = row as ShareInfo;
-      setInfo(info);
-      if (!info.has_password) setUnlocked(true);
+      try {
+        const res = await fetch(`/api/public/share/${token}?info=1`);
+        if (!res.ok) {
+          setErr(res.status === 404 ? "This link is invalid, expired, or has been revoked." : await res.text());
+          setLoading(false);
+          return;
+        }
+        const info = (await res.json()) as ShareInfo;
+        setInfo(info);
+        if (!info.has_password) setUnlocked(true);
+      } catch {
+        setErr("This link is invalid, expired, or has been revoked.");
+      }
       setLoading(false);
     })();
   }, [token]);
+
 
   useEffect(() => {
     (async () => {
