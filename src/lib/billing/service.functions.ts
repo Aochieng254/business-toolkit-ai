@@ -5,12 +5,27 @@ import { FREE_DAILY_CONVERSIONS, TRIAL_DAYS, type Entitlement } from "./plans";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+/** Counts today's quota-consuming conversions with the caller's RLS-scoped client. */
+export async function countConversionsToday(supabase: any, userId: string): Promise<number> {
+  const startOfDay = new Date();
+  startOfDay.setUTCHours(0, 0, 0, 0);
+  const { count } = await supabase
+    .from("conversion_jobs")
+    .select("id", { count: "exact", head: true })
+    .eq("user_id", userId)
+    .eq("counted_against_quota", true)
+    .in("status", ["queued", "running", "done"])
+    .gte("created_at", startOfDay.toISOString());
+  return Number(count ?? 0);
+}
+
 async function readEntitlement(supabase: any, userId: string): Promise<Entitlement> {
-  const [{ data: sub }, { data: roles }, { data: usedToday }] = await Promise.all([
+  const [{ data: sub }, { data: roles }, usedToday] = await Promise.all([
     supabase.from("subscriptions").select("*").eq("user_id", userId).maybeSingle(),
     supabase.from("user_roles").select("role").eq("user_id", userId),
-    supabase.rpc("conversions_today", { _user_id: userId }),
+    countConversionsToday(supabase, userId),
   ]);
+
 
   const isAdmin = (roles ?? []).some((r: { role: string }) => r.role === "admin");
   const now = Date.now();

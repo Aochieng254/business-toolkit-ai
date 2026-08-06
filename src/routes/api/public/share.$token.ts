@@ -33,10 +33,30 @@ export const Route = createFileRoute("/api/public/share/$token")({
         if (share.expires_at && new Date(share.expires_at) < new Date())
           return new Response("Expired", { status: 410 });
 
+        // Metadata-only request: never leaks storage paths, owner or password hash.
+        if (url.searchParams.get("info") === "1") {
+          const { data: fileRow } = await supabaseAdmin
+            .from("files")
+            .select("id, name, mime_type, size_bytes")
+            .eq("id", share.file_id)
+            .maybeSingle();
+          if (!fileRow) return new Response("Not found", { status: 404 });
+          return Response.json({
+            file_id: fileRow.id,
+            name: fileRow.name,
+            mime_type: fileRow.mime_type,
+            size_bytes: fileRow.size_bytes,
+            allow_download: share.allow_download,
+            expires_at: share.expires_at,
+            has_password: share.password_hash !== null,
+          });
+        }
+
         if (share.password_hash) {
           if (!providedHash || providedHash !== share.password_hash)
             return new Response("Password required", { status: 401 });
         }
+
 
         const { data: signed, error: sErr } = await supabaseAdmin.storage
           .from("user-files")
