@@ -3,7 +3,7 @@
 export const PRO_PRICE_USD = 25;
 export const TRIAL_DAYS = 7;
 /** Conversions a free account may run each day (resets at midnight). */
-export const FREE_DAILY_CONVERSIONS = 3;
+export const FREE_DAILY_CONVERSIONS = 5;
 
 /** Public PayPal identifiers — safe to ship to the browser. */
 export const PAYPAL_CLIENT_ID =
