@@ -225,7 +225,7 @@ function CalculatorsPage() {
             <SelectContent className="max-h-72">
               {CURRENCIES.map((c) => (
                 <SelectItem key={c.code} value={c.code}>
-                  {c.code} · {c.symbol}
+                  {c.code} · {c.label}
                 </SelectItem>
               ))}
             </SelectContent>
