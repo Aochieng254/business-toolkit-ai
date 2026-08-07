@@ -3,13 +3,18 @@ import { createFileRoute } from "@tanstack/react-router";
 import { FileSpreadsheet, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { FileDrop, ToolHeader } from "@/components/tools/file-drop";
-import { extractPages, baseName } from "@/lib/pdf/core";
-import { pagesToRows, downloadRowsAsXlsx } from "@/lib/pdf/convert";
-import { toast } from "sonner";
+import {
+  JobProgress,
+  OcrLanguageSelect,
+  QuotaBanner,
+  UpgradeDialog,
+} from "@/components/tools/conversion-status";
+import { useConversion } from "@/hooks/use-conversion";
+import { extractPages, baseName, downloadBlob } from "@/lib/pdf/core";
+import { pagesToRows, rowsToXlsxBlob } from "@/lib/pdf/convert";
 
 export const Route = createFileRoute("/_authenticated/pdf-to-excel")({
   head: () => ({
@@ -30,27 +35,33 @@ export const Route = createFileRoute("/_authenticated/pdf-to-excel")({
 });
 
 function PdfToExcelPage() {
-  const [busy, setBusy] = useState(false);
-  const [progress, setProgress] = useState(0);
+  const conv = useConversion("pdf-to-excel");
   const [ocr, setOcr] = useState(true);
   const [preview, setPreview] = useState<Record<string, string[][]> | null>(null);
-  const [name, setName] = useState("");
 
   const run = async (file: File) => {
-    setBusy(true);
-    setProgress(0);
     setPreview(null);
-    try {
-      const pages = await extractPages(file, { ocr, onProgress: (p) => setProgress(p) });
-      const sheets = pagesToRows(pages);
-      setPreview(sheets);
-      setName(baseName(file.name));
-      toast.success(`Found ${Object.values(sheets).reduce((a, r) => a + r.length, 0)} rows`);
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Could not read that PDF");
-    } finally {
-      setBusy(false);
-    }
+    const name = baseName(file.name);
+    await conv.run(
+      {
+        sourceName: file.name,
+        sourceSize: file.size,
+        ocrLanguage: ocr ? conv.prefs.ocrLanguage : undefined,
+      },
+      async (ctx) => {
+        const pages = await extractPages(file, {
+          ocr,
+          ocrLanguage: conv.prefs.ocrLanguage,
+          onProgress: (p, label) => ctx.onProgress(Math.round(p * 0.8), label),
+        });
+        const sheets = pagesToRows(pages);
+        setPreview(sheets);
+        ctx.onProgress(90, "Building workbook…");
+        const out = await rowsToXlsxBlob(sheets, name);
+        downloadBlob(out.blob, out.filename);
+        return out;
+      },
+    );
   };
 
   const firstSheet = preview ? Object.entries(preview)[0] : null;
@@ -62,13 +73,14 @@ function PdfToExcelPage() {
         title="PDF to Excel"
         description="Turn PDF tables and lists into a spreadsheet, one worksheet per page."
       />
+      <QuotaBanner remaining={conv.remaining} />
       <Card>
         <CardContent className="space-y-4 p-6">
           <FileDrop
             accept="application/pdf"
             label="Drop a PDF here"
             hint="Table-style layouts convert best"
-            busy={busy}
+            busy={conv.busy}
             onFiles={(f) => run(f[0])}
           />
           <div className="flex items-center justify-between rounded-lg border border-border p-3">
@@ -78,7 +90,13 @@ function PdfToExcelPage() {
             </div>
             <Switch id="ocr-x" checked={ocr} onCheckedChange={setOcr} />
           </div>
-          {busy && <Progress value={progress} />}
+          {ocr && (
+            <OcrLanguageSelect
+              value={conv.prefs.ocrLanguage}
+              onChange={(v) => conv.setPrefs((p) => ({ ...p, ocrLanguage: v }))}
+            />
+          )}
+          <JobProgress busy={conv.busy} progress={conv.progress} stage={conv.stage} />
         </CardContent>
       </Card>
 
@@ -87,16 +105,13 @@ function PdfToExcelPage() {
           <CardHeader className="flex-row items-center justify-between space-y-0">
             <CardTitle className="text-base">Preview — {firstSheet[0]}</CardTitle>
             <Button
+              variant="outline"
               onClick={async () => {
-                try {
-                  await downloadRowsAsXlsx(preview, name || "converted");
-                  toast.success("Workbook downloaded");
-                } catch (err) {
-                  toast.error(err instanceof Error ? err.message : "Export failed");
-                }
+                const out = await rowsToXlsxBlob(preview, "converted");
+                downloadBlob(out.blob, out.filename);
               }}
             >
-              <Download className="mr-2 h-4 w-4" /> Download .xlsx
+              <Download className="mr-2 h-4 w-4" /> Download again
             </Button>
           </CardHeader>
           <CardContent className="overflow-x-auto">
@@ -121,6 +136,7 @@ function PdfToExcelPage() {
         Columns are detected from the spacing in the PDF, so wide gaps split cleanly while tightly
         packed tables may need a quick tidy in Excel.
       </p>
+      <UpgradeDialog message={conv.blocked} onClose={conv.clearBlocked} />
     </div>
   );
 }
