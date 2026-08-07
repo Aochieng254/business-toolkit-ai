@@ -2,7 +2,6 @@ import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Image as ImageIcon } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -12,8 +11,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { FileDrop, ToolHeader } from "@/components/tools/file-drop";
-import { pdfToImages } from "@/lib/pdf/convert";
-import { toast } from "sonner";
+import { JobProgress, QuotaBanner, UpgradeDialog } from "@/components/tools/conversion-status";
+import { useConversion } from "@/hooks/use-conversion";
+import { pdfToImagesBlob } from "@/lib/pdf/convert";
+import { downloadBlob } from "@/lib/pdf/core";
 
 export const Route = createFileRoute("/_authenticated/pdf-to-image")({
   head: () => ({
@@ -34,22 +35,23 @@ export const Route = createFileRoute("/_authenticated/pdf-to-image")({
 });
 
 function PdfToImagePage() {
-  const [busy, setBusy] = useState(false);
-  const [progress, setProgress] = useState(0);
+  const conv = useConversion("pdf-to-image");
   const [format, setFormat] = useState<"png" | "jpeg">("png");
   const [scale, setScale] = useState("2");
 
   const run = async (file: File) => {
-    setBusy(true);
-    setProgress(0);
-    try {
-      await pdfToImages(file, { format, scale: Number(scale), onProgress: setProgress });
-      toast.success("Images downloaded");
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Conversion failed");
-    } finally {
-      setBusy(false);
-    }
+    await conv.run(
+      { sourceName: file.name, sourceSize: file.size, options: { format, scale: Number(scale) } },
+      async (ctx) => {
+        const out = await pdfToImagesBlob(file, {
+          format,
+          scale: Number(scale),
+          onProgress: (p) => ctx.onProgress(p, "Rendering pages…"),
+        });
+        downloadBlob(out.blob, out.filename);
+        return out;
+      },
+    );
   };
 
   return (
@@ -59,6 +61,7 @@ function PdfToImagePage() {
         title="PDF to Image"
         description="Export pages as PNG or JPG — single page downloads directly, multi-page as a ZIP."
       />
+      <QuotaBanner remaining={conv.remaining} />
       <Card>
         <CardContent className="space-y-4 p-6">
           <div className="grid gap-4 sm:grid-cols-2">
@@ -93,12 +96,13 @@ function PdfToImagePage() {
             accept="application/pdf"
             label="Drop a PDF here"
             hint="Every page is rendered as an image"
-            busy={busy}
+            busy={conv.busy}
             onFiles={(f) => run(f[0])}
           />
-          {busy && <Progress value={progress} />}
+          <JobProgress busy={conv.busy} progress={conv.progress} stage={conv.stage} />
         </CardContent>
       </Card>
+      <UpgradeDialog message={conv.blocked} onClose={conv.clearBlocked} />
     </div>
   );
 }

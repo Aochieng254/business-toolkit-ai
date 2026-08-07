@@ -1,11 +1,11 @@
-import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Presentation } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
 import { FileDrop, ToolHeader } from "@/components/tools/file-drop";
-import { pdfToPptx } from "@/lib/pdf/convert";
-import { toast } from "sonner";
+import { JobProgress, QuotaBanner, UpgradeDialog } from "@/components/tools/conversion-status";
+import { useConversion } from "@/hooks/use-conversion";
+import { pdfToPptxBlob } from "@/lib/pdf/convert";
+import { downloadBlob } from "@/lib/pdf/core";
 
 export const Route = createFileRoute("/_authenticated/pdf-to-powerpoint")({
   head: () => ({
@@ -26,20 +26,14 @@ export const Route = createFileRoute("/_authenticated/pdf-to-powerpoint")({
 });
 
 function PdfToPptPage() {
-  const [busy, setBusy] = useState(false);
-  const [progress, setProgress] = useState(0);
+  const conv = useConversion("pdf-to-powerpoint");
 
   const run = async (file: File) => {
-    setBusy(true);
-    setProgress(0);
-    try {
-      await pdfToPptx(file, setProgress);
-      toast.success("Presentation downloaded");
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Conversion failed");
-    } finally {
-      setBusy(false);
-    }
+    await conv.run({ sourceName: file.name, sourceSize: file.size }, async (ctx) => {
+      const out = await pdfToPptxBlob(file, (p) => ctx.onProgress(p, "Building slides…"));
+      downloadBlob(out.blob, out.filename);
+      return out;
+    });
   };
 
   return (
@@ -49,22 +43,24 @@ function PdfToPptPage() {
         title="PDF to PowerPoint"
         description="Each PDF page becomes a slide you can annotate and present."
       />
+      <QuotaBanner remaining={conv.remaining} />
       <Card>
         <CardContent className="space-y-4 p-6">
           <FileDrop
             accept="application/pdf"
             label="Drop a PDF here"
             hint="One slide per page"
-            busy={busy}
+            busy={conv.busy}
             onFiles={(f) => run(f[0])}
           />
-          {busy && <Progress value={progress} />}
+          <JobProgress busy={conv.busy} progress={conv.progress} stage={conv.stage} />
         </CardContent>
       </Card>
       <p className="text-xs text-muted-foreground">
         Pages are placed as high-resolution slide images. To edit the wording as text, run the file
         through PDF to Word first and paste it in.
       </p>
+      <UpgradeDialog message={conv.blocked} onClose={conv.clearBlocked} />
     </div>
   );
 }

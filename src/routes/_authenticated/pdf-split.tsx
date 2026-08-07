@@ -7,8 +7,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { FileDrop, ToolHeader } from "@/components/tools/file-drop";
-import { parseRanges } from "@/lib/pdf/core";
-import { getPageCount, splitPdf } from "@/lib/pdf/convert";
+import { JobProgress, QuotaBanner, UpgradeDialog } from "@/components/tools/conversion-status";
+import { useConversion } from "@/hooks/use-conversion";
+import { parseRanges, downloadBlob } from "@/lib/pdf/core";
+import { getPageCount, splitPdfBlob } from "@/lib/pdf/convert";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/pdf-split")({
@@ -30,14 +32,15 @@ export const Route = createFileRoute("/_authenticated/pdf-split")({
 });
 
 function SplitPage() {
+  const conv = useConversion("pdf-split");
   const [file, setFile] = useState<File | null>(null);
   const [count, setCount] = useState(0);
   const [mode, setMode] = useState<"each" | "range">("range");
-  const [ranges, setRanges] = useState("1-");
-  const [busy, setBusy] = useState(false);
+  const [ranges, setRanges] = useState("");
+  const [reading, setReading] = useState(false);
 
   const pick = async (f: File) => {
-    setBusy(true);
+    setReading(true);
     try {
       const n = await getPageCount(f);
       setFile(f);
@@ -46,26 +49,33 @@ function SplitPage() {
     } catch {
       toast.error("Could not read that PDF");
     } finally {
-      setBusy(false);
+      setReading(false);
     }
   };
 
   const run = async () => {
     if (!file) return;
-    const pages = mode === "each" ? Array.from({ length: count }, (_, i) => i) : parseRanges(ranges, count);
+    const pages =
+      mode === "each" ? Array.from({ length: count }, (_, i) => i) : parseRanges(ranges, count);
     if (!pages.length) {
       toast.error("No valid pages selected");
       return;
     }
-    setBusy(true);
-    try {
-      await splitPdf(file, mode, pages);
-      toast.success(mode === "each" ? "Split pages downloaded as a ZIP" : "Extracted PDF downloaded");
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Split failed");
-    } finally {
-      setBusy(false);
-    }
+    await conv.run(
+      {
+        sourceName: file.name,
+        sourceSize: file.size,
+        pageCount: pages.length,
+        options: { mode, pages: pages.length },
+      },
+      async (ctx) => {
+        ctx.onProgress(40, "Splitting pages…");
+        const out = await splitPdfBlob(file, mode, pages);
+        ctx.onProgress(90, "Preparing download…");
+        downloadBlob(out.blob, out.filename);
+        return out;
+      },
+    );
   };
 
   return (
@@ -75,19 +85,24 @@ function SplitPage() {
         title="Split PDF"
         description="Separate every page into its own file, or extract a specific range."
       />
+      <QuotaBanner remaining={conv.remaining} />
       <Card>
         <CardContent className="space-y-5 p-6">
           <FileDrop
             accept="application/pdf"
             label={file ? `${file.name} — ${count} page(s)` : "Drop a PDF here"}
             hint="Choose the file you want to split"
-            busy={busy}
+            busy={reading || conv.busy}
             onFiles={(f) => pick(f[0])}
           />
 
           {file && (
             <>
-              <RadioGroup value={mode} onValueChange={(v) => setMode(v as "each" | "range")} className="gap-3">
+              <RadioGroup
+                value={mode}
+                onValueChange={(v) => setMode(v as "each" | "range")}
+                className="gap-3"
+              >
                 <label className="flex cursor-pointer items-start gap-3 rounded-lg border border-border p-3">
                   <RadioGroupItem value="range" className="mt-1" />
                   <span>
@@ -123,13 +138,16 @@ function SplitPage() {
                 </div>
               )}
 
-              <Button onClick={run} disabled={busy}>
+              <JobProgress busy={conv.busy} progress={conv.progress} stage={conv.stage} />
+
+              <Button onClick={run} disabled={reading || conv.busy}>
                 Split PDF
               </Button>
             </>
           )}
         </CardContent>
       </Card>
+      <UpgradeDialog message={conv.blocked} onClose={conv.clearBlocked} />
     </div>
   );
 }
