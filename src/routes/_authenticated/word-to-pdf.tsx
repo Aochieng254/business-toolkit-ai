@@ -1,10 +1,11 @@
-import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { FileText } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
 import { FileDrop, ToolHeader } from "@/components/tools/file-drop";
-import { wordFileToPdf } from "@/lib/pdf/convert";
+import { JobProgress, QuotaBanner, UpgradeDialog } from "@/components/tools/conversion-status";
+import { useConversion } from "@/hooks/use-conversion";
+import { wordFileToPdfBlob } from "@/lib/pdf/convert";
+import { downloadBlob } from "@/lib/pdf/core";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/word-to-pdf")({
@@ -26,7 +27,7 @@ export const Route = createFileRoute("/_authenticated/word-to-pdf")({
 });
 
 function WordToPdfPage() {
-  const [busy, setBusy] = useState(false);
+  const conv = useConversion("word-to-pdf");
 
   const run = async (file: File) => {
     if (!/\.docx?$/i.test(file.name)) {
@@ -37,15 +38,13 @@ function WordToPdfPage() {
       toast.error("Legacy .doc files aren't supported — save as .docx first.");
       return;
     }
-    setBusy(true);
-    try {
-      await wordFileToPdf(file);
-      toast.success("PDF downloaded");
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Conversion failed");
-    } finally {
-      setBusy(false);
-    }
+    await conv.run({ sourceName: file.name, sourceSize: file.size }, async (ctx) => {
+      ctx.onProgress(30, "Reading document…");
+      const out = await wordFileToPdfBlob(file);
+      ctx.onProgress(90, "Preparing download…");
+      downloadBlob(out.blob, out.filename);
+      return out;
+    });
   };
 
   return (
@@ -53,24 +52,22 @@ function WordToPdfPage() {
       <ToolHeader
         icon={FileText}
         title="Word to PDF"
-        description="Convert a .docx document into a clean, print-ready PDF."
+        description="Convert .docx files into clean, shareable PDFs without leaving your browser."
       />
+      <QuotaBanner remaining={conv.remaining} />
       <Card>
         <CardContent className="space-y-4 p-6">
           <FileDrop
             accept=".docx"
-            label="Drop a Word document here"
-            hint="Supports .docx files"
-            busy={busy}
+            label="Drop a Word file here"
+            hint="Only .docx is supported"
+            busy={conv.busy}
             onFiles={(f) => run(f[0])}
           />
-          {busy && <Progress value={70} />}
+          <JobProgress busy={conv.busy} progress={conv.progress} stage={conv.stage} />
         </CardContent>
       </Card>
-      <p className="text-xs text-muted-foreground">
-        Text, headings, bold and italic styling, lists and tables are carried across. Embedded
-        images and complex column layouts are simplified.
-      </p>
+      <UpgradeDialog message={conv.blocked} onClose={conv.clearBlocked} />
     </div>
   );
 }
