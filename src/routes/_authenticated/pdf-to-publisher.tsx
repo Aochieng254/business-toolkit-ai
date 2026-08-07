@@ -1,12 +1,16 @@
-import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { LayoutTemplate, Info } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
 import { FileDrop, ToolHeader } from "@/components/tools/file-drop";
-import { extractPages } from "@/lib/pdf/core";
-import { pdfToPublisherBundle } from "@/lib/pdf/convert";
-import { toast } from "sonner";
+import {
+  JobProgress,
+  OcrLanguageSelect,
+  QuotaBanner,
+  UpgradeDialog,
+} from "@/components/tools/conversion-status";
+import { useConversion } from "@/hooks/use-conversion";
+import { extractPages, downloadBlob } from "@/lib/pdf/core";
+import { pdfToPublisherBundleBlob } from "@/lib/pdf/convert";
 
 export const Route = createFileRoute("/_authenticated/pdf-to-publisher")({
   head: () => ({
@@ -27,21 +31,24 @@ export const Route = createFileRoute("/_authenticated/pdf-to-publisher")({
 });
 
 function PdfToPublisherPage() {
-  const [busy, setBusy] = useState(false);
-  const [progress, setProgress] = useState(0);
+  const conv = useConversion("pdf-to-publisher");
 
   const run = async (file: File) => {
-    setBusy(true);
-    setProgress(0);
-    try {
-      const pages = await extractPages(file, { ocr: true, onProgress: (p) => setProgress(p / 2) });
-      await pdfToPublisherBundle(file, pages, (p) => setProgress(50 + p / 2));
-      toast.success("Publisher bundle downloaded");
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Conversion failed");
-    } finally {
-      setBusy(false);
-    }
+    await conv.run(
+      { sourceName: file.name, sourceSize: file.size, ocrLanguage: conv.prefs.ocrLanguage },
+      async (ctx) => {
+        const pages = await extractPages(file, {
+          ocr: true,
+          ocrLanguage: conv.prefs.ocrLanguage,
+          onProgress: (p, label) => ctx.onProgress(Math.round(p / 2), label),
+        });
+        const out = await pdfToPublisherBundleBlob(file, pages, (p) =>
+          ctx.onProgress(50 + Math.round(p / 2), "Packaging artwork…"),
+        );
+        downloadBlob(out.blob, out.filename);
+        return out;
+      },
+    );
   };
 
   return (
@@ -52,13 +59,15 @@ function PdfToPublisherPage() {
         description="Package a PDF into artwork and text that Microsoft Publisher can import."
       />
 
+      <QuotaBanner remaining={conv.remaining} />
+
       <div className="flex gap-3 rounded-xl border border-border bg-muted/40 p-4 text-sm">
         <Info className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
         <p className="text-muted-foreground">
-          Publisher's <span className="font-medium">.pub</span> format is closed, so no tool can write
-          one directly. Instead you get a ZIP with print-quality page images, the editable text as a
-          Word file, and step-by-step import instructions — which is how Publisher expects outside
-          artwork to arrive.
+          Publisher&apos;s <span className="font-medium">.pub</span> format is closed, so no tool can
+          write one directly. Instead you get a ZIP with print-quality page images, the editable text
+          as a Word file, and step-by-step import instructions — which is how Publisher expects
+          outside artwork to arrive.
         </p>
       </div>
 
@@ -67,13 +76,18 @@ function PdfToPublisherPage() {
           <FileDrop
             accept="application/pdf"
             label="Drop a PDF here"
-            hint="Creates images + editable text in one ZIP"
-            busy={busy}
+            hint="Creates a ZIP bundle for Publisher"
+            busy={conv.busy}
             onFiles={(f) => run(f[0])}
           />
-          {busy && <Progress value={progress} />}
+          <OcrLanguageSelect
+            value={conv.prefs.ocrLanguage}
+            onChange={(v) => conv.setPrefs((p) => ({ ...p, ocrLanguage: v }))}
+          />
+          <JobProgress busy={conv.busy} progress={conv.progress} stage={conv.stage} />
         </CardContent>
       </Card>
+      <UpgradeDialog message={conv.blocked} onClose={conv.clearBlocked} />
     </div>
   );
 }

@@ -4,7 +4,10 @@ import { Combine, X, ArrowUp, ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { FileDrop, ToolHeader } from "@/components/tools/file-drop";
-import { mergePdfs } from "@/lib/pdf/convert";
+import { JobProgress, QuotaBanner, UpgradeDialog } from "@/components/tools/conversion-status";
+import { useConversion } from "@/hooks/use-conversion";
+import { mergePdfsBlob } from "@/lib/pdf/convert";
+import { downloadBlob } from "@/lib/pdf/core";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/pdf-merge")({
@@ -26,8 +29,8 @@ export const Route = createFileRoute("/_authenticated/pdf-merge")({
 });
 
 function MergePage() {
+  const conv = useConversion("pdf-merge");
   const [files, setFiles] = useState<File[]>([]);
-  const [busy, setBusy] = useState(false);
 
   const move = (i: number, dir: -1 | 1) => {
     setFiles((prev) => {
@@ -44,15 +47,17 @@ function MergePage() {
       toast.error("Add at least two PDFs to merge");
       return;
     }
-    setBusy(true);
-    try {
-      await mergePdfs(files);
-      toast.success("Merged PDF downloaded");
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Merge failed");
-    } finally {
-      setBusy(false);
-    }
+    const totalSize = files.reduce((a, f) => a + f.size, 0);
+    await conv.run(
+      { sourceName: files[0].name, sourceSize: totalSize, options: { fileCount: files.length } },
+      async (ctx) => {
+        ctx.onProgress(40, "Combining documents…");
+        const out = await mergePdfsBlob(files);
+        ctx.onProgress(90, "Preparing download…");
+        downloadBlob(out.blob, out.filename);
+        return out;
+      },
+    );
   };
 
   return (
@@ -62,6 +67,7 @@ function MergePage() {
         title="Merge PDFs"
         description="Combine multiple PDFs into one file, in the order you choose."
       />
+      <QuotaBanner remaining={conv.remaining} />
       <Card>
         <CardContent className="space-y-5 p-6">
           <FileDrop
@@ -69,7 +75,7 @@ function MergePage() {
             label="Drop PDFs here"
             hint="Add as many files as you need"
             multiple
-            busy={busy}
+            busy={conv.busy}
             onFiles={(f) => setFiles((prev) => [...prev, ...f.filter((x) => /\.pdf$/i.test(x.name))])}
           />
 
@@ -101,11 +107,14 @@ function MergePage() {
             </ul>
           )}
 
-          <Button onClick={run} disabled={busy || files.length < 2}>
+          <JobProgress busy={conv.busy} progress={conv.progress} stage={conv.stage} />
+
+          <Button onClick={run} disabled={conv.busy || files.length < 2}>
             Merge {files.length || ""} PDFs
           </Button>
         </CardContent>
       </Card>
+      <UpgradeDialog message={conv.blocked} onClose={conv.clearBlocked} />
     </div>
   );
 }
