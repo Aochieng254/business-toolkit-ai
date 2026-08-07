@@ -9,6 +9,13 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { FileDrop, ToolHeader } from "@/components/tools/file-drop";
+import {
+  JobProgress,
+  OcrLanguageSelect,
+  QuotaBanner,
+  UpgradeDialog,
+} from "@/components/tools/conversion-status";
+import { useConversion } from "@/hooks/use-conversion";
 import { extractPages, downloadBlob, baseName, type PageContent } from "@/lib/pdf/core";
 import { pagesToDocxBlob, pdfToImageDocxBlob } from "@/lib/pdf/convert";
 import { toast } from "sonner";
@@ -37,14 +44,17 @@ export const Route = createFileRoute("/_authenticated/pdf-to-word")({
 type Mode = "layout" | "text" | "image";
 
 function PdfToWordPage() {
+  const conv = useConversion("pdf-to-word");
   const [file, setFile] = useState<File | null>(null);
   const [pages, setPages] = useState<PageContent[]>([]);
-  const [busy, setBusy] = useState(false);
-  const [progress, setProgress] = useState(0);
+  const [reading, setReading] = useState(false);
+  const [readProgress, setReadProgress] = useState(0);
   const [status, setStatus] = useState("");
   const [ocr, setOcr] = useState(true);
   const [mode, setMode] = useState<Mode>("layout");
   const [text, setText] = useState("");
+
+  const busy = reading || conv.busy;
 
   const analyse = async (f: File) => {
     if (!f.name.toLowerCase().endsWith(".pdf")) {
@@ -52,15 +62,16 @@ function PdfToWordPage() {
       return;
     }
     setFile(f);
-    setBusy(true);
-    setProgress(0);
+    setReading(true);
+    setReadProgress(0);
     setPages([]);
     setText("");
     try {
       const result = await extractPages(f, {
         ocr,
+        ocrLanguage: conv.prefs.ocrLanguage,
         onProgress: (pct, label) => {
-          setProgress(pct);
+          setReadProgress(pct);
           setStatus(label);
         },
       });
@@ -86,50 +97,55 @@ function PdfToWordPage() {
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Could not read that PDF");
     } finally {
-      setBusy(false);
+      setReading(false);
       setStatus("");
     }
   };
 
   const convert = async () => {
     if (!file) return;
-    setBusy(true);
-    setProgress(0);
-    try {
-      const name = baseName(file.name);
-      if (mode === "image") {
-        setStatus("Rendering pages…");
-        const blob = await pdfToImageDocxBlob(file, setProgress);
-        downloadBlob(blob, `${name}.docx`);
-      } else if (mode === "layout") {
-        const blob = await pagesToDocxBlob(pages);
-        downloadBlob(blob, `${name}.docx`);
-      } else {
-        const blob = await pagesToDocxBlob([
-          {
-            pageNumber: 1,
-            width: 612,
-            height: 792,
-            ocr: false,
-            lines: text.split("\n").map((t, i, arr) => ({
-              y: arr.length - i,
-              x: 0,
-              text: t,
-              size: 11,
-              bold: false,
-              italic: false,
-            })),
-          },
-        ]);
-        downloadBlob(blob, `${name}.docx`);
-      }
-      toast.success("Word file downloaded");
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Conversion failed");
-    } finally {
-      setBusy(false);
-      setStatus("");
-    }
+    const name = baseName(file.name);
+    const filename = `${name}.docx`;
+    await conv.run(
+      {
+        sourceName: file.name,
+        sourceSize: file.size,
+        pageCount: pages.length,
+        ocrLanguage: ocr ? conv.prefs.ocrLanguage : undefined,
+        options: { mode },
+      },
+      async (ctx) => {
+        let blob: Blob;
+        if (mode === "image") {
+          ctx.onProgress(5, "Rendering pages…");
+          blob = await pdfToImageDocxBlob(file, (p) => ctx.onProgress(p, "Rendering pages…"));
+        } else if (mode === "layout") {
+          ctx.onProgress(40, "Rebuilding layout…");
+          blob = await pagesToDocxBlob(pages);
+        } else {
+          ctx.onProgress(40, "Building document…");
+          blob = await pagesToDocxBlob([
+            {
+              pageNumber: 1,
+              width: 612,
+              height: 792,
+              ocr: false,
+              lines: text.split("\n").map((t, i, arr) => ({
+                y: arr.length - i,
+                x: 0,
+                text: t,
+                size: 11,
+                bold: false,
+                italic: false,
+              })),
+            },
+          ]);
+        }
+        ctx.onProgress(95, "Preparing download…");
+        downloadBlob(blob, filename);
+        return { blob, filename };
+      },
+    );
   };
 
   return (
@@ -139,6 +155,8 @@ function PdfToWordPage() {
         title="PDF to Word"
         description="Keeps the original layout, and reads scanned pages with OCR — all on your device."
       />
+
+      <QuotaBanner remaining={conv.remaining} />
 
       <Card>
         <CardContent className="space-y-4 p-6">
@@ -158,12 +176,19 @@ function PdfToWordPage() {
             </div>
             <Switch id="ocr" checked={ocr} onCheckedChange={setOcr} />
           </div>
-          {busy && (
+          {ocr && (
+            <OcrLanguageSelect
+              value={conv.prefs.ocrLanguage}
+              onChange={(v) => conv.setPrefs((p) => ({ ...p, ocrLanguage: v }))}
+            />
+          )}
+          {reading && (
             <div className="space-y-1">
-              <Progress value={progress} />
+              <Progress value={readProgress} />
               <p className="text-xs text-muted-foreground">{status || "Working…"}</p>
             </div>
           )}
+          <JobProgress busy={conv.busy} progress={conv.progress} stage={conv.stage} />
         </CardContent>
       </Card>
 
@@ -225,6 +250,8 @@ function PdfToWordPage() {
       <p className="text-xs text-muted-foreground">
         Everything is processed locally in your browser — your documents never leave your device.
       </p>
+
+      <UpgradeDialog message={conv.blocked} onClose={conv.clearBlocked} />
     </div>
   );
 }
