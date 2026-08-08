@@ -21,6 +21,9 @@ import {
   TRIAL_DAYS,
 } from "@/lib/billing/plans";
 import { startFreeTrial, refreshSubscription } from "@/lib/billing/service.functions";
+import { PaypalCheckout } from "@/components/billing/paypal-checkout";
+import { AdSlot } from "@/components/ads/ad-slot";
+
 
 export const Route = createFileRoute("/_authenticated/subscription")({
   component: SubscriptionPage,
