@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { ToolHeader } from "@/components/tools/file-drop";
+import { AdSlot } from "@/components/ads/ad-slot";
 
 export const Route = createFileRoute("/_authenticated/pdf-tools")({
   head: () => ({
@@ -65,6 +66,7 @@ function PdfToolsPage() {
           </Link>
         ))}
       </div>
+      <AdSlot />
     </div>
   );
 }

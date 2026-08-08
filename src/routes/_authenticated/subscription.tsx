@@ -21,6 +21,9 @@ import {
   TRIAL_DAYS,
 } from "@/lib/billing/plans";
 import { startFreeTrial, refreshSubscription } from "@/lib/billing/service.functions";
+import { PaypalCheckout } from "@/components/billing/paypal-checkout";
+import { AdSlot } from "@/components/ads/ad-slot";
+
 
 export const Route = createFileRoute("/_authenticated/subscription")({
   component: SubscriptionPage,
@@ -173,7 +176,7 @@ function SubscriptionPage() {
           </ul>
 
           {!isPro && (
-            <div className="space-y-3">
+            <div className="space-y-4">
               <Button
                 className="w-full sm:w-auto"
                 onClick={onStartTrial}
@@ -189,13 +192,16 @@ function SubscriptionPage() {
                   : `Start ${TRIAL_DAYS}-day free trial`}
               </Button>
               <p className="text-xs text-muted-foreground">
-                Card-free trial. Secure PayPal checkout at ${PRO_PRICE_USD}/month will be connected
-                here to keep Pro running after the trial.
+                Card-free trial. When it ends, subscribe below to keep Pro running.
               </p>
+              <PaypalCheckout onLinked={refresh} />
             </div>
           )}
         </CardContent>
       </Card>
+
+      {!isPro && <AdSlot className="mt-2" />}
+
     </div>
   );
 }
