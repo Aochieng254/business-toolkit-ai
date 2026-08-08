@@ -3,6 +3,8 @@ import { useNavigate } from "@tanstack/react-router";
 import { LogOut, User as UserIcon } from "lucide-react";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/layout/app-sidebar";
+import { CommandPalette } from "@/components/layout/command-palette";
+
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { FloatingAssistant } from "@/components/ai/floating-assistant";
@@ -28,9 +30,13 @@ export function AppShell({ children }: { children: ReactNode }) {
         <AppSidebar />
         <div className="flex min-w-0 flex-1 flex-col">
           <header className="sticky top-0 z-30 flex h-14 items-center justify-between gap-2 border-b border-border bg-background/80 px-3 backdrop-blur">
-            <SidebarTrigger />
+            <div className="flex min-w-0 items-center gap-2">
+              <SidebarTrigger />
+              <CommandPalette />
+            </div>
             <div className="flex items-center gap-1">
               <ThemeToggle />
+
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="icon" className="rounded-full">
