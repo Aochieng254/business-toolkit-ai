@@ -3,6 +3,8 @@ import { useNavigate } from "@tanstack/react-router";
 import { LogOut, User as UserIcon } from "lucide-react";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/layout/app-sidebar";
+import { CommandPalette } from "@/components/layout/command-palette";
+
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { FloatingAssistant } from "@/components/ai/floating-assistant";
