@@ -183,7 +183,7 @@ export async function generateInvoicePDF(invoice: InvoiceWithRelations, logoUrl?
       doc.setFontSize(9);
     }
 
-    const rowVals = [
+    const rowVals: string[][] = [
       descLines,
       [String(Number(it.quantity))],
       [formatMoney(Number(it.unit_price), currency)],
@@ -194,17 +194,14 @@ export async function generateInvoicePDF(invoice: InvoiceWithRelations, logoUrl?
     let cx = tableX + 6;
     cols.forEach((c, idx) => {
       const tx = c.align === "right" ? cx + c.w - 6 : cx;
-      for (const val of rowVals[idx]) {
-        doc.text(val, tx, y + 13, { align: c.align });
-        y += c.key === "description" ? 12 : 0;
-      }
+      rowVals[idx].forEach((val, li) => {
+        doc.text(val, tx, y + 13 + li * 12, { align: c.align });
+      });
       cx += c.w;
     });
-    y += rowH - (descLines.length - 1) * 12; // normalize: desc loop already advanced y
-    y = Math.max(y, 0); // safety
-    // recompute cleanly: the loop above advanced y by (descLines-1)*12 extra
     doc.setDrawColor(230);
-    doc.line(tableX, y, pageW - margin, y);
+    doc.line(tableX, y + rowH, pageW - margin, y + rowH);
+    y += rowH;
   }
 
   // ---------- Totals ----------
