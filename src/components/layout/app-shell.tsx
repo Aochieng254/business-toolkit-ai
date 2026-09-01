@@ -4,6 +4,7 @@ import { LogOut, User as UserIcon } from "lucide-react";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/layout/app-sidebar";
 import { CommandPalette } from "@/components/layout/command-palette";
+import { NotificationBell } from "@/components/layout/notification-bell";
 
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
@@ -35,7 +36,9 @@ export function AppShell({ children }: { children: ReactNode }) {
               <CommandPalette />
             </div>
             <div className="flex items-center gap-1">
+              <NotificationBell />
               <ThemeToggle />
+
 
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
