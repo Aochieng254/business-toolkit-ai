@@ -130,6 +130,22 @@ export const finishConversionJob = createServerFn({ method: "POST" })
       })
       .eq("id", data.jobId)
       .eq("user_id", context.userId);
+
+    if (data.status === "done" || data.status === "error") {
+      await supabaseAdmin.from("notifications").insert({
+        user_id: context.userId,
+        type: data.status === "done" ? "success" : "error",
+        title:
+          data.status === "done"
+            ? `Conversion finished: ${data.outputName ?? "your file"}`
+            : "Conversion failed",
+        body:
+          data.status === "done"
+            ? "The converted file was saved to your Conversions folder."
+            : (data.error ?? "Something went wrong during conversion."),
+        link: data.status === "done" ? "/files" : "/pdf-tools",
+      });
+    }
     return { ok: true };
   });
 
