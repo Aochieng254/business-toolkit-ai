@@ -83,6 +83,13 @@ export const startFreeTrial = createServerFn({ method: "POST" })
       { onConflict: "user_id" },
     );
     if (error) throw new Error(error.message);
+    await supabaseAdmin.from("notifications").insert({
+      user_id: context.userId,
+      type: "success",
+      title: "Your 7-day Pro trial has started",
+      body: `Enjoy unlimited conversions and all Pro features until ${ends.toLocaleDateString()}.`,
+      link: "/subscription",
+    });
     return readEntitlement(context.supabase, context.userId);
   });
 
@@ -135,6 +142,14 @@ export const linkPaypalSubscription = createServerFn({ method: "POST" })
       user_id: context.userId,
       verified: true,
       payload: { status: sub.status } as never,
+    });
+
+    await supabaseAdmin.from("notifications").insert({
+      user_id: context.userId,
+      type: "success",
+      title: "Welcome to Pro",
+      body: "Your PayPal subscription is active. All limits have been lifted.",
+      link: "/subscription",
     });
 
     return readEntitlement(context.supabase, context.userId);

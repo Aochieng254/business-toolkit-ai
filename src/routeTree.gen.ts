@@ -29,6 +29,7 @@ import { Route as AuthenticatedPdfToExcelRouteImport } from './routes/_authentic
 import { Route as AuthenticatedPdfSplitRouteImport } from './routes/_authenticated/pdf-split'
 import { Route as AuthenticatedPdfMergeRouteImport } from './routes/_authenticated/pdf-merge'
 import { Route as AuthenticatedPayslipRouteImport } from './routes/_authenticated/payslip'
+import { Route as AuthenticatedNotificationsRouteImport } from './routes/_authenticated/notifications'
 import { Route as AuthenticatedInvoiceRouteImport } from './routes/_authenticated/invoice'
 import { Route as AuthenticatedFilesRouteImport } from './routes/_authenticated/files'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
@@ -158,6 +159,12 @@ const AuthenticatedPayslipRoute = AuthenticatedPayslipRouteImport.update({
   path: '/payslip',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedNotificationsRoute =
+  AuthenticatedNotificationsRouteImport.update({
+    id: '/notifications',
+    path: '/notifications',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedInvoiceRoute = AuthenticatedInvoiceRouteImport.update({
   id: '/invoice',
   path: '/invoice',
@@ -319,6 +326,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/files': typeof AuthenticatedFilesRoute
   '/invoice': typeof AuthenticatedInvoiceRouteWithChildren
+  '/notifications': typeof AuthenticatedNotificationsRoute
   '/payslip': typeof AuthenticatedPayslipRoute
   '/pdf-merge': typeof AuthenticatedPdfMergeRoute
   '/pdf-split': typeof AuthenticatedPdfSplitRoute
@@ -365,6 +373,7 @@ export interface FileRoutesByTo {
   '/cv-builder': typeof AuthenticatedCvBuilderRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/files': typeof AuthenticatedFilesRoute
+  '/notifications': typeof AuthenticatedNotificationsRoute
   '/payslip': typeof AuthenticatedPayslipRoute
   '/pdf-merge': typeof AuthenticatedPdfMergeRoute
   '/pdf-split': typeof AuthenticatedPdfSplitRoute
@@ -412,6 +421,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/files': typeof AuthenticatedFilesRoute
   '/_authenticated/invoice': typeof AuthenticatedInvoiceRouteWithChildren
+  '/_authenticated/notifications': typeof AuthenticatedNotificationsRoute
   '/_authenticated/payslip': typeof AuthenticatedPayslipRoute
   '/_authenticated/pdf-merge': typeof AuthenticatedPdfMergeRoute
   '/_authenticated/pdf-split': typeof AuthenticatedPdfSplitRoute
@@ -461,6 +471,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/files'
     | '/invoice'
+    | '/notifications'
     | '/payslip'
     | '/pdf-merge'
     | '/pdf-split'
@@ -507,6 +518,7 @@ export interface FileRouteTypes {
     | '/cv-builder'
     | '/dashboard'
     | '/files'
+    | '/notifications'
     | '/payslip'
     | '/pdf-merge'
     | '/pdf-split'
@@ -553,6 +565,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard'
     | '/_authenticated/files'
     | '/_authenticated/invoice'
+    | '/_authenticated/notifications'
     | '/_authenticated/payslip'
     | '/_authenticated/pdf-merge'
     | '/_authenticated/pdf-split'
@@ -737,6 +750,13 @@ declare module '@tanstack/react-router' {
       path: '/payslip'
       fullPath: '/payslip'
       preLoaderRoute: typeof AuthenticatedPayslipRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/notifications': {
+      id: '/_authenticated/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof AuthenticatedNotificationsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/invoice': {
@@ -990,6 +1010,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedFilesRoute: typeof AuthenticatedFilesRoute
   AuthenticatedInvoiceRoute: typeof AuthenticatedInvoiceRouteWithChildren
+  AuthenticatedNotificationsRoute: typeof AuthenticatedNotificationsRoute
   AuthenticatedPayslipRoute: typeof AuthenticatedPayslipRoute
   AuthenticatedPdfMergeRoute: typeof AuthenticatedPdfMergeRoute
   AuthenticatedPdfSplitRoute: typeof AuthenticatedPdfSplitRoute
@@ -1019,6 +1040,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedFilesRoute: AuthenticatedFilesRoute,
   AuthenticatedInvoiceRoute: AuthenticatedInvoiceRouteWithChildren,
+  AuthenticatedNotificationsRoute: AuthenticatedNotificationsRoute,
   AuthenticatedPayslipRoute: AuthenticatedPayslipRoute,
   AuthenticatedPdfMergeRoute: AuthenticatedPdfMergeRoute,
   AuthenticatedPdfSplitRoute: AuthenticatedPdfSplitRoute,
