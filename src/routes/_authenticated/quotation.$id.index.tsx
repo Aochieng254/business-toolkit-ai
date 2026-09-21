@@ -174,8 +174,10 @@ function ViewQuotationPage() {
             <ArrowRightLeft className="mr-2 h-4 w-4" />
             {quotation.converted_invoice_id ? "Converted" : "Convert to invoice"}
           </Button>
-          <Button onClick={() => navigate({ to: "/quotation/$id/edit", params: { id } })}>
-            <Pencil className="mr-2 h-4 w-4" /> Edit
+          <Button asChild>
+            <Link to="/quotation/$id/edit" params={{ id }}>
+              <Pencil className="mr-2 h-4 w-4" /> Edit
+            </Link>
           </Button>
           <AlertDialog>
             <AlertDialogTrigger asChild>
