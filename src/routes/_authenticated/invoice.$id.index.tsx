@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate, useParams } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate, useParams } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft, Copy, Download, Pencil, Receipt as ReceiptIcon, Trash2 } from "lucide-react";
 import { toast } from "sonner";
@@ -145,8 +145,10 @@ function ViewInvoicePage() {
           <Button variant="outline" onClick={() => dupMut.mutate()}>
             <Copy className="mr-2 h-4 w-4" /> Duplicate
           </Button>
-          <Button onClick={() => navigate({ to: "/invoice/$id/edit", params: { id } })}>
-            <Pencil className="mr-2 h-4 w-4" /> Edit
+          <Button asChild>
+            <Link to="/invoice/$id/edit" params={{ id }}>
+              <Pencil className="mr-2 h-4 w-4" /> Edit
+            </Link>
           </Button>
           <AlertDialog>
             <AlertDialogTrigger asChild>
