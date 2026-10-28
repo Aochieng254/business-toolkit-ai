@@ -7,6 +7,7 @@ import {
   Receipt,
   Wallet,
   UserSquare2,
+  IdCard,
   Mail,
   Sparkles,
   Calculator,
