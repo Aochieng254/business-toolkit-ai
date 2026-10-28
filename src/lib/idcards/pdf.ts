@@ -47,6 +47,12 @@ export const LAYOUT = {
 
 const MM_TO_PT = 2.834645669;
 
+export interface LoadedImage {
+  dataUrl: string;
+  w: number;
+  h: number;
+}
+
 async function toDataUrl(url: string): Promise<string | null> {
   try {
     const res = await fetch(url);
@@ -64,92 +70,110 @@ async function toDataUrl(url: string): Promise<string | null> {
 }
 
 export interface CardImages {
+  logo?: LoadedImage | null;
+  photo?: LoadedImage | null;
+  signature?: LoadedImage | null;
+}
+
+export async function loadCardImages(images: {
   logo?: string | null;
   photo?: string | null;
   signature?: string | null;
-}
-
-/** Contain-fit an image inside a box, centred. Returns false on failure. */
-async function addImageFit(
-  doc: jsPDF,
-  url: string | null | undefined,
-  x: number,
-  y: number,
-  w: number,
-  h: number,
-): Promise<boolean> {
-  if (!url) return false;
-  const dataUrl = await toDataUrl(url);
-  if (!dataUrl) return false;
-  return new Promise((resolve) => {
-    const img = new Image();
-    img.onload = () => {
-      const ratio = img.width / img.height || 1;
-      let dw = w;
-      let dh = w / ratio;
-      if (dh > h) {
-        dh = h;
-        dw = h * ratio;
-      }
-      try {
-        doc.addImage(dataUrl, "PNG", x + (w - dw) / 2, y + (h - dh) / 2, dw, dh, undefined, "FAST");
-        resolve(true);
-      } catch {
-        resolve(false);
-      }
-    };
-    img.onerror = () => resolve(false);
-    img.src = dataUrl;
-  });
-}
-
-function footerFontSize(doc: jsPDF, text: string, maxSize: number, maxW: number): number {
-  let size = maxSize;
-  while (size > 1.6) {
-    doc.setFontSize(size * MM_TO_PT);
-    if (doc.getTextWidth(text) <= maxW) break;
-    size -= 0.1;
+}): Promise<CardImages> {
+  const out: CardImages = {};
+  for (const key of ["logo", "photo", "signature"] as const) {
+    const url = images[key];
+    if (!url) {
+      out[key] = null;
+      continue;
+    }
+    const dataUrl = await toDataUrl(url);
+    if (!dataUrl) {
+      out[key] = null;
+      continue;
+    }
+    const dims = await new Promise<{ w: number; h: number }>((resolve) => {
+      const img = new Image();
+      img.onload = () => resolve({ w: img.width, h: img.height });
+      img.onerror = () => resolve({ w: 0, h: 0 });
+      img.src = dataUrl;
+    });
+    out[key] = dims.w > 0 ? { dataUrl, ...dims } : null;
   }
-  return size;
+  return out;
 }
 
-export function drawIdCard(doc: jsPDF, data: IdCardData, images: CardImages): void {
+/** Cover-fit (fill box, centre-crop) inside a clipped rounded frame. */
+function drawCover(doc: jsPDF, img: LoadedImage, ox: number, oy: number, box: { x: number; y: number; w: number; h: number }): void {
+  const scale = Math.max(box.w / img.w, box.h / img.h);
+  const dw = img.w * scale;
+  const dh = img.h * scale;
+  const dx = box.x + (box.w - dw) / 2;
+  const dy = box.y + (box.h - dh) / 2;
+  doc.saveGraphicsState();
+  doc.roundedRect(box.x + ox, box.y + oy, box.w, box.h, 1.2, 1.2).clip().discardPath();
+  doc.addImage(img.dataUrl, "PNG", dx + ox, dy + oy, dw, dh, undefined, "FAST");
+  doc.restoreGraphicsState();
+}
+
+/** Contain-fit (whole image visible) centred inside a box. */
+function drawContain(doc: jsPDF, img: LoadedImage, ox: number, oy: number, box: { x: number; y: number; w: number; h: number }): void {
+  const ratio = img.w / img.h || 1;
+  let dw = box.w;
+  let dh = box.w / ratio;
+  if (dh > box.h) {
+    dh = box.h;
+    dw = box.h * ratio;
+  }
+  doc.addImage(img.dataUrl, "PNG", box.x + (box.w - dw) / 2 + ox, box.y + (box.h - dh) / 2 + oy, dw, dh, undefined, "FAST");
+}
+
+export function drawIdCard(
+  doc: jsPDF,
+  data: IdCardData,
+  images: CardImages,
+  ox = 0,
+  oy = 0,
+): void {
+  const X = (v: number) => v + ox;
+  const Y = (v: number) => v + oy;
+
   // Card body — light background with rounded corners
   doc.setFillColor(CARD_BG);
-  doc.roundedRect(0, 0, CARD_W, CARD_H, 2.2, 2.2, "F");
+  doc.roundedRect(X(0), Y(0), CARD_W, CARD_H, 2.2, 2.2, "F");
 
-  // ── Header: logo + company name ──
+  // ── Header: company name ──
   doc.setFillColor(HEADER_TEXT);
   doc.setFont("helvetica", "bold");
   doc.setFontSize(LAYOUT.companyNameSize * MM_TO_PT);
   const nameCx = (LAYOUT.companyNameX + CARD_W - LAYOUT.pad) / 2;
-  doc.text(data.companyName || "Company Name", nameCx, LAYOUT.companyNameBaseline, { align: "center" });
+  doc.text(data.companyName || "Company Name", X(nameCx), Y(LAYOUT.companyNameBaseline), { align: "center" });
 
   // ── Badge ──
   const b = LAYOUT.badge;
   doc.setFillColor(GREEN);
-  doc.roundedRect(b.x, b.y, b.w, b.h, 0.6, 0.6, "F");
+  doc.roundedRect(X(b.x), Y(b.y), b.w, b.h, 0.6, 0.6, "F");
   doc.setFillColor(YELLOW);
   doc.setFontSize(LAYOUT.badgeTextSize * MM_TO_PT);
-  doc.text(data.badgeText || "STAFF ID CARD", b.x + b.w / 2, b.y + b.h * 0.68, { align: "center" });
+  doc.text(data.badgeText || "STAFF ID CARD", X(b.x + b.w / 2), Y(b.y + b.h * 0.68), { align: "center" });
 
   // ── Photo (green rounded frame) ──
   const p = LAYOUT.photo;
   doc.setDrawColor(GREEN);
   doc.setFillColor("#ffffff");
   doc.setLineWidth(0.55);
-  doc.roundedRect(p.x, p.y, p.w, p.h, 1.4, 1.4, "FD");
+  doc.roundedRect(X(p.x), Y(p.y), p.w, p.h, 1.4, 1.4, "FD");
   const inset = 0.9;
   const photoClip = { x: p.x + inset, y: p.y + inset, w: p.w - inset * 2, h: p.h - inset * 2 };
   doc.setFillColor("#e8f5ec");
-  doc.rect(photoClip.x, photoClip.y, photoClip.w, photoClip.h, "F");
-  addImageFitSync(doc, images.photo, photoClip);
+  doc.rect(X(photoClip.x), Y(photoClip.y), photoClip.w, photoClip.h, "F");
+  if (images.photo) drawCover(doc, images.photo, ox, oy, photoClip);
 
   // ── Name ──
   doc.setFillColor(HEADER_TEXT);
   doc.setFont("helvetica", "bold");
   doc.setFontSize(LAYOUT.nameSize * MM_TO_PT);
-  doc.text(data.fullName || "Full Name", LAYOUT.nameX, LAYOUT.nameBaseline);
+  doc.text(data.fullName || "Full Name", X(LAYOUT.nameX), Y(LAYOUT.nameBaseline));
 
   // ── Fields ──
   const fields = data.fields.slice(0, 4);
@@ -157,11 +181,11 @@ export function drawIdCard(doc: jsPDF, data: IdCardData, images: CardImages): vo
     const y = LAYOUT.fieldFirstBaseline + i * LAYOUT.fieldPitch;
     doc.setFont("helvetica", "normal");
     doc.setFontSize(LAYOUT.fieldLabelSize * MM_TO_PT);
-    doc.text(f.label || "", LAYOUT.fieldLabelX, y);
-    doc.text(":", LAYOUT.fieldColonX, y);
+    doc.text(f.label || "", X(LAYOUT.fieldLabelX), Y(y));
+    doc.text(":", X(LAYOUT.fieldColonX), Y(y));
     doc.setFont("helvetica", "bold");
     doc.setFontSize(LAYOUT.fieldValueSize * MM_TO_PT);
-    doc.text(f.value || "", LAYOUT.fieldValueX, y);
+    doc.text(f.value || "", X(LAYOUT.fieldValueX), Y(y));
   });
 
   // ── Authorizing signature ──
@@ -170,73 +194,76 @@ export function drawIdCard(doc: jsPDF, data: IdCardData, images: CardImages): vo
   if (sigBaseline > 44.4) sigBaseline = 44.4;
   doc.setFont("helvetica", "normal");
   doc.setFontSize(LAYOUT.fieldLabelSize * MM_TO_PT);
-  doc.text(data.signatureLabel || "", LAYOUT.fieldLabelX, sigBaseline);
-  const labelW = doc.getTextWidth(data.signatureLabel || "");
-  const sigBox = {
-    x: LAYOUT.fieldLabelX + labelW / MM_TO_PT + 1.2,
-    y: sigBaseline - LAYOUT.sigImageH,
-    w: LAYOUT.sigImageW,
-    h: LAYOUT.sigImageH,
-  };
-  addImageFitSync(doc, images.signature, sigBox);
+  const sigLabel = data.signatureLabel || "";
+  doc.text(sigLabel, X(LAYOUT.fieldLabelX), Y(sigBaseline));
+  const labelW = doc.getTextWidth(sigLabel) / MM_TO_PT;
+  if (images.signature) {
+    drawContain(doc, images.signature, ox, oy, {
+      x: LAYOUT.fieldLabelX + labelW + 1.2,
+      y: sigBaseline - LAYOUT.sigImageH,
+      w: LAYOUT.sigImageW,
+      h: LAYOUT.sigImageH,
+    });
+  }
 
   // ── Footer strip ──
   const ft = LAYOUT.footerTop;
   doc.setFillColor(GREEN);
-  doc.rect(0, ft, CARD_W, CARD_H - ft, "F");
+  doc.rect(X(0), Y(ft), CARD_W, CARD_H - ft, "F");
   doc.setFillColor(YELLOW);
   const maxW = CARD_W - 4;
-  const s1 = footerFontSize(doc, data.footerLine1 || "", LAYOUT.footerTextSize, maxW);
-  doc.setFontSize(s1 * MM_TO_PT);
-  doc.text(data.footerLine1 || "", CARD_W / 2, LAYOUT.footerLine1Baseline, { align: "center" });
-  const s2 = footerFontSize(doc, data.footerLine2 || "", LAYOUT.footerTextSize, maxW);
-  doc.setFontSize(s2 * MM_TO_PT);
-  doc.text(data.footerLine2 || "", CARD_W / 2, LAYOUT.footerLine2Baseline, { align: "center" });
+  const fitSize = (text: string) => {
+    let size = LAYOUT.footerTextSize;
+    doc.setFontSize(size * MM_TO_PT);
+    while (size > 1.6 && doc.getTextWidth(text) > maxW) {
+      size -= 0.1;
+      doc.setFontSize(size * MM_TO_PT);
+    }
+    return size;
+  };
+  fitSize(data.footerLine1 || "");
+  doc.text(data.footerLine1 || "", X(CARD_W / 2), Y(LAYOUT.footerLine1Baseline), { align: "center" });
+  fitSize(data.footerLine2 || "");
+  doc.text(data.footerLine2 || "", X(CARD_W / 2), Y(LAYOUT.footerLine2Baseline), { align: "center" });
 
-  // Header logo is drawn last so it sits above the background cleanly.
+  // ── Header logo (drawn last so it sits above the background) ──
   const lg = LAYOUT.logoBox;
-  addImageFitSync(doc, images.logo, lg);
+  if (images.logo) drawContain(doc, images.logo, ox, oy, lg);
 }
 
-/** Synchronous contain-fit once a dataUrl is already loaded. */
-function addImageFitSync(doc: jsPDF, url: string | null | undefined, box: { x: number; y: number; w: number; h: number }): void {
-  if (!url) return;
-  doc.addImage(url, "PNG", box.x, box.y, box.w, box.h, undefined, "FAST");
-}
-
-/**
- * Preload all image URLs into data URLs (addImage needs them upfront for
- * synchronous layout), then draw the card at its exact physical size.
- */
-export async function generateIdCardPDF(data: IdCardData, images: CardImages): Promise<jsPDF> {
+/** Single card PDF at its exact physical size: 85.6 mm × 54 mm (CR80). */
+export async function generateIdCardPDF(data: IdCardData, urls: CardImages["logo"] extends never ? never : {
+  logo?: string | null;
+  photo?: string | null;
+  signature?: string | null;
+}): Promise<jsPDF> {
   const doc = new jsPDF({ unit: "mm", format: [CARD_W, CARD_H], orientation: "landscape" });
-  const loaded: CardImages = {};
-  for (const key of ["logo", "photo", "signature"] as const) {
-    loaded[key] = images[key] ? await toDataUrl(images[key]!) : null;
-  }
-  drawIdCard(doc, data, loaded);
+  const images = await loadCardImages(urls);
+  drawIdCard(doc, data, images);
   return doc;
 }
 
 /** A4 print sheet with the card repeated in a cut-out grid. */
 export async function generateIdCardPrintSheet(
   data: IdCardData,
-  images: CardImages,
+  urls: {
+    logo?: string | null;
+    photo?: string | null;
+    signature?: string | null;
+  },
   copies: number,
 ): Promise<jsPDF> {
   const doc = new jsPDF({ unit: "mm", format: "a4", orientation: "portrait" });
-  const loaded: CardImages = {};
-  for (const key of ["logo", "photo", "signature"] as const) {
-    loaded[key] = images[key] ? await toDataUrl(images[key]!) : null;
-  }
+  const images = await loadCardImages(urls);
   const margin = 6;
   const gap = 3;
-  const perRow = Math.floor((doc.internal.pageSize.getWidth() - margin * 2 + gap) / (CARD_W + gap));
-  const perCol = Math.floor((doc.internal.pageSize.getHeight() - margin * 2 + gap) / (CARD_H + gap));
-  const perPage = perRow * perCol;
+  const pageW = doc.internal.pageSize.getWidth();
+  const pageH = doc.internal.pageSize.getHeight();
+  const perRow = Math.floor((pageW - margin * 2 + gap) / (CARD_W + gap));
+  const perCol = Math.floor((pageH - margin * 2 + gap) / (CARD_H + gap));
+  const perPage = Math.max(perRow * perCol, 1);
   let placed = 0;
-  let index = 0;
-  while (index < copies) {
+  for (let index = 0; index < copies; index++) {
     if (placed === perPage) {
       doc.addPage();
       placed = 0;
@@ -245,25 +272,12 @@ export async function generateIdCardPrintSheet(
     const col = placed % perRow;
     const x = margin + col * (CARD_W + gap);
     const y = margin + row * (CARD_H + gap);
-    // Cut guide
-    doc.setDrawColor("#c9d4cc");
+    drawIdCard(doc, data, images, x, y);
+    // Cut guide around each card
+    doc.setDrawColor("#b9c6be");
     doc.setLineWidth(0.2);
     doc.roundedRect(x, y, CARD_W, CARD_H, 2.2, 2.2, "S");
-    doc.saveGraphicsState();
-    doc.setCurrentTransformationMatrix(
-      (doc as unknown as { Matrix: new (a: number, b: number, c: number, d: number, e: number, f: number) => unknown }).constructor
-        ? (doc as never)
-        : (doc as never),
-    );
-    doc.restoreGraphicsState();
-    // Translate drawing by using a lightweight sub-context: shift origin via clip is complex,
-    // so draw a translated copy using jsPDF's translate on a fresh card each time.
-    doc.saveGraphicsState();
-    (doc as unknown as { translate?: (x: number, y: number) => void }).translate?.(x, y);
-    drawIdCard(doc, data, loaded);
-    doc.restoreGraphicsState();
     placed += 1;
-    index += 1;
   }
   return doc;
 }
