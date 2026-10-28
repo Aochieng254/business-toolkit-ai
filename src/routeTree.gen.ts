@@ -31,6 +31,7 @@ import { Route as AuthenticatedPdfMergeRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedPayslipRouteImport } from './routes/_authenticated/payslip'
 import { Route as AuthenticatedNotificationsRouteImport } from './routes/_authenticated/notifications'
 import { Route as AuthenticatedInvoiceRouteImport } from './routes/_authenticated/invoice'
+import { Route as AuthenticatedIdCardsRouteImport } from './routes/_authenticated/id-cards'
 import { Route as AuthenticatedFilesRouteImport } from './routes/_authenticated/files'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedCvBuilderRouteImport } from './routes/_authenticated/cv-builder'
@@ -168,6 +169,11 @@ const AuthenticatedNotificationsRoute =
 const AuthenticatedInvoiceRoute = AuthenticatedInvoiceRouteImport.update({
   id: '/invoice',
   path: '/invoice',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedIdCardsRoute = AuthenticatedIdCardsRouteImport.update({
+  id: '/id-cards',
+  path: '/id-cards',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedFilesRoute = AuthenticatedFilesRouteImport.update({
@@ -325,6 +331,7 @@ export interface FileRoutesByFullPath {
   '/cv-builder': typeof AuthenticatedCvBuilderRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/files': typeof AuthenticatedFilesRoute
+  '/id-cards': typeof AuthenticatedIdCardsRoute
   '/invoice': typeof AuthenticatedInvoiceRouteWithChildren
   '/notifications': typeof AuthenticatedNotificationsRoute
   '/payslip': typeof AuthenticatedPayslipRoute
@@ -373,6 +380,7 @@ export interface FileRoutesByTo {
   '/cv-builder': typeof AuthenticatedCvBuilderRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/files': typeof AuthenticatedFilesRoute
+  '/id-cards': typeof AuthenticatedIdCardsRoute
   '/notifications': typeof AuthenticatedNotificationsRoute
   '/payslip': typeof AuthenticatedPayslipRoute
   '/pdf-merge': typeof AuthenticatedPdfMergeRoute
@@ -420,6 +428,7 @@ export interface FileRoutesById {
   '/_authenticated/cv-builder': typeof AuthenticatedCvBuilderRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/files': typeof AuthenticatedFilesRoute
+  '/_authenticated/id-cards': typeof AuthenticatedIdCardsRoute
   '/_authenticated/invoice': typeof AuthenticatedInvoiceRouteWithChildren
   '/_authenticated/notifications': typeof AuthenticatedNotificationsRoute
   '/_authenticated/payslip': typeof AuthenticatedPayslipRoute
@@ -470,6 +479,7 @@ export interface FileRouteTypes {
     | '/cv-builder'
     | '/dashboard'
     | '/files'
+    | '/id-cards'
     | '/invoice'
     | '/notifications'
     | '/payslip'
@@ -518,6 +528,7 @@ export interface FileRouteTypes {
     | '/cv-builder'
     | '/dashboard'
     | '/files'
+    | '/id-cards'
     | '/notifications'
     | '/payslip'
     | '/pdf-merge'
@@ -564,6 +575,7 @@ export interface FileRouteTypes {
     | '/_authenticated/cv-builder'
     | '/_authenticated/dashboard'
     | '/_authenticated/files'
+    | '/_authenticated/id-cards'
     | '/_authenticated/invoice'
     | '/_authenticated/notifications'
     | '/_authenticated/payslip'
@@ -764,6 +776,13 @@ declare module '@tanstack/react-router' {
       path: '/invoice'
       fullPath: '/invoice'
       preLoaderRoute: typeof AuthenticatedInvoiceRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/id-cards': {
+      id: '/_authenticated/id-cards'
+      path: '/id-cards'
+      fullPath: '/id-cards'
+      preLoaderRoute: typeof AuthenticatedIdCardsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/files': {
@@ -1009,6 +1028,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedCvBuilderRoute: typeof AuthenticatedCvBuilderRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedFilesRoute: typeof AuthenticatedFilesRoute
+  AuthenticatedIdCardsRoute: typeof AuthenticatedIdCardsRoute
   AuthenticatedInvoiceRoute: typeof AuthenticatedInvoiceRouteWithChildren
   AuthenticatedNotificationsRoute: typeof AuthenticatedNotificationsRoute
   AuthenticatedPayslipRoute: typeof AuthenticatedPayslipRoute
@@ -1039,6 +1059,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCvBuilderRoute: AuthenticatedCvBuilderRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedFilesRoute: AuthenticatedFilesRoute,
+  AuthenticatedIdCardsRoute: AuthenticatedIdCardsRoute,
   AuthenticatedInvoiceRoute: AuthenticatedInvoiceRouteWithChildren,
   AuthenticatedNotificationsRoute: AuthenticatedNotificationsRoute,
   AuthenticatedPayslipRoute: AuthenticatedPayslipRoute,
