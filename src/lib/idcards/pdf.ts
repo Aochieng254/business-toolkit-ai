@@ -232,11 +232,14 @@ export function drawIdCard(
 }
 
 /** Single card PDF at its exact physical size: 85.6 mm × 54 mm (CR80). */
-export async function generateIdCardPDF(data: IdCardData, urls: CardImages["logo"] extends never ? never : {
-  logo?: string | null;
-  photo?: string | null;
-  signature?: string | null;
-}): Promise<jsPDF> {
+export async function generateIdCardPDF(
+  data: IdCardData,
+  urls: {
+    logo?: string | null;
+    photo?: string | null;
+    signature?: string | null;
+  },
+): Promise<jsPDF> {
   const doc = new jsPDF({ unit: "mm", format: [CARD_W, CARD_H], orientation: "landscape" });
   const images = await loadCardImages(urls);
   drawIdCard(doc, data, images);
