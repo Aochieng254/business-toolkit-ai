@@ -1,0 +1,20 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1793170797631,
+      "tag": "0000_create_id_cards",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1793170813171,
+      "tag": "0001_id_card_assets_policies",
+      "breakpoints": true
+    }
+  ]
+}
