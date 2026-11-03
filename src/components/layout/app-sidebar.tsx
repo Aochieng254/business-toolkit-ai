@@ -52,6 +52,7 @@ const generators = [
   { title: "Payslip", url: "/payslip", icon: Wallet },
   { title: "CV Builder", url: "/cv-builder", icon: UserSquare2 },
   { title: "Cover Letter", url: "/cover-letter", icon: Mail },
+  { title: "ID Cards", url: "/id-cards", icon: IdCard },
   { title: "Business Name", url: "/business-name-generator", icon: Sparkles },
 ];
 

@@ -52,7 +52,7 @@ export async function listIdCards(): Promise<IdCardRow[]> {
     .select("*")
     .order("updated_at", { ascending: false });
   if (error) throw error;
-  return (data ?? []) as IdCardRow[];
+  return (data ?? []) as unknown as IdCardRow[];
 }
 
 export async function saveIdCard(
@@ -63,20 +63,20 @@ export async function saveIdCard(
   if (id) {
     const { data: row, error } = await supabase
       .from("id_cards")
-      .update({ title, data, updated_at: new Date().toISOString() })
+      .update({ title, data: data as unknown as Json })
       .eq("id", id)
       .select("*")
       .single();
     if (error) throw error;
-    return row as IdCardRow;
+    return row as unknown as IdCardRow;
   }
   const { data: row, error } = await supabase
     .from("id_cards")
-    .insert({ title, data })
+    .insert({ title, data: data as unknown as Json })
     .select("*")
     .single();
   if (error) throw error;
-  return row as IdCardRow;
+  return row as unknown as IdCardRow;
 }
 
 export async function deleteIdCard(id: string): Promise<void> {
