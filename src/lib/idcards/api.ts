@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import type { Json } from "@/integrations/supabase/types";
 
 export interface IdCardField {
   label: string;
@@ -60,11 +61,15 @@ export async function saveIdCard(
   title: string,
   data: IdCardData,
 ): Promise<IdCardRow> {
+  const { data: authData, error: authError } = await supabase.auth.getUser();
+  if (authError || !authData.user) throw new Error("You must be signed in to save an ID card.");
+
   if (id) {
     const { data: row, error } = await supabase
       .from("id_cards")
       .update({ title, data: data as unknown as Json })
       .eq("id", id)
+      .eq("owner", authData.user.id)
       .select("*")
       .single();
     if (error) throw error;
@@ -72,7 +77,7 @@ export async function saveIdCard(
   }
   const { data: row, error } = await supabase
     .from("id_cards")
-    .insert({ title, data: data as unknown as Json })
+    .insert({ owner: authData.user.id, title, data: data as unknown as Json })
     .select("*")
     .single();
   if (error) throw error;

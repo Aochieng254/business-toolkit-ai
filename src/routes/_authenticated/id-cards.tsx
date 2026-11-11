@@ -75,11 +75,28 @@ const IMG_LABEL: Record<ImageKind, string> = {
 function CardPreview({ data, urls, zoom }: { data: IdCardData; urls: CardUrls; zoom: number }) {
   const fields = data.fields.slice(0, 4);
   const sigTop = 28.2 - 2.55 + fields.length * 4.3;
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [containerWidth, setContainerWidth] = useState(0);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+    const observer = new ResizeObserver(([entry]) => {
+      if (entry) setContainerWidth(entry.contentRect.width);
+    });
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, []);
+
+  const fitZoom = containerWidth
+    ? Math.min(zoom, Math.max(0.5, (containerWidth - 24) / (CARD_W * (96 / 25.4))))
+    : Math.min(zoom, 1);
 
   return (
     <div
-      style={{ width: `${CARD_W * zoom}mm`, height: `${CARD_H * zoom}mm` }}
-      className="relative"
+      ref={containerRef}
+      className="relative flex w-full justify-center"
+      style={{ height: `${CARD_H * fitZoom}mm` }}
     >
       <div
         style={{
@@ -90,9 +107,9 @@ function CardPreview({ data, urls, zoom }: { data: IdCardData; urls: CardUrls; z
           color: HEADER_TEXT,
           position: "absolute",
           top: 0,
-          left: 0,
-          transform: `scale(${zoom})`,
-          transformOrigin: "top left",
+          left: "50%",
+          transform: `translateX(-50%) scale(${fitZoom})`,
+          transformOrigin: "top center",
           overflow: "hidden",
           fontFamily: "'Arial Narrow', 'Helvetica Neue', Arial, sans-serif",
           boxShadow: "0 10px 30px -12px rgba(0,0,0,0.35)",
