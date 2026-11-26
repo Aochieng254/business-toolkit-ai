@@ -24,6 +24,7 @@ import {
   Scissors,
   Combine,
   LayoutTemplate,
+  ChartNoAxesCombined,
 } from "lucide-react";
 import {
   Sidebar,
@@ -59,6 +60,7 @@ const generators = [
 const business = [
   { title: "Customers", url: "/customers", icon: Users },
   { title: "Company profile", url: "/company", icon: Building2 },
+  { title: "Reports", url: "/reports", icon: ChartNoAxesCombined },
 ];
 
 const tools = [

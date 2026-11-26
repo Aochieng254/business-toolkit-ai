@@ -12,6 +12,7 @@ import {
   Bot,
   ArrowRight,
   FolderOpen,
+  ChartNoAxesCombined,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { listQuotations } from "@/lib/quotations/api";
@@ -34,6 +35,7 @@ const quickActions = [
   { title: "Business Name", desc: "Brainstorm names", url: "/business-name-generator", icon: Sparkles },
   { title: "Calculators", desc: "Tax, loan, margin & more", url: "/calculators", icon: Calculator },
   { title: "AI Assistant", desc: "Ask anything business", url: "/ai-assistant", icon: Bot },
+  { title: "Reports", desc: "Review sales, payments and document activity", url: "/reports", icon: ChartNoAxesCombined },
 ] as const;
 
 function Dashboard() {

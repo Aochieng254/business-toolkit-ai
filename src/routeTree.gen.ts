@@ -38,6 +38,7 @@ import { Route as AuthenticatedPdfToWordRouteImport } from './routes/_authentica
 import { Route as AuthenticatedPdfToolsRouteImport } from './routes/_authenticated/pdf-tools'
 import { Route as AuthenticatedQuotationRouteImport } from './routes/_authenticated/quotation'
 import { Route as AuthenticatedReceiptRouteImport } from './routes/_authenticated/receipt'
+import { Route as AuthenticatedReportsRouteImport } from './routes/_authenticated/reports'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
 import { Route as AuthenticatedSubscriptionRouteImport } from './routes/_authenticated/subscription'
 import { Route as AuthenticatedWordToPdfRouteImport } from './routes/_authenticated/word-to-pdf'
@@ -209,6 +210,11 @@ const AuthenticatedReceiptRoute = AuthenticatedReceiptRouteImport.update({
   path: '/receipt',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedReportsRoute = AuthenticatedReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -345,6 +351,7 @@ export interface FileRoutesByFullPath {
   '/pdf-tools': typeof AuthenticatedPdfToolsRoute
   '/quotation': typeof AuthenticatedQuotationRouteWithChildren
   '/receipt': typeof AuthenticatedReceiptRouteWithChildren
+  '/reports': typeof AuthenticatedReportsRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/subscription': typeof AuthenticatedSubscriptionRoute
   '/word-to-pdf': typeof AuthenticatedWordToPdfRoute
@@ -391,6 +398,7 @@ export interface FileRoutesByTo {
   '/pdf-to-publisher': typeof AuthenticatedPdfToPublisherRoute
   '/pdf-to-word': typeof AuthenticatedPdfToWordRoute
   '/pdf-tools': typeof AuthenticatedPdfToolsRoute
+  '/reports': typeof AuthenticatedReportsRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/subscription': typeof AuthenticatedSubscriptionRoute
   '/word-to-pdf': typeof AuthenticatedWordToPdfRoute
@@ -442,6 +450,7 @@ export interface FileRoutesById {
   '/_authenticated/pdf-tools': typeof AuthenticatedPdfToolsRoute
   '/_authenticated/quotation': typeof AuthenticatedQuotationRouteWithChildren
   '/_authenticated/receipt': typeof AuthenticatedReceiptRouteWithChildren
+  '/_authenticated/reports': typeof AuthenticatedReportsRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/_authenticated/subscription': typeof AuthenticatedSubscriptionRoute
   '/_authenticated/word-to-pdf': typeof AuthenticatedWordToPdfRoute
@@ -493,6 +502,7 @@ export interface FileRouteTypes {
     | '/pdf-tools'
     | '/quotation'
     | '/receipt'
+    | '/reports'
     | '/settings'
     | '/subscription'
     | '/word-to-pdf'
@@ -539,6 +549,7 @@ export interface FileRouteTypes {
     | '/pdf-to-publisher'
     | '/pdf-to-word'
     | '/pdf-tools'
+    | '/reports'
     | '/settings'
     | '/subscription'
     | '/word-to-pdf'
@@ -589,6 +600,7 @@ export interface FileRouteTypes {
     | '/_authenticated/pdf-tools'
     | '/_authenticated/quotation'
     | '/_authenticated/receipt'
+    | '/_authenticated/reports'
     | '/_authenticated/settings'
     | '/_authenticated/subscription'
     | '/_authenticated/word-to-pdf'
@@ -827,6 +839,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedReceiptRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/reports': {
+      id: '/_authenticated/reports'
+      path: '/reports'
+      fullPath: '/reports'
+      preLoaderRoute: typeof AuthenticatedReportsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/settings': {
       id: '/_authenticated/settings'
       path: '/settings'
@@ -1042,6 +1061,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedPdfToolsRoute: typeof AuthenticatedPdfToolsRoute
   AuthenticatedQuotationRoute: typeof AuthenticatedQuotationRouteWithChildren
   AuthenticatedReceiptRoute: typeof AuthenticatedReceiptRouteWithChildren
+  AuthenticatedReportsRoute: typeof AuthenticatedReportsRoute
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
   AuthenticatedSubscriptionRoute: typeof AuthenticatedSubscriptionRoute
   AuthenticatedWordToPdfRoute: typeof AuthenticatedWordToPdfRoute
@@ -1073,6 +1093,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedPdfToolsRoute: AuthenticatedPdfToolsRoute,
   AuthenticatedQuotationRoute: AuthenticatedQuotationRouteWithChildren,
   AuthenticatedReceiptRoute: AuthenticatedReceiptRouteWithChildren,
+  AuthenticatedReportsRoute: AuthenticatedReportsRoute,
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
   AuthenticatedSubscriptionRoute: AuthenticatedSubscriptionRoute,
   AuthenticatedWordToPdfRoute: AuthenticatedWordToPdfRoute,
