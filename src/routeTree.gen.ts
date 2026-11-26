@@ -9,63 +9,62 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
-import { Route as ResetPasswordRouteImport } from './routes/reset-password'
-import { Route as AuthRouteImport } from './routes/auth'
-import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as ShareTokenRouteImport } from './routes/share.$token'
-import { Route as AuthenticatedWordToPdfRouteImport } from './routes/_authenticated/word-to-pdf'
-import { Route as AuthenticatedSubscriptionRouteImport } from './routes/_authenticated/subscription'
-import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
-import { Route as AuthenticatedReceiptRouteImport } from './routes/_authenticated/receipt'
-import { Route as AuthenticatedQuotationRouteImport } from './routes/_authenticated/quotation'
-import { Route as AuthenticatedPdfToolsRouteImport } from './routes/_authenticated/pdf-tools'
-import { Route as AuthenticatedPdfToWordRouteImport } from './routes/_authenticated/pdf-to-word'
-import { Route as AuthenticatedPdfToPublisherRouteImport } from './routes/_authenticated/pdf-to-publisher'
-import { Route as AuthenticatedPdfToPowerpointRouteImport } from './routes/_authenticated/pdf-to-powerpoint'
-import { Route as AuthenticatedPdfToImageRouteImport } from './routes/_authenticated/pdf-to-image'
-import { Route as AuthenticatedPdfToExcelRouteImport } from './routes/_authenticated/pdf-to-excel'
-import { Route as AuthenticatedPdfSplitRouteImport } from './routes/_authenticated/pdf-split'
-import { Route as AuthenticatedPdfMergeRouteImport } from './routes/_authenticated/pdf-merge'
-import { Route as AuthenticatedPayslipRouteImport } from './routes/_authenticated/payslip'
-import { Route as AuthenticatedNotificationsRouteImport } from './routes/_authenticated/notifications'
-import { Route as AuthenticatedInvoiceRouteImport } from './routes/_authenticated/invoice'
-import { Route as AuthenticatedIdCardsRouteImport } from './routes/_authenticated/id-cards'
-import { Route as AuthenticatedFilesRouteImport } from './routes/_authenticated/files'
-import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
-import { Route as AuthenticatedCvBuilderRouteImport } from './routes/_authenticated/cv-builder'
-import { Route as AuthenticatedCustomersRouteImport } from './routes/_authenticated/customers'
-import { Route as AuthenticatedCoverLetterRouteImport } from './routes/_authenticated/cover-letter'
-import { Route as AuthenticatedCompanyRouteImport } from './routes/_authenticated/company'
-import { Route as AuthenticatedCalculatorsRouteImport } from './routes/_authenticated/calculators'
-import { Route as AuthenticatedBusinessNameGeneratorRouteImport } from './routes/_authenticated/business-name-generator'
-import { Route as AuthenticatedAiAssistantRouteImport } from './routes/_authenticated/ai-assistant'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
-import { Route as AuthenticatedReceiptIndexRouteImport } from './routes/_authenticated/receipt.index'
-import { Route as AuthenticatedQuotationIndexRouteImport } from './routes/_authenticated/quotation.index'
+import { Route as AuthenticatedAiAssistantRouteImport } from './routes/_authenticated/ai-assistant'
+import { Route as AuthenticatedBusinessNameGeneratorRouteImport } from './routes/_authenticated/business-name-generator'
+import { Route as AuthenticatedCalculatorsRouteImport } from './routes/_authenticated/calculators'
+import { Route as AuthenticatedCompanyRouteImport } from './routes/_authenticated/company'
+import { Route as AuthenticatedCoverLetterRouteImport } from './routes/_authenticated/cover-letter'
+import { Route as AuthenticatedCustomersRouteImport } from './routes/_authenticated/customers'
+import { Route as AuthenticatedCvBuilderRouteImport } from './routes/_authenticated/cv-builder'
+import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedFilesRouteImport } from './routes/_authenticated/files'
+import { Route as AuthenticatedIdCardsRouteImport } from './routes/_authenticated/id-cards'
+import { Route as AuthenticatedInvoiceRouteImport } from './routes/_authenticated/invoice'
+import { Route as AuthenticatedNotificationsRouteImport } from './routes/_authenticated/notifications'
+import { Route as AuthenticatedPayslipRouteImport } from './routes/_authenticated/payslip'
+import { Route as AuthenticatedPdfMergeRouteImport } from './routes/_authenticated/pdf-merge'
+import { Route as AuthenticatedPdfSplitRouteImport } from './routes/_authenticated/pdf-split'
+import { Route as AuthenticatedPdfToExcelRouteImport } from './routes/_authenticated/pdf-to-excel'
+import { Route as AuthenticatedPdfToImageRouteImport } from './routes/_authenticated/pdf-to-image'
+import { Route as AuthenticatedPdfToPowerpointRouteImport } from './routes/_authenticated/pdf-to-powerpoint'
+import { Route as AuthenticatedPdfToPublisherRouteImport } from './routes/_authenticated/pdf-to-publisher'
+import { Route as AuthenticatedPdfToWordRouteImport } from './routes/_authenticated/pdf-to-word'
+import { Route as AuthenticatedPdfToolsRouteImport } from './routes/_authenticated/pdf-tools'
+import { Route as AuthenticatedQuotationRouteImport } from './routes/_authenticated/quotation'
+import { Route as AuthenticatedReceiptRouteImport } from './routes/_authenticated/receipt'
+import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
+import { Route as AuthenticatedSubscriptionRouteImport } from './routes/_authenticated/subscription'
+import { Route as AuthenticatedWordToPdfRouteImport } from './routes/_authenticated/word-to-pdf'
+import { Route as ShareTokenRouteImport } from './routes/share.$token'
 import { Route as AuthenticatedInvoiceIndexRouteImport } from './routes/_authenticated/invoice.index'
-import { Route as ApiPublicPaypalWebhookRouteImport } from './routes/api/public/paypal-webhook'
-import { Route as ApiAiChatRouteImport } from './routes/api/ai/chat'
-import { Route as AuthenticatedReceiptNewRouteImport } from './routes/_authenticated/receipt.new'
-import { Route as AuthenticatedQuotationNewRouteImport } from './routes/_authenticated/quotation.new'
 import { Route as AuthenticatedInvoiceNewRouteImport } from './routes/_authenticated/invoice.new'
-import { Route as AuthenticatedReceiptIdIndexRouteImport } from './routes/_authenticated/receipt.$id.index'
-import { Route as AuthenticatedQuotationIdIndexRouteImport } from './routes/_authenticated/quotation.$id.index'
+import { Route as AuthenticatedQuotationIndexRouteImport } from './routes/_authenticated/quotation.index'
+import { Route as AuthenticatedQuotationNewRouteImport } from './routes/_authenticated/quotation.new'
+import { Route as AuthenticatedReceiptIndexRouteImport } from './routes/_authenticated/receipt.index'
+import { Route as AuthenticatedReceiptNewRouteImport } from './routes/_authenticated/receipt.new'
+import { Route as ApiAiChatRouteImport } from './routes/api/ai/chat'
+import { Route as ApiPublicPaypalWebhookRouteImport } from './routes/api/public/paypal-webhook'
 import { Route as AuthenticatedInvoiceIdIndexRouteImport } from './routes/_authenticated/invoice.$id.index'
-import { Route as ApiPublicShareTokenRouteImport } from './routes/api/public/share.$token'
-import { Route as AuthenticatedReceiptIdEditRouteImport } from './routes/_authenticated/receipt.$id.edit'
-import { Route as AuthenticatedQuotationIdEditRouteImport } from './routes/_authenticated/quotation.$id.edit'
 import { Route as AuthenticatedInvoiceIdEditRouteImport } from './routes/_authenticated/invoice.$id.edit'
+import { Route as AuthenticatedQuotationIdIndexRouteImport } from './routes/_authenticated/quotation.$id.index'
+import { Route as AuthenticatedQuotationIdEditRouteImport } from './routes/_authenticated/quotation.$id.edit'
+import { Route as AuthenticatedReceiptIdIndexRouteImport } from './routes/_authenticated/receipt.$id.index'
+import { Route as AuthenticatedReceiptIdEditRouteImport } from './routes/_authenticated/receipt.$id.edit'
+import { Route as ApiPublicShareTokenRouteImport } from './routes/api/public/share.$token'
 
-const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
-  id: '/sitemap.xml',
-  path: '/sitemap.xml',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ResetPasswordRoute = ResetPasswordRouteImport.update({
-  id: '/reset-password',
-  path: '/reset-password',
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -73,144 +72,25 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
-  id: '/_authenticated',
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ShareTokenRoute = ShareTokenRouteImport.update({
-  id: '/share/$token',
-  path: '/share/$token',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthenticatedWordToPdfRoute = AuthenticatedWordToPdfRouteImport.update({
-  id: '/word-to-pdf',
-  path: '/word-to-pdf',
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedSubscriptionRoute =
-  AuthenticatedSubscriptionRouteImport.update({
-    id: '/subscription',
-    path: '/subscription',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedReceiptRoute = AuthenticatedReceiptRouteImport.update({
-  id: '/receipt',
-  path: '/receipt',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedQuotationRoute = AuthenticatedQuotationRouteImport.update({
-  id: '/quotation',
-  path: '/quotation',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedPdfToolsRoute = AuthenticatedPdfToolsRouteImport.update({
-  id: '/pdf-tools',
-  path: '/pdf-tools',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedPdfToWordRoute = AuthenticatedPdfToWordRouteImport.update({
-  id: '/pdf-to-word',
-  path: '/pdf-to-word',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedPdfToPublisherRoute =
-  AuthenticatedPdfToPublisherRouteImport.update({
-    id: '/pdf-to-publisher',
-    path: '/pdf-to-publisher',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedPdfToPowerpointRoute =
-  AuthenticatedPdfToPowerpointRouteImport.update({
-    id: '/pdf-to-powerpoint',
-    path: '/pdf-to-powerpoint',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedPdfToImageRoute = AuthenticatedPdfToImageRouteImport.update({
-  id: '/pdf-to-image',
-  path: '/pdf-to-image',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedPdfToExcelRoute = AuthenticatedPdfToExcelRouteImport.update({
-  id: '/pdf-to-excel',
-  path: '/pdf-to-excel',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedPdfSplitRoute = AuthenticatedPdfSplitRouteImport.update({
-  id: '/pdf-split',
-  path: '/pdf-split',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedPdfMergeRoute = AuthenticatedPdfMergeRouteImport.update({
-  id: '/pdf-merge',
-  path: '/pdf-merge',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedPayslipRoute = AuthenticatedPayslipRouteImport.update({
-  id: '/payslip',
-  path: '/payslip',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedNotificationsRoute =
-  AuthenticatedNotificationsRouteImport.update({
-    id: '/notifications',
-    path: '/notifications',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedInvoiceRoute = AuthenticatedInvoiceRouteImport.update({
-  id: '/invoice',
-  path: '/invoice',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedIdCardsRoute = AuthenticatedIdCardsRouteImport.update({
-  id: '/id-cards',
-  path: '/id-cards',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedFilesRoute = AuthenticatedFilesRouteImport.update({
-  id: '/files',
-  path: '/files',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedCvBuilderRoute = AuthenticatedCvBuilderRouteImport.update({
-  id: '/cv-builder',
-  path: '/cv-builder',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedCustomersRoute = AuthenticatedCustomersRouteImport.update({
-  id: '/customers',
-  path: '/customers',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedCoverLetterRoute =
-  AuthenticatedCoverLetterRouteImport.update({
-    id: '/cover-letter',
-    path: '/cover-letter',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedCompanyRoute = AuthenticatedCompanyRouteImport.update({
-  id: '/company',
-  path: '/company',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedCalculatorsRoute =
-  AuthenticatedCalculatorsRouteImport.update({
-    id: '/calculators',
-    path: '/calculators',
+const AuthenticatedAiAssistantRoute =
+  AuthenticatedAiAssistantRouteImport.update({
+    id: '/ai-assistant',
+    path: '/ai-assistant',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedBusinessNameGeneratorRoute =
@@ -219,95 +99,186 @@ const AuthenticatedBusinessNameGeneratorRoute =
     path: '/business-name-generator',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedAiAssistantRoute =
-  AuthenticatedAiAssistantRouteImport.update({
-    id: '/ai-assistant',
-    path: '/ai-assistant',
+const AuthenticatedCalculatorsRoute =
+  AuthenticatedCalculatorsRouteImport.update({
+    id: '/calculators',
+    path: '/calculators',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
-  id: '/admin',
-  path: '/admin',
+const AuthenticatedCompanyRoute = AuthenticatedCompanyRouteImport.update({
+  id: '/company',
+  path: '/company',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedReceiptIndexRoute =
-  AuthenticatedReceiptIndexRouteImport.update({
-    id: '/',
-    path: '/',
-    getParentRoute: () => AuthenticatedReceiptRoute,
+const AuthenticatedCoverLetterRoute =
+  AuthenticatedCoverLetterRouteImport.update({
+    id: '/cover-letter',
+    path: '/cover-letter',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedQuotationIndexRoute =
-  AuthenticatedQuotationIndexRouteImport.update({
-    id: '/',
-    path: '/',
-    getParentRoute: () => AuthenticatedQuotationRoute,
+const AuthenticatedCustomersRoute = AuthenticatedCustomersRouteImport.update({
+  id: '/customers',
+  path: '/customers',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedCvBuilderRoute = AuthenticatedCvBuilderRouteImport.update({
+  id: '/cv-builder',
+  path: '/cv-builder',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedFilesRoute = AuthenticatedFilesRouteImport.update({
+  id: '/files',
+  path: '/files',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedIdCardsRoute = AuthenticatedIdCardsRouteImport.update({
+  id: '/id-cards',
+  path: '/id-cards',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedInvoiceRoute = AuthenticatedInvoiceRouteImport.update({
+  id: '/invoice',
+  path: '/invoice',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedNotificationsRoute =
+  AuthenticatedNotificationsRouteImport.update({
+    id: '/notifications',
+    path: '/notifications',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedPayslipRoute = AuthenticatedPayslipRouteImport.update({
+  id: '/payslip',
+  path: '/payslip',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedPdfMergeRoute = AuthenticatedPdfMergeRouteImport.update({
+  id: '/pdf-merge',
+  path: '/pdf-merge',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedPdfSplitRoute = AuthenticatedPdfSplitRouteImport.update({
+  id: '/pdf-split',
+  path: '/pdf-split',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedPdfToExcelRoute = AuthenticatedPdfToExcelRouteImport.update({
+  id: '/pdf-to-excel',
+  path: '/pdf-to-excel',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedPdfToImageRoute = AuthenticatedPdfToImageRouteImport.update({
+  id: '/pdf-to-image',
+  path: '/pdf-to-image',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedPdfToPowerpointRoute =
+  AuthenticatedPdfToPowerpointRouteImport.update({
+    id: '/pdf-to-powerpoint',
+    path: '/pdf-to-powerpoint',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedPdfToPublisherRoute =
+  AuthenticatedPdfToPublisherRouteImport.update({
+    id: '/pdf-to-publisher',
+    path: '/pdf-to-publisher',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedPdfToWordRoute = AuthenticatedPdfToWordRouteImport.update({
+  id: '/pdf-to-word',
+  path: '/pdf-to-word',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedPdfToolsRoute = AuthenticatedPdfToolsRouteImport.update({
+  id: '/pdf-tools',
+  path: '/pdf-tools',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedQuotationRoute = AuthenticatedQuotationRouteImport.update({
+  id: '/quotation',
+  path: '/quotation',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedReceiptRoute = AuthenticatedReceiptRouteImport.update({
+  id: '/receipt',
+  path: '/receipt',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedSubscriptionRoute =
+  AuthenticatedSubscriptionRouteImport.update({
+    id: '/subscription',
+    path: '/subscription',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedWordToPdfRoute = AuthenticatedWordToPdfRouteImport.update({
+  id: '/word-to-pdf',
+  path: '/word-to-pdf',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const ShareTokenRoute = ShareTokenRouteImport.update({
+  id: '/share/$token',
+  path: '/share/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedInvoiceIndexRoute =
   AuthenticatedInvoiceIndexRouteImport.update({
     id: '/',
     path: '/',
     getParentRoute: () => AuthenticatedInvoiceRoute,
   } as any)
-const ApiPublicPaypalWebhookRoute = ApiPublicPaypalWebhookRouteImport.update({
-  id: '/api/public/paypal-webhook',
-  path: '/api/public/paypal-webhook',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiAiChatRoute = ApiAiChatRouteImport.update({
-  id: '/api/ai/chat',
-  path: '/api/ai/chat',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthenticatedReceiptNewRoute = AuthenticatedReceiptNewRouteImport.update({
+const AuthenticatedInvoiceNewRoute = AuthenticatedInvoiceNewRouteImport.update({
   id: '/new',
   path: '/new',
-  getParentRoute: () => AuthenticatedReceiptRoute,
+  getParentRoute: () => AuthenticatedInvoiceRoute,
 } as any)
+const AuthenticatedQuotationIndexRoute =
+  AuthenticatedQuotationIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedQuotationRoute,
+  } as any)
 const AuthenticatedQuotationNewRoute =
   AuthenticatedQuotationNewRouteImport.update({
     id: '/new',
     path: '/new',
     getParentRoute: () => AuthenticatedQuotationRoute,
   } as any)
-const AuthenticatedInvoiceNewRoute = AuthenticatedInvoiceNewRouteImport.update({
-  id: '/new',
-  path: '/new',
-  getParentRoute: () => AuthenticatedInvoiceRoute,
-} as any)
-const AuthenticatedReceiptIdIndexRoute =
-  AuthenticatedReceiptIdIndexRouteImport.update({
-    id: '/$id/',
-    path: '/$id/',
+const AuthenticatedReceiptIndexRoute =
+  AuthenticatedReceiptIndexRouteImport.update({
+    id: '/',
+    path: '/',
     getParentRoute: () => AuthenticatedReceiptRoute,
   } as any)
-const AuthenticatedQuotationIdIndexRoute =
-  AuthenticatedQuotationIdIndexRouteImport.update({
-    id: '/$id/',
-    path: '/$id/',
-    getParentRoute: () => AuthenticatedQuotationRoute,
-  } as any)
+const AuthenticatedReceiptNewRoute = AuthenticatedReceiptNewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => AuthenticatedReceiptRoute,
+} as any)
+const ApiAiChatRoute = ApiAiChatRouteImport.update({
+  id: '/api/ai/chat',
+  path: '/api/ai/chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicPaypalWebhookRoute = ApiPublicPaypalWebhookRouteImport.update({
+  id: '/api/public/paypal-webhook',
+  path: '/api/public/paypal-webhook',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedInvoiceIdIndexRoute =
   AuthenticatedInvoiceIdIndexRouteImport.update({
     id: '/$id/',
     path: '/$id/',
     getParentRoute: () => AuthenticatedInvoiceRoute,
-  } as any)
-const ApiPublicShareTokenRoute = ApiPublicShareTokenRouteImport.update({
-  id: '/api/public/share/$token',
-  path: '/api/public/share/$token',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthenticatedReceiptIdEditRoute =
-  AuthenticatedReceiptIdEditRouteImport.update({
-    id: '/$id/edit',
-    path: '/$id/edit',
-    getParentRoute: () => AuthenticatedReceiptRoute,
-  } as any)
-const AuthenticatedQuotationIdEditRoute =
-  AuthenticatedQuotationIdEditRouteImport.update({
-    id: '/$id/edit',
-    path: '/$id/edit',
-    getParentRoute: () => AuthenticatedQuotationRoute,
   } as any)
 const AuthenticatedInvoiceIdEditRoute =
   AuthenticatedInvoiceIdEditRouteImport.update({
@@ -315,6 +286,35 @@ const AuthenticatedInvoiceIdEditRoute =
     path: '/$id/edit',
     getParentRoute: () => AuthenticatedInvoiceRoute,
   } as any)
+const AuthenticatedQuotationIdIndexRoute =
+  AuthenticatedQuotationIdIndexRouteImport.update({
+    id: '/$id/',
+    path: '/$id/',
+    getParentRoute: () => AuthenticatedQuotationRoute,
+  } as any)
+const AuthenticatedQuotationIdEditRoute =
+  AuthenticatedQuotationIdEditRouteImport.update({
+    id: '/$id/edit',
+    path: '/$id/edit',
+    getParentRoute: () => AuthenticatedQuotationRoute,
+  } as any)
+const AuthenticatedReceiptIdIndexRoute =
+  AuthenticatedReceiptIdIndexRouteImport.update({
+    id: '/$id/',
+    path: '/$id/',
+    getParentRoute: () => AuthenticatedReceiptRoute,
+  } as any)
+const AuthenticatedReceiptIdEditRoute =
+  AuthenticatedReceiptIdEditRouteImport.update({
+    id: '/$id/edit',
+    path: '/$id/edit',
+    getParentRoute: () => AuthenticatedReceiptRoute,
+  } as any)
+const ApiPublicShareTokenRoute = ApiPublicShareTokenRouteImport.update({
+  id: '/api/public/share/$token',
+  path: '/api/public/share/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -624,25 +624,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/sitemap.xml': {
-      id: '/sitemap.xml'
-      path: '/sitemap.xml'
-      fullPath: '/sitemap.xml'
-      preLoaderRoute: typeof SitemapDotxmlRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/reset-password': {
-      id: '/reset-password'
-      path: '/reset-password'
-      fullPath: '/reset-password'
-      preLoaderRoute: typeof ResetPasswordRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/auth': {
-      id: '/auth'
-      path: '/auth'
-      fullPath: '/auth'
-      preLoaderRoute: typeof AuthRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated': {
@@ -652,193 +638,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/share/$token': {
-      id: '/share/$token'
-      path: '/share/$token'
-      fullPath: '/share/$token'
-      preLoaderRoute: typeof ShareTokenRouteImport
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/word-to-pdf': {
-      id: '/_authenticated/word-to-pdf'
-      path: '/word-to-pdf'
-      fullPath: '/word-to-pdf'
-      preLoaderRoute: typeof AuthenticatedWordToPdfRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/subscription': {
-      id: '/_authenticated/subscription'
-      path: '/subscription'
-      fullPath: '/subscription'
-      preLoaderRoute: typeof AuthenticatedSubscriptionRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/settings': {
-      id: '/_authenticated/settings'
-      path: '/settings'
-      fullPath: '/settings'
-      preLoaderRoute: typeof AuthenticatedSettingsRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/receipt': {
-      id: '/_authenticated/receipt'
-      path: '/receipt'
-      fullPath: '/receipt'
-      preLoaderRoute: typeof AuthenticatedReceiptRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/quotation': {
-      id: '/_authenticated/quotation'
-      path: '/quotation'
-      fullPath: '/quotation'
-      preLoaderRoute: typeof AuthenticatedQuotationRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/pdf-tools': {
-      id: '/_authenticated/pdf-tools'
-      path: '/pdf-tools'
-      fullPath: '/pdf-tools'
-      preLoaderRoute: typeof AuthenticatedPdfToolsRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/pdf-to-word': {
-      id: '/_authenticated/pdf-to-word'
-      path: '/pdf-to-word'
-      fullPath: '/pdf-to-word'
-      preLoaderRoute: typeof AuthenticatedPdfToWordRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/pdf-to-publisher': {
-      id: '/_authenticated/pdf-to-publisher'
-      path: '/pdf-to-publisher'
-      fullPath: '/pdf-to-publisher'
-      preLoaderRoute: typeof AuthenticatedPdfToPublisherRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/pdf-to-powerpoint': {
-      id: '/_authenticated/pdf-to-powerpoint'
-      path: '/pdf-to-powerpoint'
-      fullPath: '/pdf-to-powerpoint'
-      preLoaderRoute: typeof AuthenticatedPdfToPowerpointRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/pdf-to-image': {
-      id: '/_authenticated/pdf-to-image'
-      path: '/pdf-to-image'
-      fullPath: '/pdf-to-image'
-      preLoaderRoute: typeof AuthenticatedPdfToImageRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/pdf-to-excel': {
-      id: '/_authenticated/pdf-to-excel'
-      path: '/pdf-to-excel'
-      fullPath: '/pdf-to-excel'
-      preLoaderRoute: typeof AuthenticatedPdfToExcelRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/pdf-split': {
-      id: '/_authenticated/pdf-split'
-      path: '/pdf-split'
-      fullPath: '/pdf-split'
-      preLoaderRoute: typeof AuthenticatedPdfSplitRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/pdf-merge': {
-      id: '/_authenticated/pdf-merge'
-      path: '/pdf-merge'
-      fullPath: '/pdf-merge'
-      preLoaderRoute: typeof AuthenticatedPdfMergeRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/payslip': {
-      id: '/_authenticated/payslip'
-      path: '/payslip'
-      fullPath: '/payslip'
-      preLoaderRoute: typeof AuthenticatedPayslipRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/notifications': {
-      id: '/_authenticated/notifications'
-      path: '/notifications'
-      fullPath: '/notifications'
-      preLoaderRoute: typeof AuthenticatedNotificationsRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/invoice': {
-      id: '/_authenticated/invoice'
-      path: '/invoice'
-      fullPath: '/invoice'
-      preLoaderRoute: typeof AuthenticatedInvoiceRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/id-cards': {
-      id: '/_authenticated/id-cards'
-      path: '/id-cards'
-      fullPath: '/id-cards'
-      preLoaderRoute: typeof AuthenticatedIdCardsRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/files': {
-      id: '/_authenticated/files'
-      path: '/files'
-      fullPath: '/files'
-      preLoaderRoute: typeof AuthenticatedFilesRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/dashboard': {
-      id: '/_authenticated/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/cv-builder': {
-      id: '/_authenticated/cv-builder'
-      path: '/cv-builder'
-      fullPath: '/cv-builder'
-      preLoaderRoute: typeof AuthenticatedCvBuilderRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/customers': {
-      id: '/_authenticated/customers'
-      path: '/customers'
-      fullPath: '/customers'
-      preLoaderRoute: typeof AuthenticatedCustomersRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/cover-letter': {
-      id: '/_authenticated/cover-letter'
-      path: '/cover-letter'
-      fullPath: '/cover-letter'
-      preLoaderRoute: typeof AuthenticatedCoverLetterRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/company': {
-      id: '/_authenticated/company'
-      path: '/company'
-      fullPath: '/company'
-      preLoaderRoute: typeof AuthenticatedCompanyRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/calculators': {
-      id: '/_authenticated/calculators'
-      path: '/calculators'
-      fullPath: '/calculators'
-      preLoaderRoute: typeof AuthenticatedCalculatorsRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/business-name-generator': {
-      id: '/_authenticated/business-name-generator'
-      path: '/business-name-generator'
-      fullPath: '/business-name-generator'
-      preLoaderRoute: typeof AuthenticatedBusinessNameGeneratorRouteImport
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/ai-assistant': {
@@ -848,26 +673,187 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAiAssistantRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/admin': {
-      id: '/_authenticated/admin'
-      path: '/admin'
-      fullPath: '/admin'
-      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+    '/_authenticated/business-name-generator': {
+      id: '/_authenticated/business-name-generator'
+      path: '/business-name-generator'
+      fullPath: '/business-name-generator'
+      preLoaderRoute: typeof AuthenticatedBusinessNameGeneratorRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/receipt/': {
-      id: '/_authenticated/receipt/'
-      path: '/'
-      fullPath: '/receipt/'
-      preLoaderRoute: typeof AuthenticatedReceiptIndexRouteImport
-      parentRoute: typeof AuthenticatedReceiptRoute
+    '/_authenticated/calculators': {
+      id: '/_authenticated/calculators'
+      path: '/calculators'
+      fullPath: '/calculators'
+      preLoaderRoute: typeof AuthenticatedCalculatorsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/quotation/': {
-      id: '/_authenticated/quotation/'
-      path: '/'
-      fullPath: '/quotation/'
-      preLoaderRoute: typeof AuthenticatedQuotationIndexRouteImport
-      parentRoute: typeof AuthenticatedQuotationRoute
+    '/_authenticated/company': {
+      id: '/_authenticated/company'
+      path: '/company'
+      fullPath: '/company'
+      preLoaderRoute: typeof AuthenticatedCompanyRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/cover-letter': {
+      id: '/_authenticated/cover-letter'
+      path: '/cover-letter'
+      fullPath: '/cover-letter'
+      preLoaderRoute: typeof AuthenticatedCoverLetterRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/customers': {
+      id: '/_authenticated/customers'
+      path: '/customers'
+      fullPath: '/customers'
+      preLoaderRoute: typeof AuthenticatedCustomersRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/cv-builder': {
+      id: '/_authenticated/cv-builder'
+      path: '/cv-builder'
+      fullPath: '/cv-builder'
+      preLoaderRoute: typeof AuthenticatedCvBuilderRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard': {
+      id: '/_authenticated/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/files': {
+      id: '/_authenticated/files'
+      path: '/files'
+      fullPath: '/files'
+      preLoaderRoute: typeof AuthenticatedFilesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/id-cards': {
+      id: '/_authenticated/id-cards'
+      path: '/id-cards'
+      fullPath: '/id-cards'
+      preLoaderRoute: typeof AuthenticatedIdCardsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/invoice': {
+      id: '/_authenticated/invoice'
+      path: '/invoice'
+      fullPath: '/invoice'
+      preLoaderRoute: typeof AuthenticatedInvoiceRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/notifications': {
+      id: '/_authenticated/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof AuthenticatedNotificationsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/payslip': {
+      id: '/_authenticated/payslip'
+      path: '/payslip'
+      fullPath: '/payslip'
+      preLoaderRoute: typeof AuthenticatedPayslipRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/pdf-merge': {
+      id: '/_authenticated/pdf-merge'
+      path: '/pdf-merge'
+      fullPath: '/pdf-merge'
+      preLoaderRoute: typeof AuthenticatedPdfMergeRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/pdf-split': {
+      id: '/_authenticated/pdf-split'
+      path: '/pdf-split'
+      fullPath: '/pdf-split'
+      preLoaderRoute: typeof AuthenticatedPdfSplitRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/pdf-to-excel': {
+      id: '/_authenticated/pdf-to-excel'
+      path: '/pdf-to-excel'
+      fullPath: '/pdf-to-excel'
+      preLoaderRoute: typeof AuthenticatedPdfToExcelRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/pdf-to-image': {
+      id: '/_authenticated/pdf-to-image'
+      path: '/pdf-to-image'
+      fullPath: '/pdf-to-image'
+      preLoaderRoute: typeof AuthenticatedPdfToImageRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/pdf-to-powerpoint': {
+      id: '/_authenticated/pdf-to-powerpoint'
+      path: '/pdf-to-powerpoint'
+      fullPath: '/pdf-to-powerpoint'
+      preLoaderRoute: typeof AuthenticatedPdfToPowerpointRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/pdf-to-publisher': {
+      id: '/_authenticated/pdf-to-publisher'
+      path: '/pdf-to-publisher'
+      fullPath: '/pdf-to-publisher'
+      preLoaderRoute: typeof AuthenticatedPdfToPublisherRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/pdf-to-word': {
+      id: '/_authenticated/pdf-to-word'
+      path: '/pdf-to-word'
+      fullPath: '/pdf-to-word'
+      preLoaderRoute: typeof AuthenticatedPdfToWordRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/pdf-tools': {
+      id: '/_authenticated/pdf-tools'
+      path: '/pdf-tools'
+      fullPath: '/pdf-tools'
+      preLoaderRoute: typeof AuthenticatedPdfToolsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/quotation': {
+      id: '/_authenticated/quotation'
+      path: '/quotation'
+      fullPath: '/quotation'
+      preLoaderRoute: typeof AuthenticatedQuotationRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/receipt': {
+      id: '/_authenticated/receipt'
+      path: '/receipt'
+      fullPath: '/receipt'
+      preLoaderRoute: typeof AuthenticatedReceiptRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/settings': {
+      id: '/_authenticated/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AuthenticatedSettingsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/subscription': {
+      id: '/_authenticated/subscription'
+      path: '/subscription'
+      fullPath: '/subscription'
+      preLoaderRoute: typeof AuthenticatedSubscriptionRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/word-to-pdf': {
+      id: '/_authenticated/word-to-pdf'
+      path: '/word-to-pdf'
+      fullPath: '/word-to-pdf'
+      preLoaderRoute: typeof AuthenticatedWordToPdfRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/share/$token': {
+      id: '/share/$token'
+      path: '/share/$token'
+      fullPath: '/share/$token'
+      preLoaderRoute: typeof ShareTokenRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_authenticated/invoice/': {
       id: '/_authenticated/invoice/'
@@ -876,26 +862,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedInvoiceIndexRouteImport
       parentRoute: typeof AuthenticatedInvoiceRoute
     }
-    '/api/public/paypal-webhook': {
-      id: '/api/public/paypal-webhook'
-      path: '/api/public/paypal-webhook'
-      fullPath: '/api/public/paypal-webhook'
-      preLoaderRoute: typeof ApiPublicPaypalWebhookRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/ai/chat': {
-      id: '/api/ai/chat'
-      path: '/api/ai/chat'
-      fullPath: '/api/ai/chat'
-      preLoaderRoute: typeof ApiAiChatRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_authenticated/receipt/new': {
-      id: '/_authenticated/receipt/new'
+    '/_authenticated/invoice/new': {
+      id: '/_authenticated/invoice/new'
       path: '/new'
-      fullPath: '/receipt/new'
-      preLoaderRoute: typeof AuthenticatedReceiptNewRouteImport
-      parentRoute: typeof AuthenticatedReceiptRoute
+      fullPath: '/invoice/new'
+      preLoaderRoute: typeof AuthenticatedInvoiceNewRouteImport
+      parentRoute: typeof AuthenticatedInvoiceRoute
+    }
+    '/_authenticated/quotation/': {
+      id: '/_authenticated/quotation/'
+      path: '/'
+      fullPath: '/quotation/'
+      preLoaderRoute: typeof AuthenticatedQuotationIndexRouteImport
+      parentRoute: typeof AuthenticatedQuotationRoute
     }
     '/_authenticated/quotation/new': {
       id: '/_authenticated/quotation/new'
@@ -904,26 +883,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedQuotationNewRouteImport
       parentRoute: typeof AuthenticatedQuotationRoute
     }
-    '/_authenticated/invoice/new': {
-      id: '/_authenticated/invoice/new'
-      path: '/new'
-      fullPath: '/invoice/new'
-      preLoaderRoute: typeof AuthenticatedInvoiceNewRouteImport
-      parentRoute: typeof AuthenticatedInvoiceRoute
-    }
-    '/_authenticated/receipt/$id/': {
-      id: '/_authenticated/receipt/$id/'
-      path: '/$id'
-      fullPath: '/receipt/$id/'
-      preLoaderRoute: typeof AuthenticatedReceiptIdIndexRouteImport
+    '/_authenticated/receipt/': {
+      id: '/_authenticated/receipt/'
+      path: '/'
+      fullPath: '/receipt/'
+      preLoaderRoute: typeof AuthenticatedReceiptIndexRouteImport
       parentRoute: typeof AuthenticatedReceiptRoute
     }
-    '/_authenticated/quotation/$id/': {
-      id: '/_authenticated/quotation/$id/'
-      path: '/$id'
-      fullPath: '/quotation/$id/'
-      preLoaderRoute: typeof AuthenticatedQuotationIdIndexRouteImport
-      parentRoute: typeof AuthenticatedQuotationRoute
+    '/_authenticated/receipt/new': {
+      id: '/_authenticated/receipt/new'
+      path: '/new'
+      fullPath: '/receipt/new'
+      preLoaderRoute: typeof AuthenticatedReceiptNewRouteImport
+      parentRoute: typeof AuthenticatedReceiptRoute
+    }
+    '/api/ai/chat': {
+      id: '/api/ai/chat'
+      path: '/api/ai/chat'
+      fullPath: '/api/ai/chat'
+      preLoaderRoute: typeof ApiAiChatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/paypal-webhook': {
+      id: '/api/public/paypal-webhook'
+      path: '/api/public/paypal-webhook'
+      fullPath: '/api/public/paypal-webhook'
+      preLoaderRoute: typeof ApiPublicPaypalWebhookRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_authenticated/invoice/$id/': {
       id: '/_authenticated/invoice/$id/'
@@ -932,19 +918,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedInvoiceIdIndexRouteImport
       parentRoute: typeof AuthenticatedInvoiceRoute
     }
-    '/api/public/share/$token': {
-      id: '/api/public/share/$token'
-      path: '/api/public/share/$token'
-      fullPath: '/api/public/share/$token'
-      preLoaderRoute: typeof ApiPublicShareTokenRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_authenticated/receipt/$id/edit': {
-      id: '/_authenticated/receipt/$id/edit'
+    '/_authenticated/invoice/$id/edit': {
+      id: '/_authenticated/invoice/$id/edit'
       path: '/$id/edit'
-      fullPath: '/receipt/$id/edit'
-      preLoaderRoute: typeof AuthenticatedReceiptIdEditRouteImport
-      parentRoute: typeof AuthenticatedReceiptRoute
+      fullPath: '/invoice/$id/edit'
+      preLoaderRoute: typeof AuthenticatedInvoiceIdEditRouteImport
+      parentRoute: typeof AuthenticatedInvoiceRoute
+    }
+    '/_authenticated/quotation/$id/': {
+      id: '/_authenticated/quotation/$id/'
+      path: '/$id'
+      fullPath: '/quotation/$id/'
+      preLoaderRoute: typeof AuthenticatedQuotationIdIndexRouteImport
+      parentRoute: typeof AuthenticatedQuotationRoute
     }
     '/_authenticated/quotation/$id/edit': {
       id: '/_authenticated/quotation/$id/edit'
@@ -953,12 +939,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedQuotationIdEditRouteImport
       parentRoute: typeof AuthenticatedQuotationRoute
     }
-    '/_authenticated/invoice/$id/edit': {
-      id: '/_authenticated/invoice/$id/edit'
+    '/_authenticated/receipt/$id/': {
+      id: '/_authenticated/receipt/$id/'
+      path: '/$id'
+      fullPath: '/receipt/$id/'
+      preLoaderRoute: typeof AuthenticatedReceiptIdIndexRouteImport
+      parentRoute: typeof AuthenticatedReceiptRoute
+    }
+    '/_authenticated/receipt/$id/edit': {
+      id: '/_authenticated/receipt/$id/edit'
       path: '/$id/edit'
-      fullPath: '/invoice/$id/edit'
-      preLoaderRoute: typeof AuthenticatedInvoiceIdEditRouteImport
-      parentRoute: typeof AuthenticatedInvoiceRoute
+      fullPath: '/receipt/$id/edit'
+      preLoaderRoute: typeof AuthenticatedReceiptIdEditRouteImport
+      parentRoute: typeof AuthenticatedReceiptRoute
+    }
+    '/api/public/share/$token': {
+      id: '/api/public/share/$token'
+      path: '/api/public/share/$token'
+      fullPath: '/api/public/share/$token'
+      preLoaderRoute: typeof ApiPublicShareTokenRouteImport
+      parentRoute: typeof rootRouteImport
     }
   }
 }
