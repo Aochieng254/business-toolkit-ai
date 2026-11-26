@@ -1,4 +1,5 @@
-import { describe, expect, it } from "bun:test";
+import assert from "node:assert/strict";
+import { describe, it } from "node:test";
 import {
   filterReportRecords,
   getReportDateWindow,
@@ -20,7 +21,7 @@ describe("business report calculations", () => {
       { id: "8", type: "Quotation", number: "Q-2", date: "2026-11-08", currency: "USD", amount: 25, status: "sent", customer: null, paymentMethod: null, linked: false },
     ];
 
-    expect(summarizeBusinessRecords(records)).toEqual({
+    assert.deepEqual(summarizeBusinessRecords(records), {
       collected: 75,
       receiptCount: 1,
       invoiceValue: 380,
@@ -34,7 +35,7 @@ describe("business report calculations", () => {
   });
 
   it("returns an inclusive 30-day range for the selected report period", () => {
-    expect(getReportDateWindow("30d", new Date("2026-11-26T12:00:00.000Z"))).toEqual({
+    assert.deepEqual(getReportDateWindow("30d", new Date("2026-11-26T12:00:00.000Z")), {
       startDate: "2026-10-28",
       endDate: "2026-11-26",
     });
@@ -47,14 +48,14 @@ describe("business report calculations", () => {
       { id: "3", type: "Receipt", number: "REC-1", date: "2026-11-03", currency: "KES", amount: 70, status: "issued", customer: "Harbor Co", paymentMethod: "cash" },
     ];
 
-    expect(filterReportRecords(records, {
+    assert.deepEqual(filterReportRecords(records, {
       startDate: "2026-11-01",
       endDate: "2026-11-30",
       currency: "USD",
       type: "Invoice",
       status: "sent",
       search: "harbor",
-    }).map((record) => record.number)).toEqual(["INV-1"]);
+    }).map((record) => record.number), ["INV-1"]);
   });
 
   it("quotes CSV fields and neutralizes spreadsheet formulas", () => {
@@ -62,7 +63,7 @@ describe("business report calculations", () => {
       { id: "1", type: "Invoice", number: "=IMPORTDATA(1)", date: "2026-11-02", currency: "USD", amount: 40, status: "sent", customer: "Acme, \"North\"", paymentMethod: null },
     ];
 
-    expect(reportRecordsToCsv(records)).toContain('"\'=IMPORTDATA(1)"');
-    expect(reportRecordsToCsv(records)).toContain('"Acme, ""North"""');
+    assert.ok(reportRecordsToCsv(records).includes('"\'=IMPORTDATA(1)"'));
+    assert.ok(reportRecordsToCsv(records).includes('"Acme, ""North"""'));
   });
 });
