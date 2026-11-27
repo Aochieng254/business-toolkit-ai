@@ -239,10 +239,15 @@ export async function generateIdCardPDF(
     photo?: string | null;
     signature?: string | null;
   },
+  renderedCard?: string,
 ): Promise<jsPDF> {
   const doc = new jsPDF({ unit: "mm", format: [CARD_W, CARD_H], orientation: "landscape" });
-  const images = await loadCardImages(urls);
-  drawIdCard(doc, data, images);
+  if (renderedCard) {
+    doc.addImage(renderedCard, "PNG", 0, 0, CARD_W, CARD_H);
+  } else {
+    const images = await loadCardImages(urls);
+    drawIdCard(doc, data, images);
+  }
   return doc;
 }
 
@@ -255,9 +260,10 @@ export async function generateIdCardPrintSheet(
     signature?: string | null;
   },
   copies: number,
+  renderedCard?: string,
 ): Promise<jsPDF> {
   const doc = new jsPDF({ unit: "mm", format: "a4", orientation: "portrait" });
-  const images = await loadCardImages(urls);
+  const images = renderedCard ? null : await loadCardImages(urls);
   const margin = 6;
   const gap = 3;
   const pageW = doc.internal.pageSize.getWidth();
@@ -275,7 +281,11 @@ export async function generateIdCardPrintSheet(
     const col = placed % perRow;
     const x = margin + col * (CARD_W + gap);
     const y = margin + row * (CARD_H + gap);
-    drawIdCard(doc, data, images, x, y);
+    if (renderedCard) {
+      doc.addImage(renderedCard, "PNG", x, y, CARD_W, CARD_H);
+    } else if (images) {
+      drawIdCard(doc, data, images, x, y);
+    }
     // Cut guide around each card
     doc.setDrawColor("#b9c6be");
     doc.setLineWidth(0.2);

@@ -10,3 +10,4 @@
 <!-- LOVABLE:END -->
 
 - Business reporting reads each user's financial records through the browser client so existing row-level access policies remain the authorization boundary.
+- ID card PDFs embed the browser-rendered preview so single-card and print-sheet exports preserve the design shown to the user.

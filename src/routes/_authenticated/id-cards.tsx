@@ -1,9 +1,11 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type Ref } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import html2canvas from "html2canvas";
 import {
   BadgePlus,
   Download,
   FileDown,
+  History,
   Loader2,
   Plus,
   Save,
@@ -72,7 +74,17 @@ const IMG_LABEL: Record<ImageKind, string> = {
 
 // ─── Live preview — CSS mm units mirror the PDF layout numbers ───────────────
 
-function CardPreview({ data, urls, zoom }: { data: IdCardData; urls: CardUrls; zoom: number }) {
+function CardPreview({
+  data,
+  urls,
+  zoom,
+  cardRef,
+}: {
+  data: IdCardData;
+  urls: CardUrls;
+  zoom: number;
+  cardRef: Ref<HTMLDivElement>;
+}) {
   const fields = data.fields.slice(0, 4);
   const sigTop = 28.2 - 2.55 + fields.length * 4.3;
   const containerRef = useRef<HTMLDivElement>(null);
@@ -99,6 +111,8 @@ function CardPreview({ data, urls, zoom }: { data: IdCardData; urls: CardUrls; z
       style={{ height: `${CARD_H * fitZoom}mm` }}
     >
       <div
+        ref={cardRef}
+        data-id-card-capture="true"
         style={{
           width: `${CARD_W}mm`,
           height: `${CARD_H}mm`,
@@ -318,6 +332,7 @@ function IdCardsPage() {
   const [busy, setBusy] = useState<string | null>(null);
   const [zoom, setZoom] = useState(2);
   const [copies, setCopies] = useState(10);
+  const previewCardRef = useRef<HTMLDivElement>(null);
   const fileRefs = useRef<Record<ImageKind, HTMLInputElement | null>>({
     logo: null,
     photo: null,
@@ -337,9 +352,18 @@ function IdCardsPage() {
 
   useEffect(() => {
     listIdCards()
-      .then(setSaved)
+      .then((cards) => {
+        setSaved(cards);
+        const latest = cards[0];
+        if (!latest) return;
+        setCurrentId(latest.id);
+        setTitle(latest.title);
+        const latestData = { ...DEFAULT_ID_CARD, ...latest.data } as IdCardData;
+        setData(latestData);
+        void refreshUrls(latestData);
+      })
       .catch(() => toast.error("Could not load saved cards"));
-  }, []);
+  }, [refreshUrls]);
 
   const onUpload = async (kind: ImageKind, file: File | undefined) => {
     if (!file || !user) return;
@@ -373,6 +397,36 @@ function IdCardsPage() {
     await refreshUrls(d);
   };
 
+  const persistCurrentCard = async () => {
+    if (!user) throw new Error("You must be signed in to save an ID card.");
+    const row = await saveIdCard(currentId, title.trim() || "Untitled card", data);
+    setCurrentId(row.id);
+    setSaved((cards) => [row, ...cards.filter((card) => card.id !== row.id)]);
+    return row;
+  };
+
+  const captureCardPreview = async () => {
+    const card = previewCardRef.current;
+    if (!card) throw new Error("The card preview is not ready.");
+    const canvas = await html2canvas(card, {
+      backgroundColor: null,
+      scale: 4,
+      useCORS: true,
+      width: card.offsetWidth,
+      height: card.offsetHeight,
+      onclone: (clonedDocument) => {
+        const clonedCard = clonedDocument.querySelector<HTMLElement>("[data-id-card-capture]");
+        if (!clonedCard) return;
+        clonedCard.style.position = "relative";
+        clonedCard.style.left = "0";
+        clonedCard.style.top = "0";
+        clonedCard.style.transform = "none";
+        clonedCard.style.boxShadow = "none";
+      },
+    });
+    return canvas.toDataURL("image/png");
+  };
+
   const startNew = () => {
     setCurrentId(null);
     setTitle("Staff ID Card");
@@ -381,13 +435,10 @@ function IdCardsPage() {
   };
 
   const onSave = async () => {
-    if (!user) return;
     setBusy("save");
     try {
-      const row = await saveIdCard(currentId, title.trim() || "Untitled card", data);
-      setCurrentId(row.id);
-      setSaved((s) => [row, ...s.filter((c) => c.id !== row.id)]);
-      toast.success("Card saved");
+      await persistCurrentCard();
+      toast.success("Card saved to history");
     } catch {
       toast.error("Could not save card");
     } finally {
@@ -413,9 +464,11 @@ function IdCardsPage() {
   const onDownload = async () => {
     setBusy("pdf");
     try {
-      const doc = await generateIdCardPDF(data, urls);
+      await persistCurrentCard();
+      const cardImage = await captureCardPreview();
+      const doc = await generateIdCardPDF(data, urls, cardImage);
       doc.save(`id-card-${(title || "card").toLowerCase().replace(/\s+/g, "-")}.pdf`);
-      toast.success("PDF downloaded");
+      toast.success("Card saved to history and PDF downloaded");
     } catch {
       toast.error("Could not generate PDF");
     } finally {
@@ -426,7 +479,9 @@ function IdCardsPage() {
   const onPrintSheet = async () => {
     setBusy("sheet");
     try {
-      const doc = await generateIdCardPrintSheet(data, urls, Math.max(1, Math.min(50, copies)));
+      await persistCurrentCard();
+      const cardImage = await captureCardPreview();
+      const doc = await generateIdCardPrintSheet(data, urls, Math.max(1, Math.min(50, copies)), cardImage);
       doc.save(`id-cards-sheet-${(title || "card").toLowerCase().replace(/\s+/g, "-")}.pdf`);
       toast.success("Print sheet downloaded");
     } catch {
@@ -582,6 +637,7 @@ function IdCardsPage() {
                 {currentId && (
                   <div className="flex items-end">
                     <Button variant="ghost" size="icon" className="text-destructive" onClick={onDelete} disabled={busy === "delete"}>
+                    <span className="sr-only">Delete this card</span>
                       <Trash2 className="h-4 w-4" />
                     </Button>
                   </div>
@@ -683,7 +739,7 @@ function IdCardsPage() {
               </div>
             </CardHeader>
             <CardContent className="flex justify-center overflow-auto rounded-lg bg-muted/40 p-6">
-              <CardPreview data={data} urls={urls} zoom={zoom} />
+              <CardPreview data={data} urls={urls} zoom={zoom} cardRef={previewCardRef} />
             </CardContent>
           </Card>
 
@@ -724,29 +780,39 @@ function IdCardsPage() {
             </CardContent>
           </Card>
 
-          {saved.length > 0 && (
-            <Card>
+          <Card>
               <CardHeader className="pb-3">
-                <CardTitle className="text-base">Saved cards</CardTitle>
+                <CardTitle className="flex items-center gap-2 text-base">
+                  <History className="h-4 w-4" /> Card history
+                  <span className="text-sm font-normal text-muted-foreground">({saved.length})</span>
+                </CardTitle>
               </CardHeader>
               <CardContent className="grid gap-2 sm:grid-cols-2">
-                {saved.map((row) => (
-                  <button
+                {saved.length === 0 ? (
+                  <p className="text-sm text-muted-foreground">No cards saved yet.</p>
+                ) : saved.map((row, index) => (
+                  <Button
                     key={row.id}
                     onClick={() => loadCard(row)}
-                    className={`flex items-center justify-between rounded-md border px-3 py-2 text-left text-sm transition-colors hover:bg-muted/60 ${
+                    variant="ghost"
+                    className={`h-auto w-full justify-between gap-3 rounded-sm border px-3 py-2 text-left ${
                       currentId === row.id ? "border-primary" : ""
                     }`}
                   >
-                    <span className="truncate font-medium">{row.title}</span>
-                    <span className="shrink-0 pl-2 text-xs text-muted-foreground">
-                      {new Date(row.updated_at).toLocaleDateString()}
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate font-medium">{row.title}</span>
+                      <span className="block truncate text-xs font-normal text-muted-foreground">
+                        {row.data.fullName || "Unnamed cardholder"}
+                      </span>
                     </span>
-                  </button>
+                    <span className="shrink-0 text-right text-xs font-normal text-muted-foreground">
+                      {index === 0 && <span className="block font-medium text-primary">Latest</span>}
+                      <time dateTime={row.updated_at}>{new Date(row.updated_at).toLocaleDateString()}</time>
+                    </span>
+                  </Button>
                 ))}
               </CardContent>
-            </Card>
-          )}
+          </Card>
         </div>
       </div>
     </div>
